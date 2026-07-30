@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Labour Court | Pendaftaran Kes Buruh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #e2e8f0; 
+            --sidebar-bg: #f8fafc;
+            --text-main: #1e293b; 
+            --text-muted: #475569;
+            --border-color: #cbd5e1; 
+            --card-bg: #ffffff;
+            --card-header-bg: #f1f5f9;
+            --danger: #ef4444;
+            --success: #10b981;
+            --success-hover: #059669;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .sidebar-header {
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .sidebar-header h2 {
+            margin: 0;
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+        .sidebar-header p {
+            font-size: 0.85em;
+            margin: 4px 0 0;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .user-info {
+            padding: 16px 20px;
+            font-size: 0.9em;
+            text-align: center;
+            background-color: #ffffff;
+            margin: 0 16px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav-menu li {
+            padding: 12px 20px;
+            margin: 4px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+        .nav-menu li:hover {
+            background-color: #e2e8f0;
+            color: var(--primary-blue);
+        }
+        .nav-menu li.active {
+            background-color: #eff6ff;
+            color: var(--primary-blue);
+            font-weight: 600;
+            border: 1px solid #bfdbfe;
+        }
+        .stats {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.85em;
+            text-align: center;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .top-header {
+            padding: 16px 32px;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .btn-print {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-print:hover { opacity: 0.8; }
+
+        .page-tabs-container {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 15px;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            padding: 16px 0;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 8px 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            font-weight: 600;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .tooltip-container { position: relative; display: inline-block; cursor: help; margin-left: 5px; }
+        .tooltip-container .tooltip-text {
+            visibility: hidden; width: 300px; background-color: #1e293b; color: #ffffff;
+            text-align: center; border-radius: 8px; padding: 10px 15px; position: absolute;
+            z-index: 100; top: 150%; right: 0; font-size: 0.8em; font-weight: 500; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s;
+            line-height: 1.4;
+        }
+        .tooltip-container .tooltip-text::after {
+            content: ""; position: absolute; bottom: 100%; right: 10px; margin-left: -6px;
+            border-width: 6px; border-style: solid; border-color: transparent transparent #1e293b transparent;
+        }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+
+        .content-area {
+            padding: 32px;
+            max-width: 1600px; 
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 1fr 1fr; 
+            gap: 24px; 
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        .card.full-width { grid-column: 1 / -1; }
+
+        .card-header {
+            background-color: var(--card-header-bg);
+            color: var(--text-main);
+            padding: 16px 24px;
+            font-weight: 700;
+            font-size: 1.05em;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header::before {
+            content: ''; display: block; width: 5px; height: 20px;
+            background-color: var(--primary-blue); border-radius: 4px;
+        }
+        
+        .card-body { padding: 24px; }
+        
+        .form-group {
+            display: grid; grid-template-columns: 140px 1fr; gap: 16px; align-items: start; margin-bottom: 20px;
+        }
+        .form-group > label {
+            width: 100%; text-align: right; font-size: 0.85em; font-weight: 600; color: var(--text-main); margin-top: 10px;
+        }
+        .form-group > label span { color: var(--danger); }
+        
+        input[type="text"], input[type="date"], select, input[type="number"], input[type="email"], textarea, input[type="time"] {
+            width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px;
+            box-sizing: border-box; font-family: inherit; font-size: 0.9em; color: var(--text-main); background-color: #f8fafc;
+        }
+        
+        /* Magik Input Read-Only Design */
+        input:disabled, select:disabled, textarea:disabled {
+            background-color: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+            border-color: #cbd5e1;
+        }
+
+        .radio-group { display: flex; gap: 20px; align-items: center; height: 40px; font-size: 0.9em; }
+
+        .btn-add {
+            background-color: var(--primary-blue); color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease;
+        }
+        .btn-add:hover { background-color: var(--primary-hover); }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9em; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background-color: var(--card-header-bg); font-weight: 700; }
+        .empty-row { text-align: center !important; color: var(--text-muted); font-style: italic; }
+
+        .note { color: var(--danger); font-size: 0.85em; margin-bottom: 16px; font-weight: 500; }
+        .lmd-link { text-align: right; margin-top: -10px; margin-bottom: 24px; }
+
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-box {
+            background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 550px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: popUp 0.3s ease-out;
+        }
+        @keyframes popUp {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-title { font-size: 1.3em; font-weight: 700; margin-bottom: 20px; color: var(--primary-blue); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; }
+        .btn-cancel { background: #e2e8f0; color: #1e293b; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;}
+        .btn-cancel:hover { background: #cbd5e1; }
+        .btn-save { background: var(--success); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;}
+        .btn-save:hover { background: var(--success-hover); }
+        
+        .btn-edit-tbl, .btn-delete-tbl {
+            color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85em;
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; 
+        }
+        .btn-edit-tbl { background: var(--primary-blue); }
+        .btn-delete-tbl { background: var(--danger); }
+
+        #dropZone {
+            border: 2px dashed var(--primary-blue); border-radius: 12px; padding: 40px; text-align: center; 
+            background-color: #eff6ff; cursor: pointer; transition: all 0.3s ease;
+        }
+        #dropZone:hover { background-color: #dbeafe; border-color: var(--primary-hover); }
+        .file-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; 
+            background: white; border: 1px solid var(--border-color); border-radius: 8px;
+        }
+
+        .togol-header {
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 2px solid var(--border-color); padding-bottom: 8px; 
+            cursor: pointer; transition: opacity 0.2s; user-select: none;
+        }
+        .togol-header:hover { opacity: 0.7; }
+
+        .teks-justify { text-align: justify; }
+
+        @media (max-width: 950px) {
+            .form-group { grid-template-columns: 1fr !important; gap: 8px !important; }
+            .form-group > label { text-align: left !important; margin-top: 0 !important; }
+            .hide-mobile { display: none !important; }
+            .page-tabs-container { flex-direction: column; align-items: flex-start; padding-bottom: 15px; }
+            .content-area { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            @page { size: A4 portrait; margin: 1.5cm; }
+            body { background: white; margin: 0; padding: 0; font-family: Arial, sans-serif; color: black; }
+            body > *:not(#printArea) { display: none !important; }
+            
+            #printArea { display: block !important; width: 100%; font-size: 11pt; line-height: 1.5; }
+            .print-header { text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid black; }
+            .print-logo-placeholder { font-size: 14pt; font-weight: bold; margin-bottom: 10px; display: inline-block; padding: 10px 20px; border: 1px solid #000; }
+            .print-title { font-weight: bold; font-size: 14pt; text-transform: uppercase; margin: 5px 0; }
+            .print-nokes { font-weight: bold; font-size: 12pt; text-align: right; margin-bottom: 15px; }
+            
+            .print-section { font-weight: bold; font-size: 11pt; margin-top: 20px; margin-bottom: 8px; background-color: #e2e8f0 !important; -webkit-print-color-adjust: exact; color-adjust: exact; padding: 6px; border: 1px solid #000; text-transform: uppercase; }
+            
+            .print-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; }
+            .print-table th, .print-table td { border: 1px solid #000; padding: 8px; vertical-align: middle; }
+            .print-table th { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; font-weight: bold; text-align: left; width: 35%; }
+            
+            .print-tbl-tuntutan { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10pt; text-align: left; }
+            .print-tbl-tuntutan th, .print-tbl-tuntutan td { border: 1px solid #000; padding: 8px; }
+            .print-tbl-tuntutan th { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; font-weight: bold; text-align: center; }
+            .print-tbl-tuntutan td.num { text-align: center; }
+            .print-tbl-tuntutan td.money { text-align: right; }
+            
+            .print-footer { margin-top: 40px; display: flex; justify-content: space-between; font-size: 10pt; page-break-inside: avoid; }
+            .print-sig-box { width: 40%; text-align: center; }
+            .print-sig-line { border-top: 1px solid #000; margin-top: 60px; padding-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="printArea" style="display: none;"></div>
+
+    <div class="modal-overlay" id="modalTuntutan">
+        <div class="modal-box">
+            <div class="modal-title" id="tajukModal">Tambah Tuntutan</div>
+            <input type="hidden" id="indexTuntutanEdit" value="-1">
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+                <label style="text-align: left;">Jenis Tuntutan <span>*</span></label>
+                <select id="jenisTuntutan"><option value="">-Sila Pilih-</option></select>
+            </div>
+            <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
+                <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
+                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;"></textarea>
+            </div>
+            <div class="form-group" style="grid-template-columns: 1fr;">
+                <label style="text-align: left;">Jumlah Tuntutan (RM) <span>*</span></label>
+                <div class="input-wrapper" style="position: relative;">
+                    <span style="position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-weight: 600;">RM</span>
+                    <input type="text" id="jumlahTuntutan" style="padding-left: 45px;" placeholder="Contoh: 2500.00" 
+                           oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" onfocus="unformatDuit(this)" onblur="formatDuit(this)">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="tutupModalTuntutan()">Batal</button>
+                <button class="btn-save" onclick="simpanTuntutan()">✔ Simpan Tuntutan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
+        <div class="user-info"><strong>Mohamad Hafiz b Abu Bakar</strong></div>
+        <ul class="nav-menu">
+            <li id="navSenarai" onclick="tukarView('senarai')">SENARAI TUGASAN</li>
+            <li id="navDaftar" class="active" onclick="tukarView('daftar')">PENDAFTARAN KES</li>
+            <li>CARIAN KES</li>
+            <li>KALENDAR KES BURUH</li>
+            <li>LAPORAN</li>
+        </ul>
+        <div class="stats"><strong>STATISTIK</strong></div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-header">
+            <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Kes Buruh</span></div>
+            <div style="display: flex; gap: 10px;"><button class="btn-print" onclick="sediaUntukCetak()">🖨️ Cetak PDF</button></div>
+        </div>
+        
+        <!-- ======================= VIEW 1: SENARAI TUGASAN ======================= -->
+        <div id="viewSenaraiTugas" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
+            <div class="card full-width">
+                <div class="card-header">Senarai Kes Didaftarkan</div>
+                <div class="card-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">No. Kes</th>
+                                <th style="width: 25%;">Pengadu</th>
+                                <th style="width: 25%;">Defendan</th>
+                                <th style="width: 15%;">Tarikh Daftar</th>
+                                <th style="width: 20%; text-align: center;">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodySenaraiTugas">
+                            <tr><td colspan="5" class="empty-row">Tiada kes didaftarkan setakat ini.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= VIEW 2: PENDAFTARAN KES ======================= -->
+        <div id="viewPendaftaranKes">
+            
+            <div class="page-tabs-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="bukaTab('tab1', this)">Pengadu & Defendan</div>
+                    <div class="tab" onclick="bukaTab('tab2', this)">Kenyataan Pengadu</div>
+                    <div class="tab" onclick="bukaTab('tab3', this)">Lain-lain</div>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <!-- BUTANG KEMASKINI MAGIK: Ditekan untuk buka kunci borang -->
+                    <button id="btnEditBorangKes" onclick="setStatusBorang(false)" style="display: none; background: #eab308; color: #713f12; border: none; padding: 6px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✏️ Kemaskini Borang</button>
+                    
+                    <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
+                    <input type="text" id="noKes" value="KBR/10103/2026/0112" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
+                    <div class="tooltip-container">
+                        <span style="font-size: 1.2em; color: var(--primary-blue);">ℹ️</span>
+                        <div class="tooltip-text">
+                            *Sila dikemaskini secara manual jika No. Kes tidak mengikut turutan pemfailan.
+                            <br><br><span style="color: #cbd5e1; font-weight: 400;">Format: Kod Kawasan/Tahun/Bilangan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: PENGADU & DEFENDAN -->
+            <div class="content-area" id="tab1"> 
+                
+                <div class="card" id="kad1" style="transition: all 0.4s ease;">
+                    <div class="card-header" id="tajukKad1">Maklumat Pengadu</div>
+                    <div class="card-body">
+                        
+                        <div id="tempatSuis1">
+                            <div id="blokSuisDanWakil">
+                                <div class="form-group" id="ruanganSuisMajikan">
+                                    <label></label>
+                                    <div class="input-wrapper" style="display: flex; align-items: center; height: 40px; gap: 10px;">
+                                        <input type="checkbox" id="majikan" onchange="tukarPeranan()"> 
+                                        <label for="majikan" style="width:auto; text-align:left; font-weight:700; margin:0; color: var(--primary-blue);">Majikan adalah pengadu?</label>
+                                    </div>
+                                </div>
+                                <div id="ruanganWakilMajikan" style="display: none;">
+                                    <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Nama Penuh Wakil"></div></div>
+                                    <div class="form-group"><label>No. Pengenalan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Contoh: 880101-01-1234" maxlength="14"></div></div>
+                                    <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Jawatan Wakil"></div></div>
+                                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="ruanganAduan">
+                            <label>Aduan <span>*</span></label>
+                            <div class="input-wrapper radio-group">
+                                <label><input type="radio" name="aduan" id="aduanIndividu" value="Individu" onchange="toggleAduan()" checked> Individu</label>
+                                <label><input type="radio" name="aduan" id="aduanBerkumpulan" value="Berkumpulan" onchange="toggleAduan()"> Berkumpulan</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="ruanganBilanganPengadu" style="display: none;">
+                            <label>Bilangan Pengadu <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" id="bilanganPengadu" style="width: 50%;" placeholder="Contoh: 5">
+                                <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Termasuk ketua pengadu</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jenis Pendaftaran <span>*</span></label>
+                            <div class="input-wrapper">
+                                <select id="jenisDaftarPengadu" onchange="kawalJenisDaftarPengadu()">
+                                    <option value="">-Sila Pilih-</option><option value="MyKad">MyKad</option><option value="Pasport">Pasport</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="labelNoPendPengadu">Nombor Pendaftaran <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="noPendPengadu" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="formatMyKad(this, 'jenisDaftarPengadu')" onblur="semakFormatMyKad(this, 'jenisDaftarPengadu')">
+                                <p id="remarkNoPendPengadu" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label id="labelNamaPengadu">Nama <span>*</span></label><div class="input-wrapper"><input type="text" id="namaPengadu" placeholder="Nama penuh"></div></div>
+
+                        <div class="form-group" id="ruanganJantina">
+                            <label>Jantina <span>*</span></label>
+                            <div class="input-wrapper radio-group">
+                                <label><input type="radio" name="jantinaPengadu" id="jantinaLelaki" value="Lelaki"> Lelaki</label>
+                                <label><input type="radio" name="jantinaPengadu" id="jantinaPerempuan" value="Perempuan"> Perempuan</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanPengadu" placeholder="Jawatan"></div></div>
+                        
+                        <div class="form-group">
+                            <label>Gaji Pokok <span>*</span></label>
+                            <div class="input-wrapper" style="position: relative; width: 60%;">
+                                <span style="position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-weight: 600;">RM</span>
+                                <input type="text" id="gajiPokokPengadu" style="padding-left: 45px;" placeholder="Contoh: 1500.00" 
+                                       oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" onfocus="unformatDuit(this)" onblur="formatDuit(this)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Alamat <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="alamatPengadu1" style="margin-bottom: 8px;" placeholder="Baris 1">
+                                <input type="text" id="alamatPengadu2" style="margin-bottom: 8px;" placeholder="Baris 2">
+                                <input type="text" id="alamatPengadu3" placeholder="Baris 3">
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label>Poskod <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodPengadu" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodPengadu', 'negeriPengadu', 'bandarPengadu')" onblur="semakPoskod(this)"></div></div>
+                        <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriPengadu"><option value="">-Sila Pilih-</option></select></div></div>
+                        <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarPengadu"><option value="">-Sila Pilih-</option></select></div></div>
+                        
+                        <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telPengadu" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this)" maxlength="11"></div></div>
+                        <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpPengadu" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this)" maxlength="12"></div></div>
+                        
+                        <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelPengadu" style="width: 60%;" placeholder="Contoh: nama@email.com"></div></div>
+                        
+                        <div id="tempatAlamatKerja1"></div>
+
+                        <div class="form-group">
+                            <label>Warganegara <span>*</span></label>
+                            <div class="input-wrapper">
+                                <select id="warganegaraPengadu" onchange="kawalWarganegara()"><option value="Malaysia" selected>Malaysia</option></select>
+                                <div id="ruanganWarganegaraLain" style="display: none; margin-top: 10px;"><input type="text" id="warganegaraLain" placeholder="Masukkan warganegara" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- MAKLUMAT PERKHIDMATAN -->
+                        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
+                        
+                        <div style="margin-bottom: 20px;">
+                            <div class="togol-header" onclick="toggleMaklumatPerkhidmatan()">
+                                <h4 style="color: var(--primary-blue); margin: 0; font-size: 1.1em;">Maklumat Perkhidmatan</h4>
+                                <span id="labelTogolPerkhidmatan" style="color: var(--primary-blue); font-size: 0.85em; font-weight: 600; background: #eff6ff; padding: 4px 12px; border-radius: 20px; border: 1px solid #bfdbfe;">▲ Sembunyi</span>
+                            </div>
+                        </div>
+
+                        <div id="kandunganMaklumatPerkhidmatan">
+                            
+                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                <label style="margin-top: 0;">Tarikh Mula Kerja</label>
+                                <div class="input-wrapper">
+                                    <input type="date" id="tarikhMulaKerja" style="width: 50%; max-width: 200px;">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                <label style="margin-top: 0;">Diberi Kontrak?</label>
+                                <div class="input-wrapper radio-group" style="margin: 0;">
+                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Ya"> Ya</label>
+                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Tidak" checked> Tidak</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                <label style="margin-top: 0;">Penyata Gaji Diberikan?</label>
+                                <div class="input-wrapper radio-group" style="margin: 0;">
+                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Ya"> Ya</label>
+                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Tidak" checked> Tidak</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="align-items: center; margin-bottom: 10px;">
+                                <label style="margin-top: 0;">Menerima Elaun?</label>
+                                <div class="input-wrapper" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div class="radio-group" style="margin: 0;">
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Ya" onchange="toggleElaun()"> Ya</label>
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Tidak" onchange="toggleElaun()" checked> Tidak</label>
+                                    </div>
+                                    <button type="button" id="btnTambahElaun" style="display: none; background-color: var(--primary-blue); color: white; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;" onclick="tambahMedanElaun()">+ Tambah Elaun</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="ruanganElaunWrapper" style="display: none; margin-bottom: 15px;">
+                                <label class="hide-mobile"></label>
+                                <div class="input-wrapper" id="senaraiElaun" style="display: flex; flex-direction: column; gap: 10px;">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="align-items: flex-start; margin-bottom: 15px;">
+                                <label style="margin-top: 2px;">Waktu Kerja</label>
+                                <div class="input-wrapper">
+                                    <div class="radio-group" style="margin-bottom: 10px; height: auto;">
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tetap" onchange="toggleWaktuKerja()"> Tetap</label>
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tidak Tetap" onchange="toggleWaktuKerja()"> Tidak Tetap</label>
+                                    </div>
+                                    <div id="ruanganWaktuTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                        <input type="time" id="waktuMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;"> 
+                                        <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
+                                        <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                    </div>
+                                    <div id="ruanganWaktuTidakTetap" style="display: none;">
+                                        <input type="text" id="teksWaktuTidakTetap" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" style="width: 100%; font-size: 0.85em; padding: 8px 10px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="align-items: flex-start; margin-bottom: 0;">
+                                <label style="margin-top: 2px;">Hari Kerja Seminggu</label>
+                                <div class="input-wrapper">
+                                    <div class="radio-group" style="margin-bottom: 10px; height: auto;">
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tetap" onchange="toggleHariKerja()"> Tetap</label>
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tidak Tetap" onchange="toggleHariKerja()"> Tidak Tetap</label>
+                                    </div>
+                                    <div id="ruanganHariTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                        <select id="hariMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                            <option value="">-Mula-</option>
+                                            <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
+                                        </select>
+                                        <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
+                                        <select id="hariTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                            <option value="">-Akhir-</option>
+                                            <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
+                                        </select>
+                                    </div>
+                                    <div id="ruanganHariTidakTetap" style="display: none;">
+                                        <input type="text" id="teksHariTidakTetap" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" style="width: 100%; font-size: 0.85em; padding: 8px 10px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="kad2" style="transition: all 0.4s ease;">
+                    <div class="card-header" id="tajukKad2">Maklumat Defendan</div>
+                    <div class="card-body">
+                        
+                        <div class="lmd-link" style="display: flex; justify-content: flex-end; gap: 15px;">
+                            <a href="https://hafiz6687.github.io/eLC/https://github.com/Hafiz6687/eLC/actions#start-of-content" target="_blank">🔍 Carian Majikan LMD</a>
+                            <a href="https://hafiz6687.github.io/eLC/https://github.com/" target="_blank">🔍 Carian MyData SSM</a>
+                        </div>
+                        
+                        <div id="tempatSuis2"></div>
+
+                        <div class="form-group">
+                            <label>Jenis Pendaftaran <span>*</span></label>
+                            <div class="input-wrapper">
+                                <select id="jenisDaftarDefendan" onchange="kawalJenisDaftarDefendan()">
+                                    <option value="">-Sila Pilih-</option>
+                                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                                    <option value="MyKad">MyKad</option>
+                                    <option value="Lain-lain">Lain-lain</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombor Pendaftaran</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="noPendDefendan" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="this.value = this.value.toUpperCase(); formatMyKad(this, 'jenisDaftarDefendan')" onblur="semakFormatMyKad(this, 'jenisDaftarDefendan')">
+                                <p id="remarkNoPendDefendan" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label id="labelNamaDefendan">Nama Syarikat/ Nama Organisasi <span>*</span></label><div class="input-wrapper"><input type="text" id="namaDefendan" placeholder="Nama penuh"></div></div>
+
+                        <div id="ruanganPemilikEnterprise" style="display: none;">
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label>Nama Pemilik <span>*</span></label>
+                                <div class="input-wrapper"><input type="text" id="namaPemilikDefendan" placeholder="Nama penuh pemilik perniagaan"></div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label>No. MyKad Pemilik <span>*</span></label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="kpPemilikDefendan" placeholder="Masukkan No. Kad Pengenalan Pemilik" maxlength="14" oninput="formatMyKadPemilik(this)" onblur="semakFormatMyKad(this, 'MyKad')">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Alamat <span>*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="alamatDefendan1" style="margin-bottom: 8px;" placeholder="Baris 1">
+                                <input type="text" id="alamatDefendan2" style="margin-bottom: 8px;" placeholder="Baris 2">
+                                <input type="text" id="alamatDefendan3" placeholder="Baris 3">
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label>Poskod <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodDefendan" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodDefendan', 'negeriDefendan', 'bandarDefendan')" onblur="semakPoskod(this)"></div></div>
+                        <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriDefendan"><option value="">-Sila Pilih-</option></select></div></div>
+                        <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarDefendan"><option value="">-Sila Pilih-</option></select></div></div>
+
+                        <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telDefendan" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this)" maxlength="11"></div></div>
+                        <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpDefendan" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this)" maxlength="12"></div></div>
+                        
+                        <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelDefendan" style="width: 60%;" placeholder="Contoh: syarikat@email.com"></div></div>
+                        
+                        <div id="tempatAlamatKerja2">
+                            <div id="ruanganAlamatKerjaLengkap">
+                                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
+                                <div class="form-group">
+                                    <label></label>
+                                    <div class="input-wrapper">
+                                        <div style="display: flex; align-items: center; height: 30px; gap: 10px;">
+                                            <input type="checkbox" id="salinAlamat" onchange="salinAlamatDefendan()"> 
+                                            <label for="salinAlamat" id="labelSalinAlamat" style="width:auto; text-align:left; font-weight:500; margin:0;">Salin alamat defendan</label>
+                                        </div>
+                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 24px; font-style: italic;">*(jika alamat tempat pekerjaan sama dengan alamat defendan)</p>
+                                    </div>
+                                </div>
+
+                                <div id="ruanganAlamatKerja">
+                                    <div class="form-group">
+                                        <label>Alamat Tempat Pekerjaan <span>*</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="text" id="alamatKerja1" style="margin-bottom: 8px;" placeholder="Baris 1">
+                                            <input type="text" id="alamatKerja2" style="margin-bottom: 8px;" placeholder="Baris 2">
+                                            <input type="text" id="alamatKerja3" placeholder="Baris 3">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"><label>Poskod Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodKerja" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodKerja', 'negeriKerja', 'bandarKerja')" onblur="semakPoskod(this)"></div></div>
+                                    <div class="form-group"><label>Negeri Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="negeriKerja"><option value="">-Sila Pilih-</option></select></div></div>
+                                    <div class="form-group"><label>Bandar Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="bandarKerja"><option value="">-Sila Pilih-</option></select></div></div>
+                                </div>
+                                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sektor <span>*</span></label>
+                            <div class="input-wrapper">
+                                <select id="sektorDefendan" onchange="kawalSektor()">
+                                    <option value="">-Sila Pilih-</option><option value="Perkhidmatan">Perkhidmatan</option><option value="Pembuatan">Pembuatan</option><option value="Pembinaan">Pembinaan</option><option value="Perladangan">Perladangan</option><option value="Lain-lain">Lain-lain</option>
+                                </select>
+                                <div id="ruanganSektorLain" style="display: none; margin-top: 10px;">
+                                    <input type="text" id="sektorLain" placeholder="Masukkan nama sektor" style="width: 100%;">
+                                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Sila nyatakan sektor lain</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;"><label>Jenis Perniagaan <span>*</span></label><div class="input-wrapper"><input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan"></div></div>
+                    </div>
+                </div>
+
+                <div class="card full-width" id="kad3" style="order: 3;">
+                    <div class="card-header">Maklumat Tuntutan</div>
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+                            <button class="btn-add" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan()">+ Tambah Maklumat Tuntutan</button>
+                        </div>
+                        
+                        <table id="jadualTuntutan">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">#</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
+                                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
+                                </tr>
+                            </thead>
+                            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
+                        </table>
+
+                        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                            <button class="btn-save btn-seterusnya" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab2')">Seterusnya ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: KENYATAAN PENGADU -->
+            <div class="content-area" id="tab2" style="display: none; grid-template-columns: 1fr;">
+                
+                <div class="card full-width">
+                    <div class="card-header">Kenyataan Awal Pengadu</div>
+                    <div class="card-body">
+                        <p style="font-size: 0.85em; color: var(--text-muted); margin-top: 0; margin-bottom: 15px; font-style: italic;">
+                            *Kenyataan ini dijana secara automatik berdasarkan maklumat yang diisi di Tab Pengadu & Defendan. Anda boleh mengemaskini teks ini jika perlu.
+                        </p>
+                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <textarea rows="7" id="kenyataanAwal" readonly class="teks-justify" placeholder="Kenyataan awal pengadu akan di extract di sini..." style="resize: vertical; padding: 15px; font-size: 0.95em; line-height: 1.6; background-color: #f8fafc; border: 1px solid var(--border-color);"></textarea>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                            <button class="btn-cancel" id="btnEditKenyataan" style="padding: 8px 20px;" onclick="aktifkanEditKenyataan()">✏️ Edit Kenyataan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <!-- MAGIK: HEADER SUSUNAN ATAS BAWAH (COLUMN) UNTUK NOTA TAMBAHAN -->
+                    <div class="card-header">
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <span>Kenyataan Pengadu / Kronologi Kes</span>
+                            <span style="font-size: 0.75em; font-weight: 500; color: var(--text-muted); font-style: italic;">(Sambungan dari kenyataan awal pengadu)</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span></label>
+                            <textarea rows="10" id="kronologiKes" class="teks-justify" placeholder="Taipkan kronologi dan masalah berkaitan tuntutan di sini..." style="resize: vertical; padding: 15px; font-size: 0.95em; line-height: 1.6;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <div class="card-header">Maklumat Tambahan & Seksyen Tuntutan</div>
+                    <div class="card-body">
+                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <div class="input-wrapper" style="display: flex; gap: 30px; align-items: center; font-weight: 500;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" id="luarKawasan"> Kes Luar Kawasan?</label>
+                                <label id="ruanganGajiMinima" style="display: flex; align-items: center; gap: 8px; cursor: pointer;"><input type="checkbox" id="gajiMinima"> Kes Di Bawah Tuntutan Gaji Minima?</label>
+                            </div>
+                        </div>
+                        
+                        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 25px 0;">
+                        
+                        <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <label style="text-align: left; font-size: 1em; margin-bottom: 15px;">Seksyen Tuntutan <span>*</span></label>
+                            
+                            <div id="seksyenPekerja" class="input-wrapper" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                                <div style="display: flex; gap: 15px; align-items: center; grid-column: span 3;">
+                                    <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(1)"> Seksyen 69(1)</label>
+                                    <div style="display: flex; gap: 15px; margin-left: 10px;">
+                                        <label><input type="checkbox" name="subSeksyen" value="(a)"> a</label>
+                                        <label><input type="checkbox" name="subSeksyen" value="(b)"> b</label>
+                                        <label><input type="checkbox" name="subSeksyen" value="(c)"> c</label>
+                                    </div>
+                                </div>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(i)"> Seksyen 69(2)(i)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(ii)"> Seksyen 69(2)(ii)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(iii)"> Seksyen 69(2)(iii)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(3)"> Seksyen 69(3)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69F"> Seksyen 69F</label>
+                            </div>
+
+                            <div id="seksyenMajikan" class="input-wrapper" style="display: none; padding: 15px; background-color: #eff6ff; border: 1px dashed var(--primary-blue); border-radius: 8px;">
+                                <label style="font-weight: 600; color: var(--primary-blue); display: flex; align-items: center; gap: 10px;">
+                                    <input type="radio" name="seksyen" value="69(2)(iii)" checked> Seksyen 69(2)(iii)
+                                </label>
+                                <p style="margin: 5px 0 0 25px; font-size: 0.85em; color: var(--text-muted); font-style: italic;">*Ini adalah satu-satunya pilihan seksyen yang dibenarkan untuk pengadu berstatus Majikan.</p>
+                            </div>
+
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
+                            <button class="btn-save btn-seterusnya" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab3')">Seterusnya ➔</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: LAIN-LAIN (MUAT NAIK FAIL) -->
+            <div class="content-area" id="tab3" style="display: none; grid-template-columns: 1fr;">
+                <div class="card full-width">
+                    <div class="card-header">Muat Naik Dokumen Sokongan / Bukti</div>
+                    <div class="card-body">
+                        
+                        <div id="dropZone">
+                            <div style="font-size: 3.5em; margin-bottom: 10px;">☁️</div>
+                            <h3 style="color: var(--primary-blue); margin: 0 0 10px 0; font-size: 1.5em;">Tarik & Lepaskan Fail Di Sini</h3>
+                            <p style="color: var(--text-muted); margin: 0; font-size: 1em;">atau klik untuk memilih fail dari komputer (PDF, JPG, PNG)</p>
+                            <input type="file" id="fileInput" multiple style="display: none;" accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
+                        
+                        <p style="font-size: 0.85em; color: var(--danger); margin-top: 15px; font-style: italic;">*Sila pastikan saiz setiap fail tidak melebihi 5MB.</p>
+                        
+                        <div id="fileList" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 40px; gap: 15px; flex-wrap: wrap;">
+                            <button class="btn-cancel btn-kemaskini" style="padding: 10px 20px;" onclick="pergiKeTabBorang('tab1')">✏️ Kemaskini</button>
+                            <button class="btn-save btn-simpan" style="background-color: var(--primary-blue); padding: 10px 20px;" onclick="alert('Maklumat draf telah disimpan.')">💾 Simpan</button>
+                            <button class="btn-save btn-daftar" style="padding: 10px 25px; font-size: 1.05em;" onclick="daftarKesSistem()">🚀 Daftar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tab1 = document.getElementById('tab1');
+            tab1.addEventListener('input', janaKenyataanAwal);
+            tab1.addEventListener('change', janaKenyataanAwal);
+
+            tab1.addEventListener('input', function(e) {
+                const el = e.target;
+                if (el.tagName === 'INPUT' && el.type === 'text') {
+                    const abaikan = ['noPendPengadu', 'noPendDefendan', 'noKes', 'telPengadu', 'hpPengadu', 'telDefendan', 'hpDefendan', 'teksWaktuTidakTetap', 'teksHariTidakTetap', 'kpPemilikDefendan'];
+                    if (abaikan.includes(el.id) || el.classList.contains('input-elaun-jenis') || el.classList.contains('input-elaun-jumlah')) return;
+                    
+                    let start = el.selectionStart;
+                    let end = el.selectionEnd;
+                    let val = el.value;
+                    
+                    let newVal = val.replace(/\b\w/g, function(char) {
+                        return char.toUpperCase();
+                    });
+
+                    if (val !== newVal) {
+                        el.value = newVal;
+                        el.setSelectionRange(start, end);
+                    }
+                }
+            });
+        });
+
+        let isKenyataanEdited = false;
+
+        function aktifkanEditKenyataan() {
+            const txt = document.getElementById('kenyataanAwal');
+            const btn = document.getElementById('btnEditKenyataan');
+            if (txt.hasAttribute('readonly')) {
+                txt.removeAttribute('readonly');
+                txt.style.backgroundColor = '#ffffff';
+                txt.style.border = '1px solid var(--primary-blue)';
+                btn.innerHTML = '🔒 Kunci Kenyataan';
+                isKenyataanEdited = true; 
+            } else {
+                txt.setAttribute('readonly', 'true');
+                txt.style.backgroundColor = '#f8fafc';
+                txt.style.border = '1px solid var(--border-color)';
+                btn.innerHTML = '✏️ Edit Kenyataan';
+            }
+        }
+
+        function janaKenyataanAwal() {
+            if (isKenyataanEdited) return; 
+
+            const isIndividu = document.getElementById('aduanIndividu').checked;
+            const isMajikan = document.getElementById('majikan').checked;
+            const textareaAwal = document.getElementById('kenyataanAwal');
+
+            const defNamaRaw = document.getElementById('namaDefendan').value.trim();
+            const tarikhMulaRaw = document.getElementById('tarikhMulaKerja').value;
+            const jawatanRaw = document.getElementById('jawatanPengadu').value.trim();
+            const gajiRaw = document.getElementById('gajiPokokPengadu').value.trim();
+
+            if (!defNamaRaw && !tarikhMulaRaw && !jawatanRaw && !gajiRaw) {
+                textareaAwal.value = ''; 
+                return;
+            }
+
+            if (isIndividu && !isMajikan) {
+                
+                const defNama = defNamaRaw || '[Nama Syarikat/Organisasi]';
+                const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+                const defNo = document.getElementById('noPendDefendan').value.trim();
+                const pemilik = document.getElementById('namaPemilikDefendan').value.trim();
+                const kpPemilik = document.getElementById('kpPemilikDefendan').value.trim();
+                
+                let ayatDefendan = "";
+                
+                if (jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain') {
+                    if (defNo) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`;
+                    } else {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
+                    }
+                } else if (jenisDef === 'MyKad') {
+                    if (defNo) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. MyKad: ${defNo})`;
+                    } else {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
+                    }
+                } else if (jenisDef === 'SSM (Enterprise)') {
+                    if (defNo && pemilik && kpPemilik) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`;
+                    } else if (!defNo && pemilik && kpPemilik) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`;
+                    } else if (!defNo && pemilik && !kpPemilik) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik}`;
+                    } else if (defNo && !pemilik && !kpPemilik) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`;
+                    } else if (defNo && pemilik && !kpPemilik) {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik}`;
+                    } else {
+                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
+                    }
+                } else {
+                    ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
+                }
+                
+                const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '[Tarikh mula kerja]';
+                
+                const jawatan = jawatanRaw || '[Jawatan]';
+                const gaji = gajiRaw || '[Gaji pokok]';
+                
+                const rElaun = document.querySelector('input[name="adaElaun"]:checked');
+                const adaElaun = rElaun ? rElaun.value : 'Tidak';
+                let ayatElaun = "Saya tidak dibayar apa-apa elaun.";
+                if (adaElaun === 'Ya') {
+                    const senaraiJenis = document.querySelectorAll('.input-elaun-jenis');
+                    const senaraiJumlah = document.querySelectorAll('.input-elaun-jumlah');
+                    let butiranElaun = [];
+                    for(let i=0; i<senaraiJenis.length; i++) {
+                        if(senaraiJenis[i].value) butiranElaun.push(`${senaraiJenis[i].value} sebanyak RM${senaraiJumlah[i].value || '0'}`);
+                    }
+                    if(butiranElaun.length > 0) {
+                        ayatElaun = "Saya dibayar elaun " + butiranElaun.join(', ') + ".";
+                    } else {
+                        ayatElaun = "Saya dibayar elaun.";
+                    }
+                }
+
+                let tempatKerja = '';
+                const disalin = document.getElementById('salinAlamat').checked;
+                if (disalin) {
+                    const a1 = document.getElementById('alamatDefendan1').value.trim();
+                    const a2 = document.getElementById('alamatDefendan2').value.trim();
+                    const a3 = document.getElementById('alamatDefendan3').value.trim();
+                    const pos = document.getElementById('poskodDefendan').value.trim();
+                    const bdr = document.getElementById('bandarDefendan').value.trim();
+                    const ngr = document.getElementById('negeriDefendan').value.trim();
+                    
+                    let alamatArr = [a1, a2, a3].filter(Boolean);
+                    let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                    if(posBdr) alamatArr.push(posBdr);
+                    if(ngr) alamatArr.push(ngr);
+                    tempatKerja = alamatArr.join(', ');
+                } else {
+                    const a1 = document.getElementById('alamatKerja1').value.trim();
+                    const a2 = document.getElementById('alamatKerja2').value.trim();
+                    const a3 = document.getElementById('alamatKerja3').value.trim();
+                    const pos = document.getElementById('poskodKerja').value.trim();
+                    const bdr = document.getElementById('bandarKerja').value.trim();
+                    const ngr = document.getElementById('negeriKerja').value.trim();
+                    
+                    let alamatArr = [a1, a2, a3].filter(Boolean);
+                    let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                    if(posBdr) alamatArr.push(posBdr);
+                    if(ngr) alamatArr.push(ngr);
+                    tempatKerja = alamatArr.join(', ');
+                }
+                if (!tempatKerja) tempatKerja = '[Alamat tempat pekerjaan]';
+
+                const p1 = `${ayatDefendan} bermula pada ${tarikhMula}. Jawatan terakhir saya sebagai ${jawatan}. Gaji pokok terakhir saya ialah RM${gaji}. ${ayatElaun} Tempat pekerjaan saya di ${tempatKerja}.`;
+
+                const rKontrak = document.querySelector('input[name="adaKontrak"]:checked');
+                const kontrak = rKontrak ? rKontrak.value : '';
+                const ayatKontrak = kontrak === 'Ya' ? 'Saya ada diberikan kontrak perkhidmatan.' : (kontrak === 'Tidak' ? 'Saya tiada diberi kontrak perkhidmatan.' : 'Saya [Ada/Tiada] diberikan kontrak perkhidmatan.');
+
+                const rPenyata = document.querySelector('input[name="adaPenyata"]:checked');
+                const penyata = rPenyata ? rPenyata.value : '';
+                const ayatPenyata = penyata === 'Ya' ? 'Saya ada diberikan penyata gaji.' : (penyata === 'Tidak' ? 'Saya tiada diberikan penyata gaji.' : 'Saya [Ada/Tiada] diberikan penyata gaji.');
+
+                const rWaktu = document.querySelector('input[name="jenisWaktu"]:checked');
+                const jenisWaktu = rWaktu ? rWaktu.value : '';
+                let ayatWaktu = 'Waktu kerja saya dari jam [Mula] hingga [Tamat].';
+                
+                if (jenisWaktu === 'Tetap') {
+                    const formatMasa = (masa) => {
+                        if (!masa) return '';
+                        let [jamStr, minit] = masa.split(':');
+                        let jam = parseInt(jamStr);
+                        let waktu = jam >= 12 ? 'petang' : 'pagi';
+                        if (jam > 12) jam -= 12;
+                        if (jam === 0) jam = 12;
+                        return `${jam.toString().padStart(2, '0')}:${minit} ${waktu}`;
+                    };
+                    
+                    const wMulaVal = document.getElementById('waktuMula').value;
+                    const wTamatVal = document.getElementById('waktuTamat').value;
+                    const wMula = wMulaVal ? formatMasa(wMulaVal) : '[Waktu mula]';
+                    const wTamat = wTamatVal ? formatMasa(wTamatVal) : '[Waktu akhir]';
+                    
+                    ayatWaktu = `Waktu kerja saya dari jam ${wMula} hingga ${wTamat}.`;
+                } else if (jenisWaktu === 'Tidak Tetap') {
+                    const wTeks = document.getElementById('teksWaktuTidakTetap').value || '[Waktu kerja tidak tetap]';
+                    ayatWaktu = `Waktu kerja saya ${wTeks}.`;
+                }
+
+                const rHari = document.querySelector('input[name="jenisHari"]:checked');
+                const jenisHari = rHari ? rHari.value : '';
+                let ayatHari = 'Saya bekerja dari hari [Mula] hingga [Akhir].';
+                if (jenisHari === 'Tetap') {
+                    const hMula = document.getElementById('hariMula').value || '[Hari mula]';
+                    const hTamat = document.getElementById('hariTamat').value || '[Hari akhir]';
+                    ayatHari = `Saya bekerja dari hari ${hMula} hingga ${hTamat}.`;
+                } else if (jenisHari === 'Tidak Tetap') {
+                    const hTeks = document.getElementById('teksHariTidakTetap').value || '[Hari kerja tidak tetap]';
+                    ayatHari = `Hari kerja saya ${hTeks}.`;
+                }
+
+                const p2 = `${ayatKontrak} ${ayatPenyata} ${ayatWaktu} ${ayatHari}`;
+
+                let ayatPenuh = (p1 + '\n\n' + p2).replace(/\.\./g, '.').replace(/\s+/g, ' ');
+                ayatPenuh = ayatPenuh.replace(/ \./g, '.').replace(/ \n/g, '\n');
+                textareaAwal.value = p1.replace(/\.\./g, '.') + '\n\n' + p2.replace(/\.\./g, '.');
+            } else {
+                textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan individu (Pekerja).";
+            }
+        }
+
+        function semakFormatMyKad(inputElement, dropdownId) {
+            const val = inputElement.value;
+            let jenis = "MyKad"; 
+            if(dropdownId) {
+                jenis = document.getElementById(dropdownId).value;
+            }
+
+            if (jenis === 'MyKad' && val.length > 0 && val.length < 14) {
+                alert("Format No. MyKad tidak lengkap. Sila pastikan ia mengandungi 12 digit nombor (format: XXXXXX-XX-XXXX).");
+            }
+        }
+
+        function semakPoskod(input) {
+            const val = input.value;
+            if (val.length > 0 && val.length < 5) {
+                alert("Sila masukkan 5 digit poskod yang sah.");
+            }
+        }
+
+        function formatTelRumah(input) {
+            let val = input.value.replace(/\D/g, ''); 
+            if (val.length > 2) {
+                val = val.substring(0, 2) + '-' + val.substring(2);
+            }
+            input.value = val;
+        }
+
+        function formatTelHP(input) {
+            let val = input.value.replace(/\D/g, ''); 
+            if (val.length > 3) {
+                val = val.substring(0, 3) + '-' + val.substring(3);
+            }
+            input.value = val;
+        }
+
+        let memoriSenaraiKes = [];
+
+        function tukarView(jenisView) {
+            const navSenarai = document.getElementById('navSenarai');
+            const navDaftar = document.getElementById('navDaftar');
+            const viewSenarai = document.getElementById('viewSenaraiTugas');
+            const viewDaftar = document.getElementById('viewPendaftaranKes');
+            const tajukHalaman = document.getElementById('tajukHalamanAtas');
+
+            navSenarai.classList.remove('active');
+            navDaftar.classList.remove('active');
+
+            if (jenisView === 'senarai') {
+                navSenarai.classList.add('active');
+                viewDaftar.style.display = 'none';
+                viewSenarai.style.display = 'block';
+                tajukHalaman.innerHTML = 'Senarai Tugasan';
+                renderSenaraiTugas();
+            } else {
+                navDaftar.classList.add('active');
+                viewSenarai.style.display = 'none';
+                viewDaftar.style.display = 'block';
+                tajukHalaman.innerHTML = 'Pendaftaran Kes Buruh';
+                
+                // Magik: Buka kunci borang jika pengguna nak daftar kes baharu
+                setStatusBorang(false);
+            }
+        }
+
+        // ================= MAGIK KUNCI BORANG (OPTION 1) =================
+        function setStatusBorang(isReadonly) {
+            const container = document.getElementById('viewPendaftaranKes');
+            
+            // 1. Kunci semua input, select, textarea di dalam borang
+            const inputs = container.querySelectorAll('input, select, textarea');
+            inputs.forEach(el => {
+                el.disabled = isReadonly;
+            });
+            
+            // 2. Sembunyikan butang-butang action (Tambah/Hapus/Simpan/Daftar)
+            const actionButtons = container.querySelectorAll('.btn-add, .btn-delete-tbl, .btn-edit-tbl, .btn-kemaskini, .btn-simpan, .btn-daftar');
+            actionButtons.forEach(btn => {
+                if (isReadonly) {
+                    btn.setAttribute('data-original-display', btn.style.display || 'inline-block');
+                    btn.style.display = 'none';
+                } else {
+                    btn.style.display = btn.getAttribute('data-original-display') || 'inline-block';
+                }
+            });
+
+            // 3. Papar/Sembunyi butang "Kemaskini Borang" di header borang
+            const btnEdit = document.getElementById('btnEditBorangKes');
+            if (btnEdit) {
+                btnEdit.style.display = isReadonly ? 'inline-block' : 'none';
+            }
+        }
+        // =================================================================
+
+        function daftarKesSistem() {
+            const noKes = document.getElementById('noKes').value;
+            const namaPengadu = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
+            
+            let namaDefendan = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
+            const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+            if(jenisDef === 'SSM (Enterprise)') {
+                 const pemilik = document.getElementById('namaPemilikDefendan').value || '';
+                 if(pemilik) namaDefendan += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`;
+            }
+
+            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+            const jenisAduan = aduanBerkumpulan ? 'Berkumpulan' : 'Individu';
+            const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
+
+            memoriSenaraiKes.push({
+                noKes: noKes,
+                namaPengadu: namaPengadu,
+                namaDefendan: namaDefendan,
+                jenisAduan: jenisAduan,
+                tarikh: tarikhHariIni
+            });
+
+            alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem.");
+            tukarView('senarai');
+        }
+
+        function renderSenaraiTugas() {
+            const tbody = document.getElementById('bodySenaraiTugas');
+            tbody.innerHTML = '';
+
+            if (memoriSenaraiKes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-row">Tiada kes didaftarkan setakat ini.</td></tr>`;
+                return;
+            }
+
+            memoriSenaraiKes.forEach((kes, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><a href="#" onclick="bukaKesDidaftar(${index})" style="color: var(--primary-blue); font-weight: 700; text-decoration: underline; cursor: pointer;">${kes.noKes}</a></td>
+                    <td><strong style="color: var(--text-main);">${kes.namaPengadu}</strong><br><span style="font-size: 0.85em; color: var(--text-muted);">${kes.jenisAduan}</span></td>
+                    <td><strong style="color: var(--text-main);">${kes.namaDefendan}</strong></td>
+                    <td style="color: var(--text-muted); font-weight: 500;">${kes.tarikh}</td>
+                    <td style="text-align: center; display: flex; gap: 5px; justify-content: center;">
+                        <button class="btn-edit-tbl" onclick="bukaKesDidaftar(${index})">📂 Buka</button>
+                        <button class="btn-delete-tbl" onclick="hapusKesDidaftar(${index})">🗑️ Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function hapusKesDidaftar(index) {
+            if (confirm("Adakah anda pasti mahu memadam kes ini dari senarai tugasan?")) {
+                memoriSenaraiKes.splice(index, 1);
+                renderSenaraiTugas();
+            }
+        }
+
+        function bukaKesDidaftar(index) {
+            const kes = memoriSenaraiKes[index];
+            document.getElementById('noKes').value = kes.noKes;
+            document.getElementById('namaPengadu').value = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
+            
+            // Buang tag HTML jika ada sebelum masukkan dalam input
+            let defAsal = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
+            if (defAsal.includes('<br>')) {
+                defAsal = defAsal.split('<br>')[0]; 
+            }
+            document.getElementById('namaDefendan').value = defAsal;
+            
+            if (kes.jenisAduan === 'Berkumpulan') {
+                document.getElementById('aduanBerkumpulan').checked = true;
+            } else {
+                document.getElementById('aduanIndividu').checked = true;
+            }
+            toggleAduan();
+            
+            tukarView('daftar');
+            pergiKeTabBorang('tab1');
+            
+            // Magik: Kunci borang terus lepas dibuka!
+            setStatusBorang(true);
+        }
+
+        function pergiKeTabBorang(tabId) {
+            if (tabId === 'tab2') {
+                janaKenyataanAwal();
+            }
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if(tabId === 'tab1') tabs[0].classList.add('active');
+            if(tabId === 'tab2') tabs[1].classList.add('active');
+            if(tabId === 'tab3') tabs[2].classList.add('active');
+            
+            document.getElementById('tab1').style.display = 'none';
+            document.getElementById('tab2').style.display = 'none';
+            document.getElementById('tab3').style.display = 'none';
+            
+            document.getElementById(tabId).style.display = 'grid';
+            window.scrollTo(0, 0); 
+        }
+
+        function bukaTab(tabId, elemenTab) {
+            if (tabId === 'tab2') {
+                janaKenyataanAwal();
+            }
+
+            document.getElementById('tab1').style.display = 'none';
+            document.getElementById('tab2').style.display = 'none';
+            document.getElementById('tab3').style.display = 'none';
+            
+            const senaraiTab = document.querySelectorAll('.tab');
+            senaraiTab.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabId).style.display = 'grid'; 
+            elemenTab.classList.add('active');
+        }
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#dbeafe';
+            dropZone.style.borderColor = 'var(--primary-hover)';
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.backgroundColor = '#eff6ff';
+            dropZone.style.borderColor = 'var(--primary-blue)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#eff6ff';
+            dropZone.style.borderColor = 'var(--primary-blue)';
+            urusFail(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', function() {
+            urusFail(this.files);
+        });
+
+        function urusFail(files) {
+            Array.from(files).forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                let saiz = (file.size / 1024).toFixed(2) + " KB";
+                if (file.size > 1024 * 1024) { saiz = (file.size / (1024 * 1024)).toFixed(2) + " MB"; }
+
+                fileItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-size: 1.8em;">📄</span>
+                        <div>
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 0.95em;">${file.name}</div>
+                            <div style="font-size: 0.8em; color: var(--text-muted);">${saiz}</div>
+                        </div>
+                    </div>
+                    <button style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2em; padding: 5px;" 
+                            onclick="if(confirm('Hapus fail ini?')) this.parentElement.remove()" title="Hapus Fail">🗑️</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+            fileInput.value = ""; 
+        }
+
+        const senaraiTuntutanPekerja = [
+            "Baki Gaji", "Baki Gaji Minimum", "Bayaran Balik Potongan Gaji", "Elaun", 
+            "Elaun / Faedah Bersalin", "Faedah-Faedah Penamatan dan Pembentian Kerja", 
+            "Gaji Cuti Hari Kelepasan", "Gaji Cuti Hospitalitasi", "Gaji Cuti Paterniti", 
+            "Gaji Cuti Sakit", "Gaji Cuti Tahunan", "Gaji Ganti Cuti Tahunan", 
+            "Gaji Ganti Notis", "Gaji Kerja Cuti Kelepasan", "Gaji Kerja Hari Rehat", 
+            "Gaji Kerja Lebih Masa Pada Hari Cuti Kelepasan", "Gaji Kerja Lebih Masa Pada Hari Biasa", 
+            "Gaji Kerja Lebih Masa Pada Hari Cuti Rehat", "Lain-lain"
+        ];
+        
+        const senaraiTuntutanMajikan = [
+            "Gaji Ganti Notis", "Lain-lain"
+        ];
+
+        let memoriTuntutan = []; 
+
+        function formatDuit(input) {
+            let val = input.value.replace(/,/g, ''); 
+            if (val !== "" && !isNaN(val)) {
+                input.value = Number(val).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+
+        function unformatDuit(input) {
+            input.value = input.value.replace(/,/g, ''); 
+        }
+
+        function bukaModalTuntutan(indexEdit = -1) {
+            document.getElementById('modalTuntutan').style.display = 'flex';
+            
+            const isMajikan = document.getElementById('majikan').checked;
+            const dropdown = document.getElementById('jenisTuntutan');
+            
+            dropdown.innerHTML = '<option value="">-Sila Pilih-</option>';
+            const senaraiPilihan = isMajikan ? senaraiTuntutanMajikan : senaraiTuntutanPekerja;
+            
+            senaraiPilihan.forEach(item => {
+                dropdown.innerHTML += `<option value="${item}">${item}</option>`;
+            });
+            
+            if(indexEdit > -1) {
+                document.getElementById('tajukModal').innerHTML = "Kemaskini Tuntutan";
+                document.getElementById('jenisTuntutan').value = memoriTuntutan[indexEdit].jenis;
+                document.getElementById('keteranganTuntutan').value = memoriTuntutan[indexEdit].keterangan;
+                
+                const jumlahEdit = memoriTuntutan[indexEdit].jumlah;
+                document.getElementById('jumlahTuntutan').value = Number(jumlahEdit).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                
+                document.getElementById('indexTuntutanEdit').value = indexEdit;
+            } else {
+                document.getElementById('tajukModal').innerHTML = "Tambah Tuntutan";
+                document.getElementById('jenisTuntutan').value = "";
+                document.getElementById('keteranganTuntutan').value = "";
+                document.getElementById('jumlahTuntutan').value = "";
+                document.getElementById('indexTuntutanEdit').value = "-1";
+            }
+        }
+
+        function tutupModalTuntutan() {
+            document.getElementById('modalTuntutan').style.display = 'none';
+        }
+
+        function simpanTuntutan() {
+            const jenis = document.getElementById('jenisTuntutan').value;
+            const keterangan = document.getElementById('keteranganTuntutan').value;
+            let jumlah = document.getElementById('jumlahTuntutan').value.replace(/,/g, ''); 
+            const index = parseInt(document.getElementById('indexTuntutanEdit').value);
+
+            if (jenis === "" || keterangan.trim() === "" || jumlah.trim() === "" || isNaN(jumlah)) {
+                alert("Sila lengkapkan Jenis, Keterangan, dan pastikan Jumlah Tuntutan adalah nombor.");
+                return;
+            }
+
+            if (index > -1) {
+                memoriTuntutan[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah };
+            } else {
+                memoriTuntutan.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah });
+            }
+
+            tutupModalTuntutan();
+            renderJadualTuntutan();
+        }
+
+        function hapusTuntutan(index) {
+            if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) {
+                memoriTuntutan.splice(index, 1); 
+                renderJadualTuntutan();
+            }
+        }
+
+        function renderJadualTuntutan() {
+            const tbody = document.querySelector("#jadualTuntutan tbody");
+            tbody.innerHTML = ""; 
+
+            if (memoriTuntutan.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`;
+                return;
+            }
+
+            memoriTuntutan.forEach((item, index) => {
+                const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${item.jenis}</strong></td>
+                    <td>${item.keterangan}</td>
+                    <td>RM ${jumlahCantik}</td>
+                    <td><button class="btn-edit-tbl" onclick="bukaModalTuntutan(${index})">✏️ Edit</button></td>
+                    <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index})">🗑️ Hapus</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleMaklumatPerkhidmatan() {
+            const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
+            const labelTogol = document.getElementById('labelTogolPerkhidmatan');
+            
+            if (kandungan.style.display === 'none') {
+                kandungan.style.display = 'block';
+                labelTogol.innerHTML = '▲ Sembunyi';
+                labelTogol.style.backgroundColor = '#eff6ff';
+                labelTogol.style.color = 'var(--primary-blue)';
+            } else {
+                kandungan.style.display = 'none';
+                labelTogol.innerHTML = '▼ Buka';
+                labelTogol.style.backgroundColor = '#f1f5f9';
+                labelTogol.style.color = 'var(--text-muted)';
+            }
+        }
+
+        function toggleElaun() {
+            const radioTerpilih = document.querySelector('input[name="adaElaun"]:checked');
+            if(!radioTerpilih) return;
+
+            const isAdaElaun = radioTerpilih.value === 'Ya';
+            const ruanganElaunWrapper = document.getElementById('ruanganElaunWrapper');
+            const btnTambahElaun = document.getElementById('btnTambahElaun');
+            
+            if (isAdaElaun) {
+                ruanganElaunWrapper.style.display = 'grid'; 
+                btnTambahElaun.style.display = 'inline-block'; 
+                if (document.getElementById('senaraiElaun').children.length === 0) {
+                    tambahMedanElaun();
+                }
+            } else {
+                ruanganElaunWrapper.style.display = 'none';
+                btnTambahElaun.style.display = 'none'; 
+                document.getElementById('senaraiElaun').innerHTML = ''; 
+            }
+        }
+
+        function tambahMedanElaun() {
+            const container = document.getElementById('senaraiElaun');
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.gap = '10px';
+            div.style.marginBottom = '10px';
+            div.style.alignItems = 'center';
+            div.style.flexWrap = 'wrap';
+
+            div.innerHTML = `
+                <div style="flex: 2.5; min-width: 150px;">
+                    <input type="text" placeholder="Jenis Elaun (Cth: Kedatangan)" class="input-elaun-jenis" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9em; font-family: inherit; box-sizing: border-box;">
+                </div>
+                <div style="position: relative; flex: 1; min-width: 120px;">
+                    <span style="position: absolute; left: 12px; top: 10px; color: var(--text-muted); font-weight: 600;">RM</span>
+                    <input type="text" class="input-elaun-jumlah" style="padding-left: 45px; width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding-top: 10px; padding-bottom: 10px; font-size: 0.9em; font-family: inherit; box-sizing: border-box;" placeholder="Jumlah" 
+                           oninput="this.value = this.value.replace(/[^0-9.,]/g, '')" onfocus="unformatDuit(this)" onblur="formatDuit(this)">
+                </div>
+                <button type="button" style="background: var(--danger); color: white; border: none; border-radius: 6px; padding: 10px 12px; cursor: pointer; font-size: 0.9em; flex-shrink: 0;" onclick="this.parentElement.remove()" title="Hapus Elaun">✖</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function toggleWaktuKerja() {
+            const radioTerpilih = document.querySelector('input[name="jenisWaktu"]:checked');
+            if(!radioTerpilih) return;
+            
+            const isTetap = radioTerpilih.value === 'Tetap';
+            document.getElementById('ruanganWaktuTetap').style.display = isTetap ? 'flex' : 'none';
+            document.getElementById('ruanganWaktuTidakTetap').style.display = isTetap ? 'none' : 'block';
+        }
+
+        function toggleHariKerja() {
+            const radioTerpilih = document.querySelector('input[name="jenisHari"]:checked');
+            if(!radioTerpilih) return;
+            
+            const isTetap = radioTerpilih.value === 'Tetap';
+            document.getElementById('ruanganHariTetap').style.display = isTetap ? 'flex' : 'none';
+            document.getElementById('ruanganHariTidakTetap').style.display = isTetap ? 'none' : 'block';
+        }
+
+        function tukarPeranan() {
+            const suis = document.getElementById('majikan');
+            const kad1 = document.getElementById('kad1');
+            const kad2 = document.getElementById('kad2');
+            const tajuk1 = document.getElementById('tajukKad1');
+            const tajuk2 = document.getElementById('tajukKad2');
+            
+            const blokSuisDanWakil = document.getElementById('blokSuisDanWakil');
+            const tempatKiri = document.getElementById('tempatSuis1');
+            const tempatKanan = document.getElementById('tempatSuis2');
+
+            const ruanganAduan = document.getElementById('ruanganAduan');
+            const ruanganJantina = document.getElementById('ruanganJantina');
+            const ruanganAlamatKerja = document.getElementById('ruanganAlamatKerjaLengkap');
+            const ruanganWakil = document.getElementById('ruanganWakilMajikan');
+            const tempatKerja1 = document.getElementById('tempatAlamatKerja1');
+            const tempatKerja2 = document.getElementById('tempatAlamatKerja2');
+            const labelSalin = document.getElementById('labelSalinAlamat');
+            const notaSalin = document.getElementById('notaSalinAlamat');
+            
+            const seksyenPekerja = document.getElementById('seksyenPekerja');
+            const seksyenMajikan = document.getElementById('seksyenMajikan');
+            const ruanganGajiMinima = document.getElementById('ruanganGajiMinima');
+
+            if (suis.checked) {
+                kad1.style.order = "2"; 
+                kad2.style.order = "1"; 
+                tajuk1.innerHTML = "Maklumat Defendan (Pekerja)";
+                tajuk2.innerHTML = "Maklumat Pengadu (Majikan)";
+                tempatKanan.appendChild(blokSuisDanWakil);
+                
+                ruanganAduan.style.display = "none";
+                ruanganJantina.style.display = "none";
+                ruanganWakil.style.display = "block"; 
+                
+                tempatKerja1.appendChild(ruanganAlamatKerja);
+                labelSalin.innerHTML = document.getElementById('salinAlamat').checked ? 'Alamat tempat pekerjaan seperti alamat pengadu' : 'Salin alamat pengadu';
+                notaSalin.innerHTML = '*(jika alamat tempat pekerjaan sama dengan alamat pengadu)';
+
+                if(seksyenPekerja && seksyenMajikan) {
+                    seksyenPekerja.style.display = "none";
+                    seksyenMajikan.style.display = "block";
+                }
+                if(ruanganGajiMinima) ruanganGajiMinima.style.display = "none";
+                
+            } else {
+                kad1.style.order = "1"; 
+                kad2.style.order = "2"; 
+                tajuk1.innerHTML = "Maklumat Pengadu";
+                tajuk2.innerHTML = "Maklumat Defendan";
+                tempatKiri.appendChild(blokSuisDanWakil);
+                
+                ruanganAduan.style.display = "grid"; 
+                ruanganJantina.style.display = "grid";
+                ruanganWakil.style.display = "none"; 
+                
+                tempatKerja2.appendChild(ruanganAlamatKerja);
+                labelSalin.innerHTML = document.getElementById('salinAlamat').checked ? 'Alamat tempat pekerjaan seperti alamat defendan' : 'Salin alamat defendan';
+                notaSalin.innerHTML = '*(jika alamat tempat pekerjaan sama dengan alamat defendan)';
+
+                if(seksyenPekerja && seksyenMajikan) {
+                    seksyenPekerja.style.display = "grid";
+                    seksyenMajikan.style.display = "none";
+                }
+                if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
+            }
+        }
+
+        function kawalJenisDaftarPengadu() {
+            const jenis = document.getElementById('jenisDaftarPengadu').value;
+            const labelNo = document.getElementById('labelNoPendPengadu');
+            const inputNo = document.getElementById('noPendPengadu');
+            const remark = document.getElementById('remarkNoPendPengadu');
+            const warganegara = document.getElementById('warganegaraPengadu');
+            const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+
+            if(ruanganLain) { ruanganLain.style.display = 'none'; }
+
+            if (jenis === 'MyKad') {
+                labelNo.innerHTML = 'No. MyKad <span>*</span>';
+                inputNo.placeholder = "Contoh: 880101-01-1234";
+                inputNo.maxLength = 14;
+                remark.innerText = "Masukkan No. Kad Pengenalan";
+                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+            } else if (jenis === 'Pasport') {
+                labelNo.innerHTML = 'No. Pasport <span>*</span>';
+                inputNo.placeholder = "Masukkan No. Pasport";
+                inputNo.maxLength = 20;
+                remark.innerText = "Masukkan No. Pasport";
+                warganegara.innerHTML = `
+                    <option value="">-Sila Pilih-</option>
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Bangladesh">Bangladesh</option>
+                    <option value="Nepal">Nepal</option>
+                    <option value="India">India</option>
+                    <option value="Myanmar">Myanmar</option>
+                    <option value="Filipina">Filipina</option>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                `;
+            } else {
+                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
+                inputNo.placeholder = "Sila pilih jenis pendaftaran dahulu";
+                remark.innerText = "";
+                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+            }
+        }
+
+        function kawalWarganegara() {
+            const warganegara = document.getElementById('warganegaraPengadu').value;
+            const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+            if (warganegara === 'Lain-lain') {
+                ruanganLain.style.display = 'block';
+            } else {
+                ruanganLain.style.display = 'none';
+                document.getElementById('warganegaraLain').value = ''; 
+            }
+        }
+
+        function kawalJenisDaftarDefendan() {
+            const jenis = document.getElementById('jenisDaftarDefendan').value;
+            const inputNo = document.getElementById('noPendDefendan');
+            const remark = document.getElementById('remarkNoPendDefendan');
+            const labelNama = document.getElementById('labelNamaDefendan'); 
+            const ruanganPemilik = document.getElementById('ruanganPemilikEnterprise');
+
+            if (jenis === 'MyKad') {
+                inputNo.placeholder = "Contoh: 880101-01-1234";
+                inputNo.maxLength = 14;
+                remark.innerText = "Masukkan No. Kad Pengenalan";
+                labelNama.innerHTML = 'Nama <span>*</span>'; 
+                ruanganPemilik.style.display = 'none';
+                document.getElementById('namaPemilikDefendan').value = '';
+                document.getElementById('kpPemilikDefendan').value = '';
+            } else if (jenis.includes('SSM') || jenis === 'Lain-lain') {
+                inputNo.placeholder = "Masukkan No. Pendaftaran";
+                inputNo.maxLength = 20;
+                remark.innerText = "Masukkan No. Pendaftaran";
+                labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
+                
+                if (jenis === 'SSM (Enterprise)') {
+                    ruanganPemilik.style.display = 'block';
+                } else {
+                    ruanganPemilik.style.display = 'none';
+                    document.getElementById('namaPemilikDefendan').value = '';
+                    document.getElementById('kpPemilikDefendan').value = '';
+                }
+            } else {
+                inputNo.placeholder = "Sila pilih jenis pendaftaran";
+                remark.innerText = "";
+                labelNama.innerHTML = 'Nama <span>*</span>'; 
+                ruanganPemilik.style.display = 'none';
+                document.getElementById('namaPemilikDefendan').value = '';
+                document.getElementById('kpPemilikDefendan').value = '';
+            }
+        }
+
+        function formatMyKadPemilik(inputElement) {
+            let val = inputElement.value.replace(/[^0-9]/g, ''); 
+            let formatted = val;
+            if (val.length > 6) { formatted = val.substring(0, 6) + '-' + val.substring(6); }
+            if (val.length > 8) { formatted = formatted.substring(0, 9) + '-' + formatted.substring(9, 13); }
+            inputElement.value = formatted;
+        }
+
+        function formatMyKad(inputElement, dropdownId) {
+            const jenis = document.getElementById(dropdownId).value;
+            if (jenis === 'MyKad') {
+                let val = inputElement.value.replace(/[^0-9]/g, ''); 
+                let formatted = val;
+                if (val.length > 6) { formatted = val.substring(0, 6) + '-' + val.substring(6); }
+                if (val.length > 8) { formatted = formatted.substring(0, 9) + '-' + formatted.substring(9, 13); }
+                inputElement.value = formatted;
+
+                if (val.length === 12 && dropdownId === 'jenisDaftarPengadu') {
+                    let lastDigit = parseInt(val.substring(11, 12));
+                    if (lastDigit % 2 !== 0) {
+                        document.getElementById('jantinaLelaki').checked = true;
+                    } else {
+                        document.getElementById('jantinaPerempuan').checked = true;
+                    }
+                }
+            }
+        }
+
+        function kawalSektor() {
+            const sektor = document.getElementById('sektorDefendan').value;
+            const ruanganLain = document.getElementById('ruanganSektorLain');
+            if (sektor === 'Lain-lain') {
+                ruanganLain.style.display = 'block';
+            } else {
+                ruanganLain.style.display = 'none';
+                document.getElementById('sektorLain').value = '';
+            }
+        }
+
+        async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
+            const poskod = document.getElementById(idPoskod).value;
+            const negeriDropdown = document.getElementById(idNegeri);
+            const bandarField = document.getElementById(idBandar);
+
+            const senaraiNegeri = `
+                <option value="">-Sila Pilih Secara Manual-</option>
+                <option value="Johor">Johor</option>
+                <option value="Kedah">Kedah</option>
+                <option value="Kelantan">Kelantan</option>
+                <option value="Melaka">Melaka</option>
+                <option value="Negeri Sembilan">Negeri Sembilan</option>
+                <option value="Pahang">Pahang</option>
+                <option value="Perak">Perak</option>
+                <option value="Perlis">Perlis</option>
+                <option value="Pulau Pinang">Pulau Pinang</option>
+                <option value="Sabah">Sabah</option>
+                <option value="Sarawak">Sarawak</option>
+                <option value="Selangor">Selangor</option>
+                <option value="Terengganu">Terengganu</option>
+                <option value="W.P Kuala Lumpur">W.P Kuala Lumpur</option>
+                <option value="W.P Labuan">W.P Labuan</option>
+                <option value="W.P Putrajaya">W.P Putrajaya</option>
+            `;
+
+            if (poskod.length === 5) {
+                try {
+                    negeriDropdown.innerHTML = `<option value="">Mencari...</option>`;
+                    if(bandarField.tagName === 'SELECT') { bandarField.innerHTML = `<option value="">Mencari...</option>`; }
+                    else { bandarField.value = "Mencari..."; }
+
+                    const response = await fetch(`https://api.zippopotam.us/MY/${poskod}`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        let negeri = data.places[0].state;
+                        const bandar = data.places[0]['place name'];
+
+                        if(negeri === "Federal Territory of Kuala Lumpur") negeri = "W.P Kuala Lumpur";
+                        if(negeri === "Federal Territory of Putrajaya") negeri = "W.P Putrajaya";
+                        if(negeri === "Federal Territory of Labuan") negeri = "W.P Labuan";
+
+                        negeriDropdown.innerHTML = `<option value="${negeri}" selected>${negeri}</option>`;
+                        
+                        if(bandarField.tagName === 'SELECT') {
+                            bandarField.innerHTML = `<option value="${bandar}" selected>${bandar}</option>`;
+                        } else {
+                            bandarField.value = bandar;
+                        }
+                    } else {
+                        alert("⚠️ Poskod tidak ditemui dalam sistem (Mungkin poskod baharu).\n\nSila pastikan poskod dimasukkan dengan betul. Jika ia betul, sila pilih Negeri dan taip nama Bandar anda secara manual.");
+                        negeriDropdown.innerHTML = senaraiNegeri;
+                        if(bandarField.tagName === 'SELECT') {
+                            const inputManual = document.createElement('input');
+                            inputManual.type = 'text';
+                            inputManual.id = idBandar;
+                            inputManual.placeholder = "Sila taip nama bandar";
+                            bandarField.parentNode.replaceChild(inputManual, bandarField);
+                        } else {
+                            bandarField.value = "";
+                            bandarField.placeholder = "Sila taip nama bandar";
+                        }
+                    }
+                } catch (error) {
+                    alert("Gangguan capaian internet. Sila pilih secara manual.");
+                    negeriDropdown.innerHTML = senaraiNegeri;
+                }
+            } 
+            else if (poskod.length < 5) {
+                negeriDropdown.innerHTML = `<option value="">-Sila Pilih-</option>`;
+                if(bandarField.tagName === 'SELECT') { bandarField.innerHTML = `<option value="">-Sila Pilih-</option>`; }
+                else { bandarField.value = ""; }
+            }
+        }
+
+        function toggleAduan() {
+            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+            const ruanganBilangan = document.getElementById('ruanganBilanganPengadu');
+            const labelNama = document.getElementById('labelNamaPengadu');
+
+            if (aduanBerkumpulan) {
+                ruanganBilangan.style.display = 'grid'; 
+                labelNama.innerHTML = 'Ketua Pengadu <span>*</span>';
+            } else {
+                ruanganBilangan.style.display = 'none';
+                labelNama.innerHTML = 'Nama <span>*</span>';
+            }
+        }
+
+        function salinAlamatDefendan() {
+            const disalin = document.getElementById('salinAlamat').checked;
+            const ruanganKerja = document.getElementById('ruanganAlamatKerja');
+            const labelSalin = document.getElementById('labelSalinAlamat');
+            const isMajikan = document.getElementById('majikan').checked;
+            
+            if (disalin) {
+                ruanganKerja.style.display = 'none';
+                labelSalin.innerHTML = isMajikan ? 'Alamat tempat pekerjaan seperti alamat pengadu' : 'Alamat tempat pekerjaan seperti alamat defendan';
+                
+                document.getElementById('alamatKerja1').value = document.getElementById('alamatDefendan1').value;
+                document.getElementById('alamatKerja2').value = document.getElementById('alamatDefendan2').value;
+                document.getElementById('alamatKerja3').value = document.getElementById('alamatDefendan3').value;
+                document.getElementById('poskodKerja').value = document.getElementById('poskodDefendan').value;
+                document.getElementById('negeriKerja').value = document.getElementById('negeriDefendan').value;
+                document.getElementById('bandarKerja').value = document.getElementById('bandarDefendan').value;
+            } else {
+                ruanganKerja.style.display = 'block';
+                labelSalin.innerHTML = isMajikan ? 'Salin alamat pengadu' : 'Salin alamat defendan';
+                
+                document.getElementById('alamatKerja1').value = '';
+                document.getElementById('alamatKerja2').value = '';
+                document.getElementById('alamatKerja3').value = '';
+                document.getElementById('poskodKerja').value = '';
+                document.getElementById('negeriKerja').value = '';
+                document.getElementById('bandarKerja').value = '';
+            }
+        }
+
+        function sediaUntukCetak() {
+            const noKes = document.getElementById('noKes')?.value || '-';
+            const isMajikan = document.getElementById('majikan')?.checked;
+            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+            const bilanganPengadu = aduanBerkumpulan ? (document.getElementById('bilanganPengadu')?.value || '-') : '1';
+            
+            const namaPengadu = document.getElementById('namaPengadu')?.value || '-';
+            const kpPengadu = document.getElementById('noPendPengadu')?.value || '-';
+            const jantinaPengadu = document.querySelector('input[name="jantinaPengadu"]:checked')?.value || '-';
+            const telPengadu = document.getElementById('telPengadu')?.value || '-';
+            const hpPengadu = document.getElementById('hpPengadu')?.value || '-';
+            const gajiPengadu = document.getElementById('gajiPokokPengadu')?.value || '-';
+            
+            const alamatP1 = document.getElementById('alamatPengadu1')?.value || '';
+            const alamatP2 = document.getElementById('alamatPengadu2')?.value || '';
+            const alamatP3 = document.getElementById('alamatPengadu3')?.value || '';
+            const poskodP = document.getElementById('poskodPengadu')?.value || '';
+            const bandarP = document.getElementById('bandarPengadu')?.value || '';
+            const negeriP = document.getElementById('negeriPengadu')?.value || '';
+            let alamatPenuhPengadu = [alamatP1, alamatP2, alamatP3].filter(Boolean).join(', ');
+            if(poskodP || bandarP || negeriP) alamatPenuhPengadu += `<br>${poskodP} ${bandarP}, ${negeriP}`;
+            if(!alamatPenuhPengadu) alamatPenuhPengadu = '-';
+
+            let namaDefendanPDF = document.getElementById('namaDefendan')?.value || '-';
+            const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
+            if(jenisDefCetak === 'SSM (Enterprise)') {
+                 const pemilikCetak = document.getElementById('namaPemilikDefendan')?.value || '-';
+                 const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '-';
+                 namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak}, MyKad: ${kpPemilikCetak})</span>`;
+            }
+
+            const kpDefendan = document.getElementById('noPendDefendan')?.value || '-';
+            const telDefendan = document.getElementById('telDefendan')?.value || '-';
+            const hpDefendan = document.getElementById('hpDefendan')?.value || '-';
+            const sektorDefendan = document.getElementById('sektorDefendan')?.value || '-';
+            
+            const alamatD1 = document.getElementById('alamatDefendan1')?.value || '';
+            const alamatD2 = document.getElementById('alamatDefendan2')?.value || '';
+            const alamatD3 = document.getElementById('alamatDefendan3')?.value || '';
+            const poskodD = document.getElementById('poskodDefendan')?.value || '';
+            const bandarD = document.getElementById('bandarDefendan')?.value || '';
+            const negeriD = document.getElementById('negeriDefendan')?.value || '';
+            let alamatPenuhDefendan = [alamatD1, alamatD2, alamatD3].filter(Boolean).join(', ');
+            if(poskodD || bandarD || negeriD) alamatPenuhDefendan += `<br>${poskodD} ${bandarD}, ${negeriD}`;
+            if(!alamatPenuhDefendan) alamatPenuhDefendan = '-';
+
+            const kontrak = document.querySelector('input[name="adaKontrak"]:checked')?.value || '-';
+            const penyata = document.querySelector('input[name="adaPenyata"]:checked')?.value || '-';
+            const adaElaun = document.querySelector('input[name="adaElaun"]:checked')?.value || '-';
+            
+            let butiranElaun = "-";
+            if (adaElaun === 'Ya') {
+                const senaraiJenisElaun = document.querySelectorAll('.input-elaun-jenis');
+                const senaraiJumlahElaun = document.querySelectorAll('.input-elaun-jumlah');
+                let listElaun = [];
+                for(let i=0; i<senaraiJenisElaun.length; i++) {
+                    if(senaraiJenisElaun[i].value) listElaun.push(`${senaraiJenisElaun[i].value} (RM ${senaraiJumlahElaun[i].value || '0'})`);
+                }
+                if(listElaun.length > 0) butiranElaun = listElaun.join('<br>');
+            }
+
+            const jenisWaktu = document.querySelector('input[name="jenisWaktu"]:checked')?.value;
+            let infoWaktu = "-";
+            if (jenisWaktu === "Tetap") {
+                const mula = document.getElementById('waktuMula')?.value || '';
+                const tamat = document.getElementById('waktuTamat')?.value || '';
+                infoWaktu = (mula && tamat) ? `${mula} hingga ${tamat}` : 'Tidak dilengkapkan';
+            } else if (jenisWaktu === "Tidak Tetap") {
+                infoWaktu = document.getElementById('teksWaktuTidakTetap')?.value || 'Tidak Tetap';
+            }
+
+            const jenisHari = document.querySelector('input[name="jenisHari"]:checked')?.value;
+            let infoHari = "-";
+            if (jenisHari === "Tetap") {
+                const mulaH = document.getElementById('hariMula')?.value || '';
+                const tamatH = document.getElementById('hariTamat')?.value || '';
+                infoHari = (mulaH && tamatH) ? `${mulaH} hingga ${tamatH}` : 'Tidak dilengkapkan';
+            } else if (jenisHari === "Tidak Tetap") {
+                infoHari = document.getElementById('teksHariTidakTetap')?.value || 'Tidak Tetap';
+            }
+
+            let htmlJadualTuntutan = "";
+            let jumlahKeseluruhan = 0;
+            if (memoriTuntutan.length === 0) {
+                htmlJadualTuntutan = `<tr><td colspan="3" class="num">Tiada tuntutan direkodkan.</td></tr>`;
+            } else {
+                memoriTuntutan.forEach((item, index) => {
+                    const jumlahNum = parseFloat(item.jumlah);
+                    jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum;
+                    htmlJadualTuntutan += `
+                        <tr>
+                            <td class="num">${index + 1}</td>
+                            <td><strong>${item.jenis}</strong><br><span style="font-size: 0.9em; color: #333;">${item.keterangan}</span></td>
+                            <td class="money">RM ${Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        </tr>
+                    `;
+                });
+                htmlJadualTuntutan += `
+                    <tr>
+                        <td colspan="2" style="text-align:right; font-weight:bold;">JUMLAH KESELURUHAN</td>
+                        <td class="money" style="font-weight:bold;">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                `;
+            }
+
+            const htmlDokumenRasmi = `
+                <div class="print-header">
+                    <div class="print-logo-placeholder">LOGO KERAJAAN MALAYSIA</div>
+                    <div class="print-title">JABATAN TENAGA KERJA SEMENANJUNG MALAYSIA (JTKSM)</div>
+                    <div class="print-subtitle">BORANG PENDAFTARAN KES BURUH</div>
+                </div>
+
+                <div class="print-nokes">RUJUKAN KES: ${noKes}</div>
+
+                <div class="print-section">A. MAKLUMAT PENGADU</div>
+                <table class="print-table">
+                    <tr><th>Jenis Aduan</th><td>${aduanBerkumpulan ? 'Berkumpulan' : 'Individu'} (${bilanganPengadu} Orang)</td></tr>
+                    <tr><th>Nama Pengadu</th><td>${namaPengadu}</td></tr>
+                    <tr><th>No. Kad Pengenalan / Pasport</th><td>${kpPengadu}</td></tr>
+                    <tr><th>Jantina</th><td>${jantinaPengadu}</td></tr>
+                    <tr><th>No. Telefon / H/p</th><td>Tel: ${telPengadu}<br>H/p: ${hpPengadu}</td></tr>
+                    <tr><th>Gaji Pokok</th><td>RM ${gajiPengadu}</td></tr>
+                    <tr><th>Alamat</th><td>${alamatPenuhPengadu}</td></tr>
+                </table>
+
+                <div class="print-section">B. MAKLUMAT DEFENDAN (MAJIKAN)</div>
+                <table class="print-table">
+                    <tr><th>Nama Majikan / Syarikat</th><td>${namaDefendanPDF}</td></tr>
+                    <tr><th>No. Pendaftaran (SSM/MYKAD)</th><td>${kpDefendan}</td></tr>
+                    <tr><th>Sektor Industri</th><td>${sektorDefendan}</td></tr>
+                    <tr><th>No. Telefon / H/p</th><td>Tel: ${telDefendan}<br>H/p: ${hpDefendan}</td></tr>
+                    <tr><th>Alamat Premis / Syarikat</th><td>${alamatPenuhDefendan}</td></tr>
+                </table>
+
+                <div class="print-section">C. MAKLUMAT PERKHIDMATAN PENGADU</div>
+                <table class="print-table">
+                    <tr><th>Diberi Kontrak Pekerjaan?</th><td>${kontrak}</td></tr>
+                    <tr><th>Penyata Gaji Diberikan?</th><td>${penyata}</td></tr>
+                    <tr><th>Penerimaan Elaun</th><td>${adaElaun === 'Ya' ? butiranElaun : 'Tidak'}</td></tr>
+                    <tr><th>Waktu Kerja</th><td>${infoWaktu}</td></tr>
+                    <tr><th>Hari Kerja Seminggu</th><td>${infoHari}</td></tr>
+                </table>
+
+                <div class="print-section">D. MAKLUMAT TUNTUTAN</div>
+                <table class="print-tbl-tuntutan">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Bil</th>
+                            <th style="width: 70%;">Jenis & Keterangan Tuntutan</th>
+                            <th style="width: 25%;">Jumlah (RM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${htmlJadualTuntutan}
+                    </tbody>
+                </table>
+
+                <div class="print-footer">
+                    <div class="print-sig-box">
+                        <div class="print-sig-line">Tandatangan / Cap Ibu Jari Pengadu</div>
+                        <div style="margin-top: 10px; text-align: left;">Nama: ${namaPengadu}<br>Tarikh: .......................................</div>
+                    </div>
+                    <div class="print-sig-box">
+                        <div class="print-sig-line">Cop Rasmi & Tandatangan Pegawai</div>
+                        <div style="margin-top: 10px; text-align: left;">Nama Pegawai:<br>Tarikh: .......................................</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('printArea').innerHTML = htmlDokumenRasmi;
+            window.print();
+        }
+    </script>
+</body>
+</html>
