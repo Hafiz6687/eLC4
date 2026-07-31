@@ -265,7 +265,6 @@
         }
         .btn-add:hover { background-color: var(--primary-hover); }
 
-        /* Magik Table 4 Penjuru Segi Empat (Buang Radius) */
         table { width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color); }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
         th { background-color: var(--card-header-bg); font-weight: 700; }
@@ -334,17 +333,17 @@
             
             #printArea { display: block !important; width: 100%; font-size: 11pt; line-height: 1.5; }
             
-            /* Magik Jadual Profesional: Border collapse untuk penjuru 4 segi bersambung penuh */
             .print-tbl-tuntutan { 
                 width: 100%; 
-                border-collapse: collapse; 
+                border-collapse: separate; 
+                border-spacing: 0;
                 font-size: 11pt; 
                 text-align: left; 
-                border: 1px solid #000 !important; 
+                border: 2px solid #000 !important; 
             }
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
                 border: none !important; 
-                padding: 2.0pt 8px; /* Magik padding 2.0pt */
+                padding: 2.0pt 8px; 
                 line-height: 1;     
             }
             .print-tbl-tuntutan th { 
@@ -556,10 +555,10 @@
                         <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriPengadu"><option value="">-Sila Pilih-</option></select></div></div>
                         <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarPengadu"><option value="">-Sila Pilih-</option></select></div></div>
                         
-                        <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telPengadu" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this)" maxlength="11"></div></div>
-                        <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpPengadu" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this)" maxlength="12"></div></div>
-                        
-                        <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelPengadu" style="width: 60%;" placeholder="Contoh: nama@email.com"></div></div>
+                        <!-- MAGIK Auto Muncul Maklumat Perkhidmatan jika diisi -->
+                        <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telPengadu" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this); semakBukaMaklumatPerkhidmatan();" maxlength="11"></div></div>
+                        <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpPengadu" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this); semakBukaMaklumatPerkhidmatan();" maxlength="12"></div></div>
+                        <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelPengadu" style="width: 60%;" placeholder="Contoh: nama@email.com" oninput="semakBukaMaklumatPerkhidmatan();"></div></div>
                         
                         <div id="tempatAlamatKerja1"></div>
 
@@ -571,17 +570,17 @@
                             </div>
                         </div>
                         
-                        <!-- MAKLUMAT PERKHIDMATAN -->
+                        <!-- MAKLUMAT PERKHIDMATAN (Tersembunyi secara lalai) -->
                         <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                         
                         <div style="margin-bottom: 20px;">
                             <div class="togol-header" onclick="toggleMaklumatPerkhidmatan()">
                                 <h4 style="color: var(--primary-blue); margin: 0; font-size: 1.1em;">Maklumat Perkhidmatan</h4>
-                                <span id="labelTogolPerkhidmatan" style="color: var(--primary-blue); font-size: 0.85em; font-weight: 600; background: #eff6ff; padding: 4px 12px; border-radius: 20px; border: 1px solid #bfdbfe;">▲ Sembunyi</span>
+                                <span id="labelTogolPerkhidmatan" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">▼ Buka</span>
                             </div>
                         </div>
 
-                        <div id="kandunganMaklumatPerkhidmatan">
+                        <div id="kandunganMaklumatPerkhidmatan" style="display: none;">
                             
                             <div class="form-group" style="align-items: center; margin-bottom: 15px;">
                                 <label style="margin-top: 0;">Tarikh Mula Kerja</label>
@@ -636,6 +635,7 @@
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
+                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -660,6 +660,7 @@
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
+                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -740,15 +741,16 @@
                                 <div class="form-group">
                                     <label></label>
                                     <div class="input-wrapper">
+                                        <!-- MAGIK ALAMAT BERBEZA (Lalai: Tersembunyi) -->
                                         <div style="display: flex; align-items: center; height: 30px; gap: 10px;">
-                                            <input type="checkbox" id="salinAlamat" onchange="salinAlamatDefendan()"> 
-                                            <label for="salinAlamat" id="labelSalinAlamat" style="width:auto; text-align:left; font-weight:500; margin:0;">Salin alamat defendan</label>
+                                            <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()"> 
+                                            <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
                                         </div>
-                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 24px; font-style: italic;">*(jika alamat tempat pekerjaan sama dengan alamat defendan)</p>
+                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 24px; font-style: italic;">*(tanda kotak di atas jika tempat pekerjaan berbeza)</p>
                                     </div>
                                 </div>
 
-                                <div id="ruanganAlamatKerja">
+                                <div id="ruanganAlamatKerja" style="display: none;">
                                     <div class="form-group">
                                         <label>Alamat Tempat Pekerjaan <span>*</span></label>
                                         <div class="input-wrapper">
@@ -948,6 +950,22 @@
             });
         });
 
+        // FUNGSI MAGIK: Buka auto Maklumat Perkhidmatan jika no tel/emel diisi
+        function semakBukaMaklumatPerkhidmatan() {
+            const tel = document.getElementById('telPengadu').value.trim();
+            const hp = document.getElementById('hpPengadu').value.trim();
+            const emel = document.getElementById('emelPengadu').value.trim();
+            const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
+            const labelTogol = document.getElementById('labelTogolPerkhidmatan');
+            
+            if ((tel !== '' || hp !== '' || emel !== '') && kandungan.style.display === 'none') {
+                kandungan.style.display = 'block';
+                labelTogol.innerHTML = '▲ Sembunyi';
+                labelTogol.style.backgroundColor = '#eff6ff';
+                labelTogol.style.color = 'var(--primary-blue)';
+            }
+        }
+
         // FUNGSI MAGIK: Huruf Besar Pangkal untuk satu huruf pertama ayat sahaja
         function hurufBesarAyatPertama(input) {
             let start = input.selectionStart;
@@ -1079,10 +1097,10 @@
                 }
 
                 let tempatKerja = '';
-                const disalin = document.getElementById('salinAlamat').checked;
+                const alamatBerbeza = document.getElementById('alamatBerbeza').checked;
                 const namaTK = document.getElementById('namaTempatKerja').value.trim();
                 
-                if (disalin) {
+                if (!alamatBerbeza) {
                     const a1 = document.getElementById('alamatDefendan1').value.trim();
                     const a2 = document.getElementById('alamatDefendan2').value.trim();
                     const a3 = document.getElementById('alamatDefendan3').value.trim();
@@ -1090,7 +1108,7 @@
                     const bdr = document.getElementById('bandarDefendan').value.trim();
                     const ngr = document.getElementById('negeriDefendan').value.trim();
                     
-                    let alamatArr = [namaTK, a1, a2, a3].filter(Boolean);
+                    let alamatArr = [namaTK || document.getElementById('namaDefendan').value.trim(), a1, a2, a3].filter(Boolean);
                     let posBdr = [pos, bdr].filter(Boolean).join(' ');
                     if(posBdr) alamatArr.push(posBdr);
                     if(ngr) alamatArr.push(ngr);
@@ -1109,7 +1127,9 @@
                     if(ngr) alamatArr.push(ngr);
                     tempatKerja = alamatArr.join(', ');
                 }
-                if (!tempatKerja) tempatKerja = '[Alamat tempat pekerjaan]';
+                if (!tempatKerja || tempatKerja === document.getElementById('namaDefendan').value.trim()) {
+                    tempatKerja = '[Alamat tempat pekerjaan]';
+                }
 
                 const p1 = `${ayatDefendan} bermula pada ${tarikhMula}. Jawatan terakhir saya sebagai ${jawatan}. Gaji pokok terakhir saya ialah RM${gaji}. ${ayatElaun} Tempat pekerjaan saya di ${tempatKerja}.`;
 
@@ -1124,7 +1144,6 @@
                 const rWaktu = document.querySelector('input[name="jenisWaktu"]:checked');
                 const jenisWaktu = rWaktu ? rWaktu.value : '';
                 
-                // Magik Waktu Kerja
                 const formatMasa = (masa) => {
                     if (!masa) return '';
                     let [jamStr, minit] = masa.split(':');
@@ -1503,6 +1522,26 @@
             document.getElementById('ruanganHariTidakTetap').style.display = isTetap ? 'none' : 'block';
         }
 
+        // FUNGSI MAGIK: Buka / Tutup Ruangan Alamat Kerja
+        function toggleAlamatKerja() {
+            const berbeza = document.getElementById('alamatBerbeza').checked;
+            const ruanganKerja = document.getElementById('ruanganAlamatKerja');
+            
+            if (berbeza) {
+                ruanganKerja.style.display = 'block';
+            } else {
+                ruanganKerja.style.display = 'none';
+                document.getElementById('namaTempatKerja').value = '';
+                document.getElementById('alamatKerja1').value = '';
+                document.getElementById('alamatKerja2').value = '';
+                document.getElementById('alamatKerja3').value = '';
+                document.getElementById('poskodKerja').value = '';
+                document.getElementById('negeriKerja').value = '';
+                document.getElementById('bandarKerja').value = '';
+            }
+            janaKenyataanAwal();
+        }
+
         function tukarPeranan() {
             const suis = document.getElementById('majikan');
             const kad1 = document.getElementById('kad1');
@@ -1520,8 +1559,10 @@
             const ruanganWakil = document.getElementById('ruanganWakilMajikan');
             const tempatKerja1 = document.getElementById('tempatAlamatKerja1');
             const tempatKerja2 = document.getElementById('tempatAlamatKerja2');
-            const labelSalin = document.getElementById('labelSalinAlamat');
-            const notaSalin = document.getElementById('notaSalinAlamat');
+            
+            // KEMASKINI MAGIK LABEL BERBEZA
+            const labelBerbeza = document.getElementById('labelAlamatBerbeza');
+            const notaBerbeza = document.getElementById('notaSalinAlamat');
             
             const seksyenPekerja = document.getElementById('seksyenPekerja');
             const seksyenMajikan = document.getElementById('seksyenMajikan');
@@ -1539,8 +1580,8 @@
                 ruanganWakil.style.display = "block"; 
                 
                 tempatKerja1.appendChild(ruanganAlamatKerja);
-                labelSalin.innerHTML = document.getElementById('salinAlamat').checked ? 'Alamat tempat pekerjaan seperti alamat pengadu' : 'Salin alamat pengadu';
-                notaSalin.innerHTML = '*(jika alamat tempat pekerjaan sama dengan alamat pengadu)';
+                labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat pengadu';
+                notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
 
                 if(seksyenPekerja && seksyenMajikan) {
                     seksyenPekerja.style.display = "none";
@@ -1560,8 +1601,8 @@
                 ruanganWakil.style.display = "none"; 
                 
                 tempatKerja2.appendChild(ruanganAlamatKerja);
-                labelSalin.innerHTML = document.getElementById('salinAlamat').checked ? 'Alamat tempat pekerjaan seperti alamat defendan' : 'Salin alamat defendan';
-                notaSalin.innerHTML = '*(jika alamat tempat pekerjaan sama dengan alamat defendan)';
+                labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat defendan';
+                notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
 
                 if(seksyenPekerja && seksyenMajikan) {
                     seksyenPekerja.style.display = "grid";
@@ -1785,37 +1826,6 @@
             } else {
                 ruanganBilangan.style.display = 'none';
                 labelNama.innerHTML = 'Nama <span>*</span>';
-            }
-        }
-
-        function salinAlamatDefendan() {
-            const disalin = document.getElementById('salinAlamat').checked;
-            const ruanganKerja = document.getElementById('ruanganAlamatKerja');
-            const labelSalin = document.getElementById('labelSalinAlamat');
-            const isMajikan = document.getElementById('majikan').checked;
-            
-            if (disalin) {
-                ruanganKerja.style.display = 'none';
-                labelSalin.innerHTML = isMajikan ? 'Alamat tempat pekerjaan seperti alamat pengadu' : 'Alamat tempat pekerjaan seperti alamat defendan';
-                
-                document.getElementById('namaTempatKerja').value = document.getElementById('namaDefendan').value;
-                document.getElementById('alamatKerja1').value = document.getElementById('alamatDefendan1').value;
-                document.getElementById('alamatKerja2').value = document.getElementById('alamatDefendan2').value;
-                document.getElementById('alamatKerja3').value = document.getElementById('alamatDefendan3').value;
-                document.getElementById('poskodKerja').value = document.getElementById('poskodDefendan').value;
-                document.getElementById('negeriKerja').value = document.getElementById('negeriDefendan').value;
-                document.getElementById('bandarKerja').value = document.getElementById('bandarDefendan').value;
-            } else {
-                ruanganKerja.style.display = 'block';
-                labelSalin.innerHTML = isMajikan ? 'Salin alamat pengadu' : 'Salin alamat defendan';
-                
-                document.getElementById('namaTempatKerja').value = '';
-                document.getElementById('alamatKerja1').value = '';
-                document.getElementById('alamatKerja2').value = '';
-                document.getElementById('alamatKerja3').value = '';
-                document.getElementById('poskodKerja').value = '';
-                document.getElementById('negeriKerja').value = '';
-                document.getElementById('bandarKerja').value = '';
             }
         }
 
