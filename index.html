@@ -377,7 +377,6 @@
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
-                <!-- Magik Capitalize Huruf Pertama Ayat Sahaja -->
                 <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
             </div>
             <div class="form-group" style="grid-template-columns: 1fr;">
@@ -398,7 +397,19 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
-        <div class="user-info"><strong>Mohamad Hafiz b Abu Bakar</strong></div>
+        
+        <!-- MAGIK PROFIL & GAMBAR -->
+        <div style="display: flex; gap: 8px; margin: 0 16px 16px; align-items: stretch;">
+            <label for="uploadProfil" style="flex-shrink: 0; width: 55px; background-color: #ffffff; border-radius: 12px; border: 1px dashed var(--primary-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative;" title="Klik untuk muat naik gambar profil">
+                <span id="ikonKamera" style="font-size: 1.5em; color: var(--text-muted);">👤</span>
+                <img id="gambarProfil" src="" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+                <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
+            </label>
+            <div class="user-info" style="margin: 0; flex-grow: 1; padding: 12px; display: flex; align-items: center; justify-content: center;">
+                <strong>Mohamad Hafiz b<br>Abu Bakar</strong>
+            </div>
+        </div>
+
         <ul class="nav-menu">
             <li id="navSenarai" onclick="tukarView('senarai')">SENARAI TUGASAN</li>
             <li id="navDaftar" class="active" onclick="tukarView('daftar')">PENDAFTARAN KES</li>
@@ -406,7 +417,22 @@
             <li>KALENDAR KES BURUH</li>
             <li>LAPORAN</li>
         </ul>
-        <div class="stats"><strong>STATISTIK</strong></div>
+        
+        <!-- MAGIK BLOK ALAMAT (Boleh Edit Tanpa Rupa Kotak Form) -->
+        <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
+            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong>
+(KLUANG LABOUR OFFICE)
+(KEMENTERIAN SUMBER MANUSIA)
+(MINISTRY OF HUMAN RESOURCES)
+JALAN PEJABAT KERAJAAN
+86000 KLUANG
+JOHOR DARUL TAKZIM
+<br>
+Telefon : | 07-772 1646/2646
+Telekerja : | 07-7737111
+E-mel : | jtkdkluang@mohr.gov.my
+Portal rasmi : | jtksm.mohr.gov.my</div>
+        </div>
     </aside>
 
     <main class="main-content">
@@ -555,7 +581,6 @@
                         <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriPengadu"><option value="">-Sila Pilih-</option></select></div></div>
                         <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarPengadu"><option value="">-Sila Pilih-</option></select></div></div>
                         
-                        <!-- MAGIK Auto Muncul Maklumat Perkhidmatan jika diisi -->
                         <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telPengadu" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this); semakBukaMaklumatPerkhidmatan();" maxlength="11"></div></div>
                         <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpPengadu" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this); semakBukaMaklumatPerkhidmatan();" maxlength="12"></div></div>
                         <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelPengadu" style="width: 60%;" placeholder="Contoh: nama@email.com" oninput="semakBukaMaklumatPerkhidmatan();"></div></div>
@@ -570,7 +595,7 @@
                             </div>
                         </div>
                         
-                        <!-- MAKLUMAT PERKHIDMATAN (Tersembunyi secara lalai) -->
+                        <!-- MAKLUMAT PERKHIDMATAN -->
                         <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                         
                         <div style="margin-bottom: 20px;">
@@ -635,7 +660,6 @@
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -660,7 +684,6 @@
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -741,7 +764,6 @@
                                 <div class="form-group">
                                     <label></label>
                                     <div class="input-wrapper">
-                                        <!-- MAGIK ALAMAT BERBEZA (Lalai: Tersembunyi) -->
                                         <div style="display: flex; align-items: center; height: 30px; gap: 10px;">
                                             <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()"> 
                                             <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
@@ -950,6 +972,20 @@
             });
         });
 
+        // FUNGSI MAGIK: Skrip baca fail dan papar profil gambar
+        function muatNaikGambarProfil(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('ikonKamera').style.display = 'none';
+                    const img = document.getElementById('gambarProfil');
+                    img.style.display = 'block';
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         // FUNGSI MAGIK: Buka auto Maklumat Perkhidmatan jika no tel/emel diisi
         function semakBukaMaklumatPerkhidmatan() {
             const tel = document.getElementById('telPengadu').value.trim();
@@ -980,7 +1016,6 @@
             }
         }
 
-        // FUNGSI MAGIK: Huruf Besar Selepas Titik (Sentence Case) untuk Kronologi
         function hurufBesarSelepasTitik(input) {
             let start = input.selectionStart;
             let end = input.selectionEnd;
@@ -992,7 +1027,6 @@
             }
         }
 
-        // FUNGSI MAGIK: Auto Resize Textarea
         function autoResize(el) {
             el.style.height = 'auto';
             el.style.height = el.scrollHeight + 'px';
@@ -1560,7 +1594,6 @@
             const tempatKerja1 = document.getElementById('tempatAlamatKerja1');
             const tempatKerja2 = document.getElementById('tempatAlamatKerja2');
             
-            // KEMASKINI MAGIK LABEL BERBEZA
             const labelBerbeza = document.getElementById('labelAlamatBerbeza');
             const notaBerbeza = document.getElementById('notaSalinAlamat');
             
