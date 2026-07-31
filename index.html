@@ -240,7 +240,6 @@
             box-sizing: border-box; font-family: inherit; font-size: 0.9em; color: var(--text-main); background-color: #f8fafc;
         }
         
-        /* Magik Input Read-Only Design */
         input:disabled, select:disabled, textarea:disabled {
             background-color: #e2e8f0;
             color: #64748b;
@@ -248,7 +247,6 @@
             border-color: #cbd5e1;
         }
 
-        /* Magik Auto-Expand Textarea */
         textarea.auto-expand {
             resize: none;
             overflow: hidden;
@@ -267,7 +265,8 @@
         }
         .btn-add:hover { background-color: var(--primary-hover); }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.9em; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        /* Magik Table 4 Penjuru Segi Empat (Buang Radius) */
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em; border: 1px solid var(--border-color); }
         th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
         th { background-color: var(--card-header-bg); font-weight: 700; }
         .empty-row { text-align: center !important; color: var(--text-muted); font-style: italic; }
@@ -335,18 +334,17 @@
             
             #printArea { display: block !important; width: 100%; font-size: 11pt; line-height: 1.5; }
             
-            /* Magik Jadual: Border luar jelas berhubung, padding di set kepada 1.5pt */
+            /* Magik Jadual Profesional: Border collapse untuk penjuru 4 segi bersambung penuh */
             .print-tbl-tuntutan { 
                 width: 100%; 
-                border-collapse: separate; /* Trik elak bucu putus dalam Chrome! */
-                border-spacing: 0;
+                border-collapse: collapse; 
                 font-size: 11pt; 
                 text-align: left; 
-                border: 2px solid #000 !important; 
+                border: 1px solid #000 !important; 
             }
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
-                border: none !important; /* Buang border dalam */
-                padding: 1.5pt 8px; /* Pad atas bawah 1.5pt */
+                border: none !important; 
+                padding: 2.0pt 8px; /* Magik padding 2.0pt */
                 line-height: 1;     
             }
             .print-tbl-tuntutan th { 
@@ -355,15 +353,13 @@
                 color-adjust: exact; 
                 font-weight: bold; 
                 text-align: center; 
-                border-bottom: 1px solid #000 !important; /* Garis bawah header sahaja */
+                border-bottom: 1px solid #000 !important; 
             }
-            /* Garis pemisah atas baris jumlah keseluruhan */
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
             }
             
             .print-tbl-tuntutan td.num { text-align: center; }
-            /* Alignment jumlah ke kiri */
             .print-tbl-tuntutan td.money { text-align: left; } 
         }
     </style>
@@ -382,8 +378,8 @@
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
-                <!-- Magik Capitalize Keterangan Tuntutan -->
-                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan Gaji Tertunggak Bagi Bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarPangkal(this)"></textarea>
+                <!-- Magik Capitalize Huruf Pertama Ayat Sahaja -->
+                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
             </div>
             <div class="form-group" style="grid-template-columns: 1fr;">
                 <label style="text-align: left;">Jumlah Tuntutan (RM) <span>*</span></label>
@@ -454,7 +450,6 @@
                 </div>
                 
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <!-- BUTANG KEMASKINI MAGIK: Ditekan untuk buka kunci borang -->
                     <button id="btnEditBorangKes" onclick="setStatusBorang(false)" style="display: none; background: #eab308; color: #713f12; border: none; padding: 6px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✏️ Kemaskini Borang</button>
                     
                     <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
@@ -641,7 +636,6 @@
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -666,7 +660,6 @@
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -759,7 +752,6 @@
                                     <div class="form-group">
                                         <label>Alamat Tempat Pekerjaan <span>*</span></label>
                                         <div class="input-wrapper">
-                                            <!-- Magik Tambah Nama Tempat Kerja -->
                                             <input type="text" id="namaTempatKerja" style="margin-bottom: 8px;" placeholder="Nama tempat pekerjaan">
                                             <input type="text" id="alamatKerja1" style="margin-bottom: 8px;" placeholder="Baris 1">
                                             <input type="text" id="alamatKerja2" style="margin-bottom: 8px;" placeholder="Baris 2">
@@ -835,7 +827,6 @@
                 </div>
 
                 <div class="card full-width">
-                    <!-- MAGIK: HEADER SUSUNAN ATAS BAWAH (COLUMN) UNTUK NOTA TAMBAHAN -->
                     <div class="card-header">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span>Kenyataan Pengadu / Kronologi Kes</span>
@@ -845,7 +836,6 @@
                     <div class="card-body">
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
                             <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span></label>
-                            <!-- Magik Kronologi Capitalize Selepas Titik -->
                             <textarea rows="10" id="kronologiKes" class="teks-justify" placeholder="Taipkan kronologi dan masalah berkaitan tuntutan di sini..." style="resize: vertical; padding: 15px; font-size: 0.95em; line-height: 1.6;" oninput="hurufBesarSelepasTitik(this)"></textarea>
                         </div>
                     </div>
@@ -866,7 +856,6 @@
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
                             <label style="text-align: left; font-size: 1em; margin-bottom: 15px;">Seksyen Tuntutan <span>*</span></label>
                             
-                            <!-- Magik Tukar Teks a, b, c kepada (a), (b), (c) -->
                             <div id="seksyenPekerja" class="input-wrapper" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
                                 <div style="display: flex; gap: 15px; align-items: center; grid-column: span 3;">
                                     <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(1)"> Seksyen 69(1)</label>
@@ -892,7 +881,6 @@
 
                         </div>
                         
-                        <!-- Magik Tambah Butang Kembali -->
                         <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px;">
                             <button class="btn-cancel" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab1')">⬅️ Kembali</button>
                             <button class="btn-save btn-seterusnya" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab3')">Seterusnya ➔</button>
@@ -960,15 +948,17 @@
             });
         });
 
-        // FUNGSI MAGIK: Huruf Besar Pangkal untuk Textarea
-        function hurufBesarPangkal(input) {
+        // FUNGSI MAGIK: Huruf Besar Pangkal untuk satu huruf pertama ayat sahaja
+        function hurufBesarAyatPertama(input) {
             let start = input.selectionStart;
             let end = input.selectionEnd;
             let val = input.value;
-            let newVal = val.replace(/\b\w/g, char => char.toUpperCase());
-            if (val !== newVal) {
-                input.value = newVal;
-                input.setSelectionRange(start, end);
+            if (val.length > 0) {
+                let newVal = val.charAt(0).toUpperCase() + val.slice(1);
+                if (val !== newVal) {
+                    input.value = newVal;
+                    input.setSelectionRange(start, end);
+                }
             }
         }
 
@@ -977,7 +967,6 @@
             let start = input.selectionStart;
             let end = input.selectionEnd;
             let val = input.value;
-            // Padanan untuk huruf pertama ayat ATAU huruf selepas titik/tanda soal/tanda seru yang diikuti ruang kosong
             let newVal = val.replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
             if (val !== newVal) {
                 input.value = newVal;
@@ -1134,19 +1123,30 @@
 
                 const rWaktu = document.querySelector('input[name="jenisWaktu"]:checked');
                 const jenisWaktu = rWaktu ? rWaktu.value : '';
+                
+                // Magik Waktu Kerja
+                const formatMasa = (masa) => {
+                    if (!masa) return '';
+                    let [jamStr, minit] = masa.split(':');
+                    let jamNum = parseInt(jamStr);
+                    let minitNum = parseInt(minit);
+                    let waktu = '';
+
+                    if (jamNum === 0 && minitNum === 0) waktu = 'tengah malam';
+                    else if (jamNum < 12) waktu = 'pagi';
+                    else if (jamNum === 12 || jamNum === 13) waktu = 'tengah hari';
+                    else if (jamNum >= 14 && jamNum <= 18) waktu = 'petang';
+                    else waktu = 'malam';
+
+                    let jamPaparan = jamNum % 12;
+                    if (jamPaparan === 0) jamPaparan = 12;
+
+                    return `${jamPaparan.toString().padStart(2, '0')}:${minit} ${waktu}`;
+                };
+                
                 let ayatWaktu = 'Waktu kerja saya dari jam [Mula] hingga [Tamat].';
                 
                 if (jenisWaktu === 'Tetap') {
-                    const formatMasa = (masa) => {
-                        if (!masa) return '';
-                        let [jamStr, minit] = masa.split(':');
-                        let jam = parseInt(jamStr);
-                        let waktu = jam >= 12 ? 'petang' : 'pagi';
-                        if (jam > 12) jam -= 12;
-                        if (jam === 0) jam = 12;
-                        return `${jam.toString().padStart(2, '0')}:${minit} ${waktu}`;
-                    };
-                    
                     const wMulaVal = document.getElementById('waktuMula').value;
                     const wTamatVal = document.getElementById('waktuTamat').value;
                     const wMula = wMulaVal ? formatMasa(wMulaVal) : '[Waktu mula]';
@@ -1347,7 +1347,6 @@
             if(indexEdit > -1) {
                 document.getElementById('tajukModal').innerHTML = "Kemaskini Tuntutan";
                 document.getElementById('jenisTuntutan').value = memoriTuntutan[indexEdit].jenis;
-                // Buang kurungan bila edit supaya user nampak text asal
                 let ketRaw = memoriTuntutan[indexEdit].keterangan;
                 if(ketRaw.startsWith('(') && ketRaw.endsWith(')')){ ketRaw = ketRaw.slice(1,-1); }
                 document.getElementById('keteranganTuntutan').value = ketRaw;
@@ -1380,7 +1379,6 @@
                 return;
             }
 
-            // Magik Auto-Tambah Kurungan pada Keterangan Tuntutan
             if (!keterangan.startsWith('(')) { keterangan = '(' + keterangan; }
             if (!keterangan.endsWith(')')) { keterangan = keterangan + ')'; }
 
@@ -2290,8 +2288,8 @@
                     <div style="page-break-inside: avoid; display: inline-block; width: 100%;">
                         <hr style="border: 0; border-top: 1px solid #000; margin: 10px 0;">
 
-                        <!-- Magik: Teks Seksyen 69 diletakkan satu baris (nowrap), jarak tandatangan tambah 1 enter -->
-                        <div style="text-align: center; margin-top: 10px; margin-bottom: 50px; white-space: nowrap; font-size: 10pt;">
+                        <!-- Magik: Teks Seksyen 69 diletakkan satu baris (nowrap), saiz ditambah kpd 10.5pt, jarak tandatangan tambah 1 enter -->
+                        <div style="text-align: center; margin-top: 10px; margin-bottom: 50px; white-space: nowrap; font-size: 10.5pt;">
                             Saya berpuashati bahawa aduan ini berasas disiasat di bawah ${teksSeksyenPenuh}.
                         </div>
 
