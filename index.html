@@ -329,14 +329,14 @@
         }
 
         @media print {
-            /* Magik Margin Kiri & Kanan 2.25cm, Atas & Bawah 1.5cm */
-            @page { size: A4 portrait; margin: 1.5cm 2.25cm; }
+            /* Magik Margin Kiri & Kanan 2.5cm, Atas & Bawah 1.5cm */
+            @page { size: A4 portrait; margin: 1.5cm 2.5cm; }
             body { background: white; margin: 0; padding: 0; font-family: Arial, sans-serif; color: black; }
             body > *:not(#printArea) { display: none !important; }
             
             #printArea { display: block !important; width: 100%; font-size: 11pt; line-height: 1.5; }
             
-            /* Magik Jadual Profesional: Garisan Luar Jelas, Dalam Kabur, Tiada Garisan Menegak */
+            /* Magik Jadual Profesional: Tiada garis dalam (kecuali Header & Footer) */
             .print-tbl-tuntutan { 
                 width: 100%; 
                 border-collapse: collapse; 
@@ -346,11 +346,8 @@
                 border: 2px solid #000 !important; 
             }
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
-                border-top: 1px solid #cbd5e1 !important; 
-                border-bottom: 1px solid #cbd5e1 !important; 
-                border-left: none !important; 
-                border-right: none !important;
-                padding: 0.5pt 8px; /* Magik padding 0.5pt */
+                border: none !important; /* Buang semua garis kotak dalam */
+                padding: 1pt 8px; /* Magik padding atas bawah 1pt */
                 line-height: 1;     /* Magik Line Spacing Single */
             }
             .print-tbl-tuntutan th { 
@@ -359,8 +356,13 @@
                 color-adjust: exact; 
                 font-weight: bold; 
                 text-align: center; 
-                border-bottom: 2px solid #000 !important; 
+                border-bottom: 1px solid #000 !important; /* Garis bawah header */
             }
+            /* Garis atas pada row Jumlah Keseluruhan */
+            .print-tbl-tuntutan tr.footer-row td {
+                border-top: 1px solid #000 !important;
+            }
+            
             .print-tbl-tuntutan td.num { text-align: center; }
             .print-tbl-tuntutan td.money { text-align: right; }
         }
@@ -2086,14 +2088,14 @@
                     htmlJadualTuntutan += `
                         <tr>
                             <td class="num">${index + 1}</td>
-                            <!-- Magik Keterangan Bersebelahan & Auto-Wrap -->
-                            <td><strong>${item.jenis}</strong> <span style="font-size: 0.9em; color: #333;">${item.keterangan}</span></td>
+                            <!-- Magik Keterangan Bersebelahan & Unbold Jenis Tuntutan -->
+                            <td>${item.jenis} <span style="font-size: 0.9em; color: #333;">${item.keterangan}</span></td>
                             <td class="money">RM ${Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         </tr>
                     `;
                 });
                 htmlJadualTuntutan += `
-                    <tr>
+                    <tr class="footer-row">
                         <td colspan="2" style="text-align:right; font-weight:bold;">JUMLAH KESELURUHAN</td>
                         <td class="money" style="font-weight:bold;">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>
@@ -2161,11 +2163,12 @@
 
                     <div style="text-align: center; margin-bottom: 5px;">Antara</div>
 
-                    <div style="display: flex; justify-content: space-between;">
+                    <!-- Spacing Pengadu Rapat (Single Spacing) -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
                         <div style="text-transform: uppercase; line-height: 1;">${namaPengadu}</div>
                         <div>... Pengadu</div>
                     </div>
-                    <div style="margin-bottom: 10px; text-transform: uppercase; line-height: 1;">
+                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1;">
                         ${alamatPenuhPengaduCetak}<br>
                         NO.TEL: ${hpPengadu !== '-' ? hpPengadu : telPengadu}<br>
                         <span style="text-transform: none;">E-mel: ${emelPengadu !== '-' ? emelPengadu.toLowerCase() : '-'}</span>
@@ -2173,11 +2176,12 @@
 
                     <div style="text-align: center; margin-bottom: 5px;">Dan</div>
 
-                    <div style="display: flex; justify-content: space-between;">
+                    <!-- Spacing Defendan Rapat (Single Spacing) -->
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
                         <div style="text-transform: uppercase; line-height: 1;">${namaDefendanRaw}</div>
                         <div>... Defendan</div>
                     </div>
-                    <div style="margin-bottom: 15px; text-transform: uppercase; line-height: 1;">
+                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1;">
                         ${alamatPenuhDefendanCetak}<br>
                         NO.TEL: ${hpDefendan !== '-' ? hpDefendan : telDefendan}<br>
                         <span style="text-transform: none;">E-mel: ${emelDefendan !== '-' ? emelDefendan.toLowerCase() : '-'}</span><br>
@@ -2237,7 +2241,8 @@
                         <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
                     </div>
 
-                    <div style="text-align: center; margin-bottom: 30px;">
+                    <!-- Magik: Teks angkat sumpah dalam 2 baris (font-size 10.5pt), margin-bottom dikurangkan -->
+                    <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; padding: 0 10px;">
                         Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain (Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:
                     </div>
 
@@ -2283,7 +2288,8 @@
                     <div style="page-break-inside: avoid; display: inline-block; width: 100%;">
                         <hr style="border: 0; border-top: 1px solid #000; margin: 10px 0;">
 
-                        <div style="text-align: center; margin-top: 10px; margin-bottom: 20px; white-space: normal;">
+                        <!-- Magik: Teks Seksyen 69 diletakkan satu baris (nowrap) dan font dikecilkan sikit jika perlu -->
+                        <div style="text-align: center; margin-top: 10px; margin-bottom: 20px; white-space: nowrap; font-size: 10pt;">
                             Saya berpuashati bahawa aduan ini berasas disiasat di bawah ${teksSeksyenPenuh}.
                         </div>
 
