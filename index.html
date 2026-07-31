@@ -398,14 +398,19 @@
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
         
-        <!-- MAGIK PROFIL & GAMBAR -->
-        <div style="display: flex; gap: 8px; margin: 0 16px 16px; align-items: stretch;">
-            <label for="uploadProfil" style="flex-shrink: 0; width: 55px; background-color: #ffffff; border-radius: 12px; border: 1px dashed var(--primary-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative;" title="Klik untuk muat naik gambar profil">
-                <span id="ikonKamera" style="font-size: 1.5em; color: var(--text-muted);">👤</span>
+        <!-- MAGIK PROFIL & GAMBAR DRAG/PAN -->
+        <div style="display: flex; gap: 8px; margin: 0 16px 16px; align-items: stretch; position: relative;">
+            <div id="bekasProfil" style="flex-shrink: 0; width: 55px; background-color: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative;" title="Klik untuk muat naik gambar. Bila gambar dipaparkan, dwi-klik untuk tukar, seret untuk laras.">
+                
+                <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
+                    <span style="font-size: 1.5em; color: var(--text-muted);">👤</span>
+                </div>
+                
                 <img id="gambarProfil" src="" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
                 <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
-            </label>
-            <div class="user-info" style="margin: 0; flex-grow: 1; padding: 12px; display: flex; align-items: center; justify-content: center;">
+            </div>
+
+            <div class="user-info" style="margin: 0; flex-grow: 1; padding: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color);">
                 <strong>Mohamad Hafiz b<br>Abu Bakar</strong>
             </div>
         </div>
@@ -420,17 +425,17 @@
         
         <!-- MAGIK BLOK ALAMAT (Boleh Edit Tanpa Rupa Kotak Form) -->
         <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
-            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong>
-(KLUANG LABOUR OFFICE)
-(KEMENTERIAN SUMBER MANUSIA)
-(MINISTRY OF HUMAN RESOURCES)
-JALAN PEJABAT KERAJAAN
-86000 KLUANG
+            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
+(KLUANG LABOUR OFFICE)<br>
+(KEMENTERIAN SUMBER MANUSIA)<br>
+(MINISTRY OF HUMAN RESOURCES)<br>
+JALAN PEJABAT KERAJAAN<br>
+86000 KLUANG<br>
 JOHOR DARUL TAKZIM
-<br>
-Telefon : | 07-772 1646/2646
-Telekerja : | 07-7737111
-E-mel : | jtkdkluang@mohr.gov.my
+<br><br>
+Telefon : | 07-772 1646/2646<br>
+Telekerja : | 07-7737111<br>
+E-mel : | jtkdkluang@mohr.gov.my<br>
 Portal rasmi : | jtksm.mohr.gov.my</div>
         </div>
     </aside>
@@ -595,7 +600,7 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                             </div>
                         </div>
                         
-                        <!-- MAKLUMAT PERKHIDMATAN -->
+                        <!-- MAKLUMAT PERKHIDMATAN (Tersembunyi secara lalai) -->
                         <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                         
                         <div style="margin-bottom: 20px;">
@@ -660,6 +665,7 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
+                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -684,6 +690,7 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
+                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -764,6 +771,7 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                                 <div class="form-group">
                                     <label></label>
                                     <div class="input-wrapper">
+                                        <!-- MAGIK ALAMAT BERBEZA (Lalai: Tersembunyi) -->
                                         <div style="display: flex; align-items: center; height: 30px; gap: 10px;">
                                             <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()"> 
                                             <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
@@ -970,9 +978,64 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                     }
                 }
             });
+            
+            // Initial setup drag script for profile picture
+            setupDragProfil();
         });
 
-        // FUNGSI MAGIK: Skrip baca fail dan papar profil gambar
+        // FUNGSI MAGIK: Drag & Pan Gambar Profil
+        let isDraggingProfil = false;
+        let startPosX = 0, startPosY = 0, currentPosX = 0, currentPosY = 0;
+
+        function setupDragProfil() {
+            const imgProfile = document.getElementById('gambarProfil');
+            const inputProfil = document.getElementById('uploadProfil');
+
+            imgProfile.addEventListener('mousedown', function(e) {
+                e.preventDefault(); 
+                isDraggingProfil = true;
+                imgProfile.style.cursor = 'grabbing';
+                startPosX = e.clientX - currentPosX;
+                startPosY = e.clientY - currentPosY;
+            });
+
+            window.addEventListener('mousemove', function(e) {
+                if (!isDraggingProfil) return;
+                currentPosX = e.clientX - startPosX;
+                currentPosY = e.clientY - startPosY;
+                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
+            });
+
+            window.addEventListener('mouseup', function() {
+                isDraggingProfil = false;
+                imgProfile.style.cursor = 'grab';
+            });
+
+            // Touch support for mobile
+            imgProfile.addEventListener('touchstart', function(e) {
+                isDraggingProfil = true;
+                startPosX = e.touches[0].clientX - currentPosX;
+                startPosY = e.touches[0].clientY - currentPosY;
+            });
+
+            window.addEventListener('touchmove', function(e) {
+                if (!isDraggingProfil) return;
+                e.preventDefault(); 
+                currentPosX = e.touches[0].clientX - startPosX;
+                currentPosY = e.touches[0].clientY - startPosY;
+                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
+            }, {passive: false});
+
+            window.addEventListener('touchend', function() {
+                isDraggingProfil = false;
+            });
+
+            // Double click to change picture
+            imgProfile.addEventListener('dblclick', function() {
+                inputProfil.click();
+            });
+        }
+
         function muatNaikGambarProfil(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -981,6 +1044,11 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                     const img = document.getElementById('gambarProfil');
                     img.style.display = 'block';
                     img.src = e.target.result;
+                    // Reset position and set scale to 1.5x for panning room
+                    currentPosX = 0; 
+                    currentPosY = 0;
+                    img.style.transform = `translate(0px, 0px) scale(1.5)`;
+                    img.style.cursor = 'grab';
                 };
                 reader.readAsDataURL(input.files[0]);
             }
