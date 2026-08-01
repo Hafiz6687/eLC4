@@ -272,7 +272,7 @@
         .empty-row { text-align: center !important; color: var(--text-muted); font-style: italic; }
 
         .note { color: var(--danger); font-size: 0.85em; margin-bottom: 16px; font-weight: 500; }
-        .lmd-link { text-align: right; margin-top: -10px; margin-bottom: 24px; }
+        .lmd-link { text-align: right; margin-top: 10px; margin-bottom: 24px; }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -342,7 +342,6 @@
                 text-align: left; 
                 border: 1px solid #000 !important; 
             }
-            /* MAGIK FIX: Padding jadual PDF 3pt untuk semua sel */
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
                 border: none !important; 
                 padding: 3pt 8px; 
@@ -502,6 +501,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
             <div class="content-area" id="tab1"> 
                 
+                <!-- KAD 1 (PEKERJA / DATA INDIVIDU) -->
                 <div class="card" id="kad1" style="transition: all 0.4s ease;">
                     <div class="card-header" id="tajukKad1">Maklumat Pengadu</div>
                     <div class="card-body">
@@ -516,9 +516,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                     </div>
                                 </div>
                                 <div id="ruanganWakilMajikan" style="display: none;">
-                                    <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" id="namaWakilMajikan" placeholder="Nama Penuh Wakil"></div></div>
-                                    <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadWakil(this)"></div></div>
-                                    <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanWakilMajikan" placeholder="Jawatan Wakil"></div></div>
+                                    <!-- TAMBAHAN oninput="semakWakilLengkap()" -->
+                                    <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" id="namaWakilMajikan" placeholder="Nama Penuh Wakil" oninput="semakWakilLengkap()"></div></div>
+                                    <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadWakil(this); semakWakilLengkap()"></div></div>
+                                    <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanWakilMajikan" placeholder="Jawatan Wakil" oninput="semakWakilLengkap()"></div></div>
                                     
                                     <div class="form-group">
                                         <label>Warganegara <span>*</span></label>
@@ -533,7 +534,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                         </div>
                                     </div>
 
-                                    <!-- MAGIK FIX: Field Jantina diletakkan di bawah Warganegara Wakil -->
                                     <div class="form-group" id="ruanganJantinaWakil">
                                         <label>Jantina <span>*</span></label>
                                         <div class="input-wrapper radio-group">
@@ -563,6 +563,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                         </div>
 
+                        <!-- MEDAN DATA PEKERJA -->
                         <div class="form-group">
                             <label id="labelJenisPendPengadu">Jenis Pendaftaran <span>*</span></label>
                             <div class="input-wrapper">
@@ -731,116 +732,121 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     </div>
                 </div>
 
+                <!-- KAD 2 (MAJIKAN / DATA SYARIKAT) -->
                 <div class="card" id="kad2" style="transition: all 0.4s ease;">
                     <div class="card-header" id="tajukKad2">Maklumat Defendan</div>
                     <div class="card-body">
                         
-                        <div class="lmd-link" style="display: flex; justify-content: flex-end; gap: 15px;">
-                            <a href="https://hafiz6687.github.io/eLC/https://github.com/Hafiz6687/eLC/actions#start-of-content" target="_blank">🔍 Carian Majikan LMD</a>
-                            <a href="https://hafiz6687.github.io/eLC/https://github.com/" target="_blank">🔍 Carian MyData SSM</a>
-                        </div>
-                        
                         <div id="tempatSuis2"></div>
 
-                        <div class="form-group">
-                            <label>Jenis Pendaftaran <span>*</span></label>
-                            <div class="input-wrapper">
-                                <select id="jenisDaftarDefendan" onchange="kawalJenisDaftarDefendan()">
-                                    <option value="">-Sila Pilih-</option>
-                                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
-                                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
-                                    <option value="MyKad">MyKad</option>
-                                    <option value="Lain-lain">Lain-lain</option>
-                                </select>
+                        <!-- WRAPPER UNTUK MAKLUMAT SYARIKAT -->
+                        <div id="ruanganMaklumatSyarikat">
+                            
+                            <div class="lmd-link" style="display: flex; justify-content: flex-end; gap: 15px; margin-top: 10px; margin-bottom: 24px;">
+                                <a href="https://hafiz6687.github.io/eLC/https://github.com/Hafiz6687/eLC/actions#start-of-content" target="_blank">🔍 Carian Majikan LMD</a>
+                                <a href="https://hafiz6687.github.io/eLC/https://github.com/" target="_blank">🔍 Carian MyData SSM</a>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label id="labelNoPendDefendan">Nombor Pendaftaran <span>*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="noPendDefendan" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="this.value = this.value.toUpperCase(); formatMyKad(this, 'jenisDaftarDefendan')" onblur="semakFormatMyKad(this, 'jenisDaftarDefendan')">
-                                <p id="remarkNoPendDefendan" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group"><label id="labelNamaDefendan">Nama Syarikat/ Nama Organisasi <span>*</span></label><div class="input-wrapper"><input type="text" id="namaDefendan" placeholder="Nama penuh"></div></div>
-
-                        <div id="ruanganPemilikEnterprise" style="display: none;">
-                            <div class="form-group" style="margin-bottom: 20px;">
-                                <label>Nama Pemilik <span>*</span></label>
-                                <div class="input-wrapper"><input type="text" id="namaPemilikDefendan" placeholder="Nama penuh pemilik perniagaan"></div>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 20px;">
-                                <label>No. MyKad Pemilik <span>*</span></label>
+                            <div class="form-group">
+                                <label>Jenis Pendaftaran <span>*</span></label>
                                 <div class="input-wrapper">
-                                    <input type="text" id="kpPemilikDefendan" placeholder="Masukkan No. Kad Pengenalan Pemilik" maxlength="14" oninput="formatMyKadPemilik(this)" onblur="semakFormatMyKad(this, 'MyKad')">
+                                    <select id="jenisDaftarDefendan" onchange="kawalJenisDaftarDefendan()">
+                                        <option value="">-Sila Pilih-</option>
+                                        <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                                        <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                                        <option value="MyKad">MyKad</option>
+                                        <option value="Lain-lain">Lain-lain</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label>Alamat <span>*</span></label>
-                            <div class="input-wrapper">
-                                <input type="text" id="alamatDefendan1" style="margin-bottom: 8px;" placeholder="Baris 1">
-                                <input type="text" id="alamatDefendan2" style="margin-bottom: 8px;" placeholder="Baris 2">
-                                <input type="text" id="alamatDefendan3" placeholder="Baris 3">
+                            <div class="form-group">
+                                <label id="labelNoPendDefendan">Nombor Pendaftaran <span>*</span></label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="noPendDefendan" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="this.value = this.value.toUpperCase(); formatMyKad(this, 'jenisDaftarDefendan')" onblur="semakFormatMyKad(this, 'jenisDaftarDefendan')">
+                                    <p id="remarkNoPendDefendan" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group"><label>Poskod <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodDefendan" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodDefendan', 'negeriDefendan', 'bandarDefendan')" onblur="semakPoskod(this)"></div></div>
-                        <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriDefendan"><option value="">-Sila Pilih-</option></select></div></div>
-                        <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarDefendan"><option value="">-Sila Pilih-</option></select></div></div>
+                            <div class="form-group"><label id="labelNamaDefendan">Nama Syarikat/ Nama Organisasi <span>*</span></label><div class="input-wrapper"><input type="text" id="namaDefendan" placeholder="Nama penuh"></div></div>
 
-                        <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telDefendan" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this)" maxlength="11"></div></div>
-                        <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpDefendan" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this)" maxlength="12"></div></div>
-                        
-                        <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelDefendan" style="width: 60%;" placeholder="Contoh: syarikat@email.com"></div></div>
-                        
-                        <div id="tempatAlamatKerja2">
-                            <div id="ruanganAlamatKerjaLengkap">
-                                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
-                                <div class="form-group">
-                                    <label></label>
+                            <div id="ruanganPemilikEnterprise" style="display: none;">
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label>Nama Pemilik <span>*</span></label>
+                                    <div class="input-wrapper"><input type="text" id="namaPemilikDefendan" placeholder="Nama penuh pemilik perniagaan"></div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label>No. MyKad Pemilik <span>*</span></label>
                                     <div class="input-wrapper">
-                                        <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px;">
-                                            <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
-                                            <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0; line-height: 1.4;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
-                                        </div>
-                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika tempat pekerjaan berbeza)</p>
+                                        <input type="text" id="kpPemilikDefendan" placeholder="Masukkan No. Kad Pengenalan Pemilik" maxlength="14" oninput="formatMyKadPemilik(this)" onblur="semakFormatMyKad(this, 'MyKad')">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div id="ruanganAlamatKerja" style="display: none;">
+                            <div class="form-group">
+                                <label>Alamat <span>*</span></label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="alamatDefendan1" style="margin-bottom: 8px;" placeholder="Baris 1">
+                                    <input type="text" id="alamatDefendan2" style="margin-bottom: 8px;" placeholder="Baris 2">
+                                    <input type="text" id="alamatDefendan3" placeholder="Baris 3">
+                                </div>
+                            </div>
+
+                            <div class="form-group"><label>Poskod <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodDefendan" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodDefendan', 'negeriDefendan', 'bandarDefendan')" onblur="semakPoskod(this)"></div></div>
+                            <div class="form-group"><label>Negeri <span>*</span></label><div class="input-wrapper"><select id="negeriDefendan"><option value="">-Sila Pilih-</option></select></div></div>
+                            <div class="form-group"><label>Bandar <span>*</span></label><div class="input-wrapper"><select id="bandarDefendan"><option value="">-Sila Pilih-</option></select></div></div>
+
+                            <div class="form-group"><label>No. Tel:</label><div class="input-wrapper"><input type="text" id="telDefendan" style="width: 60%;" placeholder="Contoh: 07-1234567" oninput="formatTelRumah(this)" maxlength="11"></div></div>
+                            <div class="form-group" style="margin-top: -5px;"><label>No. Tel (H/p):</label><div class="input-wrapper"><input type="text" id="hpDefendan" style="width: 60%;" placeholder="Contoh: 012-3456789" oninput="formatTelHP(this)" maxlength="12"></div></div>
+                            
+                            <div class="form-group"><label>E-mel</label><div class="input-wrapper"><input type="email" id="emelDefendan" style="width: 60%;" placeholder="Contoh: syarikat@email.com"></div></div>
+                            
+                            <div id="tempatAlamatKerja2">
+                                <div id="ruanganAlamatKerjaLengkap">
+                                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                                     <div class="form-group">
-                                        <label>Alamat Tempat Pekerjaan <span>*</span></label>
+                                        <label></label>
                                         <div class="input-wrapper">
-                                            <input type="text" id="namaTempatKerja" style="margin-bottom: 8px;" placeholder="Nama tempat pekerjaan">
-                                            <input type="text" id="alamatKerja1" style="margin-bottom: 8px;" placeholder="Baris 1">
-                                            <input type="text" id="alamatKerja2" style="margin-bottom: 8px;" placeholder="Baris 2">
-                                            <input type="text" id="alamatKerja3" placeholder="Baris 3">
+                                            <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px;">
+                                                <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                                                <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0; line-height: 1.4;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
+                                            </div>
+                                            <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika tempat pekerjaan berbeza)</p>
                                         </div>
                                     </div>
-                                    <div class="form-group"><label>Poskod Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodKerja" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodKerja', 'negeriKerja', 'bandarKerja')" onblur="semakPoskod(this)"></div></div>
-                                    <div class="form-group"><label>Negeri Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="negeriKerja"><option value="">-Sila Pilih-</option></select></div></div>
-                                    <div class="form-group"><label>Bandar Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="bandarKerja"><option value="">-Sila Pilih-</option></select></div></div>
-                                </div>
-                                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label>Sektor <span>*</span></label>
-                            <div class="input-wrapper">
-                                <select id="sektorDefendan" onchange="kawalSektor()">
-                                    <option value="">-Sila Pilih-</option><option value="Perkhidmatan">Perkhidmatan</option><option value="Pembuatan">Pembuatan</option><option value="Pembinaan">Pembinaan</option><option value="Perladangan">Perladangan</option><option value="Lain-lain">Lain-lain</option>
-                                </select>
-                                <div id="ruanganSektorLain" style="display: none; margin-top: 10px;">
-                                    <input type="text" id="sektorLain" placeholder="Masukkan nama sektor" style="width: 100%;">
-                                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Sila nyatakan sektor lain</p>
+                                    <div id="ruanganAlamatKerja" style="display: none;">
+                                        <div class="form-group">
+                                            <label>Alamat Tempat Pekerjaan <span>*</span></label>
+                                            <div class="input-wrapper">
+                                                <input type="text" id="namaTempatKerja" style="margin-bottom: 8px;" placeholder="Nama tempat pekerjaan">
+                                                <input type="text" id="alamatKerja1" style="margin-bottom: 8px;" placeholder="Baris 1">
+                                                <input type="text" id="alamatKerja2" style="margin-bottom: 8px;" placeholder="Baris 2">
+                                                <input type="text" id="alamatKerja3" placeholder="Baris 3">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"><label>Poskod Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><input type="text" id="poskodKerja" style="width: 50%;" placeholder="Contoh: 50000" maxlength="5" onkeyup="cariPoskodAutomatik('poskodKerja', 'negeriKerja', 'bandarKerja')" onblur="semakPoskod(this)"></div></div>
+                                        <div class="form-group"><label>Negeri Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="negeriKerja"><option value="">-Sila Pilih-</option></select></div></div>
+                                        <div class="form-group"><label>Bandar Tempat Pekerjaan <span>*</span></label><div class="input-wrapper"><select id="bandarKerja"><option value="">-Sila Pilih-</option></select></div></div>
+                                    </div>
+                                    <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;"><label>Jenis Perniagaan <span>*</span></label><div class="input-wrapper"><input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan"></div></div>
+
+                            <div class="form-group">
+                                <label>Sektor <span>*</span></label>
+                                <div class="input-wrapper">
+                                    <select id="sektorDefendan" onchange="kawalSektor()">
+                                        <option value="">-Sila Pilih-</option><option value="Perkhidmatan">Perkhidmatan</option><option value="Pembuatan">Pembuatan</option><option value="Pembinaan">Pembinaan</option><option value="Perladangan">Perladangan</option><option value="Lain-lain">Lain-lain</option>
+                                    </select>
+                                    <div id="ruanganSektorLain" style="display: none; margin-top: 10px;">
+                                        <input type="text" id="sektorLain" placeholder="Masukkan nama sektor" style="width: 100%;">
+                                        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Sila nyatakan sektor lain</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;"><label>Jenis Perniagaan <span>*</span></label><div class="input-wrapper"><input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan"></div></div>
+                        </div> <!-- TAMAT WRAPPER MAKLUMAT SYARIKAT -->
                     </div>
                 </div>
 
@@ -987,6 +993,28 @@ Portal rasmi : jtksm.mohr.gov.my</div>
     </main>
 
     <script>
+        // TAMBAHAN: FUNGSI SEMAK WAKIL LENGKAP
+        function semakWakilLengkap() {
+            const nama = document.getElementById('namaWakilMajikan')?.value.trim();
+            const kp = document.getElementById('noMyKadWakil')?.value.trim();
+            const jawatan = document.getElementById('jawatanWakilMajikan')?.value.trim();
+            
+            const ruanganSyarikat = document.getElementById('ruanganMaklumatSyarikat');
+            const isMajikan = document.getElementById('majikan')?.checked;
+            
+            if (isMajikan) {
+                // Jika majikan ditanda, papar borang syarikat hanya jika 3 field ini diisi
+                if (nama !== "" && kp !== "" && jawatan !== "") {
+                    ruanganSyarikat.style.display = 'block';
+                } else {
+                    ruanganSyarikat.style.display = 'none';
+                }
+            } else {
+                // Jika pekerja (default), pastikan sentiasa dipaparkan
+                ruanganSyarikat.style.display = 'block';
+            }
+        }
+
         function formatMyKadWakil(inputElement) {
             let val = inputElement.value.replace(/[^0-9]/g, ''); 
             let formatted = val;
@@ -1005,38 +1033,24 @@ Portal rasmi : jtksm.mohr.gov.my</div>
         }
 
         function kemaskiniDropdownPendaftaran() {
-            const isMajikan = document.getElementById('majikan').checked;
-            const dropPengadu = document.getElementById('jenisDaftarPengadu');
-            const dropDefendan = document.getElementById('jenisDaftarDefendan');
+            const dropPengadu = document.getElementById('jenisDaftarPengadu');   
+            const dropDefendan = document.getElementById('jenisDaftarDefendan'); 
             
             const valPengadu = dropPengadu.value;
             const valDefendan = dropDefendan.value;
             
-            if (isMajikan) {
-                dropPengadu.innerHTML = `
-                    <option value="">-Sila Pilih-</option>
-                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
-                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
-                    <option value="MyKad">MyKad</option>
-                    <option value="Lain-lain">Lain-lain</option>
-                `;
-                dropDefendan.innerHTML = `
-                    <option value="MyKad" selected>MyKad</option>
-                    <option value="Pasport">Pasport</option>
-                `;
-            } else {
-                dropPengadu.innerHTML = `
-                    <option value="MyKad" selected>MyKad</option>
-                    <option value="Pasport">Pasport</option>
-                `;
-                dropDefendan.innerHTML = `
-                    <option value="">-Sila Pilih-</option>
-                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
-                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
-                    <option value="MyKad">MyKad</option>
-                    <option value="Lain-lain">Lain-lain</option>
-                `;
-            }
+            dropPengadu.innerHTML = `
+                <option value="MyKad" selected>MyKad</option>
+                <option value="Pasport">Pasport</option>
+            `;
+            
+            dropDefendan.innerHTML = `
+                <option value="">-Sila Pilih-</option>
+                <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                <option value="MyKad">MyKad</option>
+                <option value="Lain-lain">Lain-lain</option>
+            `;
             
             if(Array.from(dropPengadu.options).some(o => o.value === valPengadu)) dropPengadu.value = valPengadu;
             if(Array.from(dropDefendan.options).some(o => o.value === valDefendan)) dropDefendan.value = valDefendan;
@@ -1047,6 +1061,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         document.addEventListener('DOMContentLoaded', function() {
             kemaskiniDropdownPendaftaran();
+            semakWakilLengkap(); // TAMBAHAN: Initialize state paparan ruangan syarikat
 
             const tab1 = document.getElementById('tab1');
             tab1.addEventListener('input', janaKenyataanAwal);
@@ -1577,13 +1592,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 
                 autoResize(textareaAwal);
             } else if (isMajikan) {
-                // MAGIK KEMASKINI: Maklumat khusus untuk majikan sebagai pengadu
-                let namaSyarikat = document.getElementById('namaPengadu').value.trim() || '[Nama Syarikat/Organisasi]';
-                let noPendSyarikat = document.getElementById('noPendPengadu').value.trim();
+                let namaSyarikat = document.getElementById('namaDefendan').value.trim() || '[Nama Syarikat/Organisasi]';
+                let noPendSyarikat = document.getElementById('noPendDefendan').value.trim();
                 let teksPend = noPendSyarikat ? ` (No. Pendaftaran: ${noPendSyarikat})` : '';
 
-                let namaPekerja = document.getElementById('namaDefendan').value.trim() || '[Nama Pekerja]';
-                let noMyKadPekerja = document.getElementById('noPendDefendan').value.trim();
+                let namaPekerja = document.getElementById('namaPengadu').value.trim() || '[Nama Pekerja]';
+                let noMyKadPekerja = document.getElementById('noPendPengadu').value.trim();
                 let teksMyKadPekerja = noMyKadPekerja ? ` (No. MyKad: ${noMyKadPekerja})` : '';
 
                 let p1 = `Saya merupakan wakil majikan yang diberi kuasa mewakili majikan ${namaSyarikat}${teksPend} yang ingin membuat tuntutan terhadap defendan ${namaPekerja}${teksMyKadPekerja}.`;
@@ -2089,6 +2103,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
             kemaskiniDropdownPendaftaran();
             janaKenyataanAwal();
+            semakWakilLengkap(); // TAMBAHAN: Semak status field semasa tukar peranan
         }
 
         function kawalJenisDaftarPengadu() {
@@ -2099,24 +2114,24 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const labelNama = document.getElementById('labelNamaPengadu');
             const warganegara = document.getElementById('warganegaraPengadu');
             const ruanganLain = document.getElementById('ruanganWarganegaraLain');
-            const isMajikan = document.getElementById('majikan').checked;
+            
+            const isKumpulan = document.getElementById('aduanBerkumpulan').checked && !document.getElementById('majikan').checked;
 
             if(ruanganLain) { ruanganLain.style.display = 'none'; }
+
+            labelNama.innerHTML = isKumpulan ? 'Ketua Pengadu <span>*</span>' : 'Nama <span>*</span>';
 
             if (jenis === 'MyKad') {
                 labelNo.innerHTML = 'No. MyKad <span>*</span>';
                 inputNo.placeholder = "Contoh: 880101-01-1234";
                 inputNo.maxLength = 14;
                 remark.innerText = "Masukkan No. Kad Pengenalan";
-                if(isMajikan) labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>';
-                else labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             } else if (jenis === 'Pasport') {
                 labelNo.innerHTML = 'No. Pasport <span>*</span>';
                 inputNo.placeholder = "Masukkan No. Pasport";
                 inputNo.maxLength = 20;
                 remark.innerText = "Masukkan No. Pasport";
-                labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = `
                     <option value="">-Sila Pilih-</option>
                     <option value="Indonesia">Indonesia</option>
@@ -2128,20 +2143,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <option value="Pakistan">Pakistan</option>
                     <option value="Lain-lain">Lain-lain</option>
                 `;
-            } else if (jenis.includes('SSM') || jenis === 'Lain-lain') {
-                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
-                inputNo.placeholder = "Masukkan No. Pendaftaran";
-                inputNo.maxLength = 20;
-                remark.innerText = "Masukkan No. Pendaftaran";
-                labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
-                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
-            } else {
-                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
-                inputNo.placeholder = "Sila pilih jenis pendaftaran dahulu";
-                remark.innerText = "";
-                labelNama.innerHTML = 'Nama <span>*</span>';
-                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
-            }
+            } 
         }
 
         function kawalWarganegara() {
@@ -2162,7 +2164,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const remark = document.getElementById('remarkNoPendDefendan');
             const labelNama = document.getElementById('labelNamaDefendan'); 
             const ruanganPemilik = document.getElementById('ruanganPemilikEnterprise');
-            const isMajikan = document.getElementById('majikan').checked;
 
             if (jenis === 'MyKad') {
                 if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>';
@@ -2189,7 +2190,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 remark.innerText = "Masukkan No. Pendaftaran";
                 labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
                 
-                if (jenis === 'SSM (Enterprise)' && !isMajikan) {
+                if (jenis === 'SSM (Enterprise)') {
                     ruanganPemilik.style.display = 'block';
                 } else {
                     ruanganPemilik.style.display = 'none';
@@ -2200,7 +2201,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 if(labelNo) labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
                 inputNo.placeholder = "Sila pilih jenis pendaftaran";
                 remark.innerText = "";
-                labelNama.innerHTML = 'Nama <span>*</span>'; 
+                labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
                 ruanganPemilik.style.display = 'none';
                 document.getElementById('namaPemilikDefendan').value = '';
                 document.getElementById('kpPemilikDefendan').value = '';
@@ -2414,24 +2415,42 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         function daftarKesSistem() {
             const noKes = document.getElementById('noKes').value;
-            const namaPengadu = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
-            
-            let namaDefendan = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
-            const jenisDef = document.getElementById('jenisDaftarDefendan').value;
             const isMajikan = document.getElementById('majikan').checked;
-            if(jenisDef === 'SSM (Enterprise)' && !isMajikan) {
-                 const pemilik = document.getElementById('namaPemilikDefendan').value || '';
-                 if(pemilik) namaDefendan += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`;
+            
+            let namaPengaduRaw = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
+            let namaDefendanRaw = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
+            
+            let namaPengaduFinal, namaDefendanFinal;
+
+            if (isMajikan) {
+                namaPengaduFinal = namaDefendanRaw;
+                
+                const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+                if(jenisDef === 'SSM (Enterprise)') {
+                     const pemilik = document.getElementById('namaPemilikDefendan').value || '';
+                     if(pemilik) namaPengaduFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`;
+                }
+
+                namaDefendanFinal = namaPengaduRaw;
+            } else {
+                namaPengaduFinal = namaPengaduRaw;
+                namaDefendanFinal = namaDefendanRaw;
+                
+                const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+                if(jenisDef === 'SSM (Enterprise)') {
+                     const pemilik = document.getElementById('namaPemilikDefendan').value || '';
+                     if(pemilik) namaDefendanFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`;
+                }
             }
 
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
-            const jenisAduan = aduanBerkumpulan ? 'Berkumpulan' : 'Individu';
+            const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
             const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
 
             memoriSenaraiKes.unshift({
                 noKes: noKes,
-                namaPengadu: namaPengadu,
-                namaDefendan: namaDefendan,
+                namaPengadu: namaPengaduFinal,
+                namaDefendan: namaDefendanFinal,
                 jenisAduan: jenisAduan,
                 tarikh: tarikhHariIni
             });
@@ -2450,13 +2469,23 @@ Portal rasmi : jtksm.mohr.gov.my</div>
         function bukaKesDidaftar(index) {
             const kes = memoriSenaraiKes[index];
             document.getElementById('noKes').value = kes.noKes;
-            document.getElementById('namaPengadu').value = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
             
-            let defAsal = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
-            if (defAsal.includes('<br>')) {
-                defAsal = defAsal.split('<br>')[0]; 
+            const isMajikan = kes.jenisAduan === 'Majikan';
+            document.getElementById('majikan').checked = isMajikan;
+            
+            let namaPengaduSenarai = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
+            let namaDefendanSenarai = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
+            
+            if (namaPengaduSenarai.includes('<br>')) { namaPengaduSenarai = namaPengaduSenarai.split('<br>')[0]; }
+            if (namaDefendanSenarai.includes('<br>')) { namaDefendanSenarai = namaDefendanSenarai.split('<br>')[0]; }
+
+            if(isMajikan) {
+                document.getElementById('namaDefendan').value = namaPengaduSenarai; 
+                document.getElementById('namaPengadu').value = namaDefendanSenarai; 
+            } else {
+                document.getElementById('namaPengadu').value = namaPengaduSenarai; 
+                document.getElementById('namaDefendan').value = namaDefendanSenarai; 
             }
-            document.getElementById('namaDefendan').value = defAsal;
             
             if (kes.jenisAduan === 'Berkumpulan') {
                 document.getElementById('aduanBerkumpulan').checked = true;
@@ -2464,6 +2493,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 document.getElementById('aduanIndividu').checked = true;
             }
             toggleAduan();
+            tukarPeranan();
             
             tukarView('daftar');
             pergiKeTabBorang('tab1');
@@ -2613,7 +2643,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const kenyataanAwalText = document.getElementById('kenyataanAwal')?.value.replace(/\n/g, '<br>') || '-';
             const kronologiKesText = document.getElementById('kronologiKes')?.value.replace(/\n/g, '<br>') || '-';
             
-            // MAGIK KEMASKINI: Ayat tuntutan kami/saya
             const teksTuntutanOleh = (aduanBerkumpulan && !isMajikan) ? "Oleh itu, kami menuntut sebagaimana berikut:" : "Oleh itu, saya menuntut sebagaimana berikut:";
 
             let htmlJadualTuntutan = "";
