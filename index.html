@@ -342,9 +342,10 @@
                 text-align: left; 
                 border: 1px solid #000 !important; 
             }
+            /* MAGIK FIX: Padding jadual PDF 3pt untuk semua sel */
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
                 border: none !important; 
-                padding: 2.0pt 8px; 
+                padding: 3pt 8px; 
                 line-height: 1;     
             }
             .print-tbl-tuntutan th { 
@@ -516,7 +517,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                 </div>
                                 <div id="ruanganWakilMajikan" style="display: none;">
                                     <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" id="namaWakilMajikan" placeholder="Nama Penuh Wakil"></div></div>
-                                    <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadPemilik(this)"></div></div>
+                                    <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadWakil(this)"></div></div>
                                     <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanWakilMajikan" placeholder="Jawatan Wakil"></div></div>
                                     
                                     <div class="form-group">
@@ -531,6 +532,16 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- MAGIK FIX: Field Jantina diletakkan di bawah Warganegara Wakil -->
+                                    <div class="form-group" id="ruanganJantinaWakil">
+                                        <label>Jantina <span>*</span></label>
+                                        <div class="input-wrapper radio-group">
+                                            <label><input type="radio" name="jantinaWakil" id="jantinaLelakiWakil" value="Lelaki"> Lelaki</label>
+                                            <label><input type="radio" name="jantinaWakil" id="jantinaPerempuanWakil" value="Perempuan"> Perempuan</label>
+                                        </div>
+                                    </div>
+
                                     <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                                 </div>
                             </div>
@@ -713,6 +724,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -975,7 +987,67 @@ Portal rasmi : jtksm.mohr.gov.my</div>
     </main>
 
     <script>
+        function formatMyKadWakil(inputElement) {
+            let val = inputElement.value.replace(/[^0-9]/g, ''); 
+            let formatted = val;
+            if (val.length > 6) { formatted = val.substring(0, 6) + '-' + val.substring(6); }
+            if (val.length > 8) { formatted = formatted.substring(0, 9) + '-' + formatted.substring(9, 13); }
+            inputElement.value = formatted;
+
+            if (val.length === 12) {
+                let lastDigit = parseInt(val.substring(11, 12));
+                if (lastDigit % 2 !== 0) {
+                    document.getElementById('jantinaLelakiWakil').checked = true;
+                } else {
+                    document.getElementById('jantinaPerempuanWakil').checked = true;
+                }
+            }
+        }
+
+        function kemaskiniDropdownPendaftaran() {
+            const isMajikan = document.getElementById('majikan').checked;
+            const dropPengadu = document.getElementById('jenisDaftarPengadu');
+            const dropDefendan = document.getElementById('jenisDaftarDefendan');
+            
+            const valPengadu = dropPengadu.value;
+            const valDefendan = dropDefendan.value;
+            
+            if (isMajikan) {
+                dropPengadu.innerHTML = `
+                    <option value="">-Sila Pilih-</option>
+                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                    <option value="MyKad">MyKad</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                `;
+                dropDefendan.innerHTML = `
+                    <option value="MyKad" selected>MyKad</option>
+                    <option value="Pasport">Pasport</option>
+                `;
+            } else {
+                dropPengadu.innerHTML = `
+                    <option value="MyKad" selected>MyKad</option>
+                    <option value="Pasport">Pasport</option>
+                `;
+                dropDefendan.innerHTML = `
+                    <option value="">-Sila Pilih-</option>
+                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                    <option value="MyKad">MyKad</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                `;
+            }
+            
+            if(Array.from(dropPengadu.options).some(o => o.value === valPengadu)) dropPengadu.value = valPengadu;
+            if(Array.from(dropDefendan.options).some(o => o.value === valDefendan)) dropDefendan.value = valDefendan;
+            
+            kawalJenisDaftarPengadu();
+            kawalJenisDaftarDefendan();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            kemaskiniDropdownPendaftaran();
+
             const tab1 = document.getElementById('tab1');
             tab1.addEventListener('input', janaKenyataanAwal);
             tab1.addEventListener('change', janaKenyataanAwal);
@@ -1505,13 +1577,13 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 
                 autoResize(textareaAwal);
             } else if (isMajikan) {
-                // MAGIK LOGIK: MAJIKAN ADALAH PENGADU
-                let namaSyarikat = document.getElementById('namaDefendan').value.trim() || '[Nama Syarikat/Organisasi]';
-                let noPendSyarikat = document.getElementById('noPendDefendan').value.trim();
+                // MAGIK KEMASKINI: Maklumat khusus untuk majikan sebagai pengadu
+                let namaSyarikat = document.getElementById('namaPengadu').value.trim() || '[Nama Syarikat/Organisasi]';
+                let noPendSyarikat = document.getElementById('noPendPengadu').value.trim();
                 let teksPend = noPendSyarikat ? ` (No. Pendaftaran: ${noPendSyarikat})` : '';
 
-                let namaPekerja = document.getElementById('namaPengadu').value.trim() || '[Nama Pekerja]';
-                let noMyKadPekerja = document.getElementById('noPendPengadu').value.trim();
+                let namaPekerja = document.getElementById('namaDefendan').value.trim() || '[Nama Pekerja]';
+                let noMyKadPekerja = document.getElementById('noPendDefendan').value.trim();
                 let teksMyKadPekerja = noMyKadPekerja ? ` (No. MyKad: ${noMyKadPekerja})` : '';
 
                 let p1 = `Saya merupakan wakil majikan yang diberi kuasa mewakili majikan ${namaSyarikat}${teksPend} yang ingin membuat tuntutan terhadap defendan ${namaPekerja}${teksMyKadPekerja}.`;
@@ -1946,9 +2018,20 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const tempatKanan = document.getElementById('tempatSuis2');
 
             const ruanganAduan = document.getElementById('ruanganAduan');
+            const ruanganJantina = document.getElementById('ruanganJantina');
+            const ruanganAlamatKerja = document.getElementById('ruanganAlamatKerjaLengkap');
             const ruanganWakil = document.getElementById('ruanganWakilMajikan');
-            const ruanganWarganegaraPekerja = document.getElementById('ruanganWarganegaraPengaduAsal');
+            const tempatKerja1 = document.getElementById('tempatAlamatKerja1');
+            const tempatKerja2 = document.getElementById('tempatAlamatKerja2');
+            
+            const labelBerbeza = document.getElementById('labelAlamatBerbeza');
+            const notaBerbeza = document.getElementById('notaSalinAlamat');
+            
+            const seksyenPekerja = document.getElementById('seksyenPekerja');
+            const seksyenMajikan = document.getElementById('seksyenMajikan');
+            const ruanganGajiMinima = document.getElementById('ruanganGajiMinima');
             const blokMaklumatPerkhidmatan = document.getElementById('blokMaklumatPerkhidmatan');
+            const ruanganWarganegaraPengadu = document.getElementById('ruanganWarganegaraPengaduAsal');
 
             if (suis.checked) {
                 kad1.style.order = "2"; 
@@ -1960,13 +2043,22 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 ruanganWakil.style.display = "block"; 
                 
                 ruanganAduan.style.display = "none";
+                ruanganJantina.style.display = "none";
                 document.getElementById('ruanganBilanganPengadu').style.display = 'none';
 
                 if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "none";
-                if(ruanganWarganegaraPekerja) ruanganWarganegaraPekerja.style.display = "none";
+                if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "none";
                 
-                document.getElementById('labelNamaDefendan').innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>';
+                tempatKerja1.appendChild(ruanganAlamatKerja);
+                labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat pengadu (majikan)';
+                notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
 
+                if(seksyenPekerja && seksyenMajikan) {
+                    seksyenPekerja.style.display = "none";
+                    seksyenMajikan.style.display = "block";
+                }
+                if(ruanganGajiMinima) ruanganGajiMinima.style.display = "none";
+                
             } else {
                 kad1.style.order = "1"; 
                 kad2.style.order = "2"; 
@@ -1977,15 +2069,25 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 ruanganWakil.style.display = "none"; 
                 
                 ruanganAduan.style.display = "grid"; 
+                ruanganJantina.style.display = "grid";
                 if (document.getElementById('aduanBerkumpulan').checked) {
                     document.getElementById('ruanganBilanganPengadu').style.display = 'grid';
                 }
                 
                 if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "block";
-                if(ruanganWarganegaraPekerja) ruanganWarganegaraPekerja.style.display = "grid";
+                if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "grid";
 
-                kawalJenisDaftarDefendan(); 
+                tempatKerja2.appendChild(ruanganAlamatKerja);
+                labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat defendan';
+                notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
+
+                if(seksyenPekerja && seksyenMajikan) {
+                    seksyenPekerja.style.display = "grid";
+                    seksyenMajikan.style.display = "none";
+                }
+                if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
             }
+            kemaskiniDropdownPendaftaran();
             janaKenyataanAwal();
         }
 
@@ -1997,6 +2099,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const labelNama = document.getElementById('labelNamaPengadu');
             const warganegara = document.getElementById('warganegaraPengadu');
             const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+            const isMajikan = document.getElementById('majikan').checked;
 
             if(ruanganLain) { ruanganLain.style.display = 'none'; }
 
@@ -2005,7 +2108,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 inputNo.placeholder = "Contoh: 880101-01-1234";
                 inputNo.maxLength = 14;
                 remark.innerText = "Masukkan No. Kad Pengenalan";
-                labelNama.innerHTML = 'Nama <span>*</span>';
+                if(isMajikan) labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>';
+                else labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             } else if (jenis === 'Pasport') {
                 labelNo.innerHTML = 'No. Pasport <span>*</span>';
@@ -2024,6 +2128,19 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <option value="Pakistan">Pakistan</option>
                     <option value="Lain-lain">Lain-lain</option>
                 `;
+            } else if (jenis.includes('SSM') || jenis === 'Lain-lain') {
+                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
+                inputNo.placeholder = "Masukkan No. Pendaftaran";
+                inputNo.maxLength = 20;
+                remark.innerText = "Masukkan No. Pendaftaran";
+                labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
+                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
+            } else {
+                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
+                inputNo.placeholder = "Sila pilih jenis pendaftaran dahulu";
+                remark.innerText = "";
+                labelNama.innerHTML = 'Nama <span>*</span>';
+                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             }
         }
 
@@ -2301,7 +2418,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             
             let namaDefendan = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
             const jenisDef = document.getElementById('jenisDaftarDefendan').value;
-            if(jenisDef === 'SSM (Enterprise)') {
+            const isMajikan = document.getElementById('majikan').checked;
+            if(jenisDef === 'SSM (Enterprise)' && !isMajikan) {
                  const pemilik = document.getElementById('namaPemilikDefendan').value || '';
                  if(pemilik) namaDefendan += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`;
             }
@@ -2413,13 +2531,13 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const w_nama = document.getElementById('namaWakilMajikan')?.value || '-';
             const w_kpRaw = document.getElementById('noMyKadWakil')?.value || '';
             const w_kp = w_kpRaw || '-';
+            const w_jantina = document.querySelector('input[name="jantinaWakil"]:checked')?.value || '-';
             const wgDropdownW = document.getElementById('warganegaraWakil')?.value;
             const wgLainW = document.getElementById('warganegaraLainWakil')?.value;
             const w_warga = (wgDropdownW === 'Lain-lain') ? (wgLainW || '-') : (wgDropdownW || '-');
             
             let w_umur = '-';
             let w_dob = '-';
-            let w_jantina = '-';
             const w_rawKP = w_kpRaw.replace(/[^0-9]/g, '');
             if (w_rawKP.length === 12) {
                 let thn = parseInt(w_rawKP.substring(0, 2));
@@ -2429,15 +2547,13 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 w_dob = `${hr} ${bulanMY[bln]} ${fullYear}`;
                 let ageDate = new Date(Date.now() - new Date(fullYear, bln, hr).getTime()); 
                 w_umur = Math.abs(ageDate.getUTCFullYear() - 1970) + " tahun";
-                w_jantina = parseInt(w_rawKP.substring(11, 12)) % 2 !== 0 ? "Lelaki" : "Perempuan";
             }
 
-            let cetakPengaduNama, cetakPengaduAsal, cetakPengaduAlamat, cetakPengaduTel, cetakPengaduEmel, cetakPengaduPerniagaan;
+            let cetakPengaduNama, cetakPengaduAlamat, cetakPengaduTel, cetakPengaduEmel, cetakPengaduPerniagaan;
             let cetakDefendanNama, cetakDefendanAlamat, cetakDefendanTel, cetakDefendanEmel, cetakDefendanPerniagaan;
             let m3Nama, m3Jantina, m3KP, m3Umur, m3DOB, m3Warga, m3Tandatangan;
 
             if (isMajikan) {
-                cetakPengaduAsal = c_namaRaw;
                 cetakPengaduNama = c_namaRaw;
                 cetakPengaduAlamat = c_alamat;
                 cetakPengaduTel = c_hp !== '-' ? c_hp : c_tel;
@@ -2459,7 +2575,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 m3Tandatangan = w_nama;
 
             } else {
-                cetakPengaduAsal = p_nama;
                 cetakPengaduNama = p_nama;
                 if (aduanBerkumpulan) {
                     const bil = parseInt(document.getElementById('bilanganPengadu')?.value) || 1;
@@ -2497,6 +2612,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
             const kenyataanAwalText = document.getElementById('kenyataanAwal')?.value.replace(/\n/g, '<br>') || '-';
             const kronologiKesText = document.getElementById('kronologiKes')?.value.replace(/\n/g, '<br>') || '-';
+            
+            // MAGIK KEMASKINI: Ayat tuntutan kami/saya
+            const teksTuntutanOleh = (aduanBerkumpulan && !isMajikan) ? "Oleh itu, kami menuntut sebagaimana berikut:" : "Oleh itu, saya menuntut sebagaimana berikut:";
 
             let htmlJadualTuntutan = "";
             let jumlahKeseluruhan = 0;
@@ -2671,7 +2789,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     </div>
 
                     <div style="margin-bottom: 0;">
-                        Oleh itu, saya menuntut sebagaimana berikut:
+                        ${teksTuntutanOleh}
                     </div>
 
                     <table class="print-tbl-tuntutan" style="margin-top: 0; margin-bottom: 0;">
