@@ -355,6 +355,12 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
+            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
+                background-color: #cbd5e1 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
                 background-color: #cbd5e1 !important; 
@@ -1665,6 +1671,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
+        // MAGIK KEMASKINI: Ditambah fungsi auto-focus ke kotak Jenis Tuntutan
         function bukaModalTuntutan(indexEdit = -1) {
             document.getElementById('modalTuntutan').style.display = 'flex';
             
@@ -1710,6 +1717,15 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 document.getElementById('jumlahTuntutan').value = "";
                 document.getElementById('indexTuntutanEdit').value = "-1";
             }
+
+            // MAGIK KEMASKINI: Auto-fokus ke kotak Jenis Tuntutan supaya user bersedia untuk memilih
+            setTimeout(() => {
+                document.getElementById('jenisTuntutan').focus();
+                document.getElementById('jenisTuntutan').style.boxShadow = '0 0 0 2px rgba(37, 99, 235, 0.3)';
+                document.getElementById('jenisTuntutan').addEventListener('blur', function() {
+                    this.style.boxShadow = 'none';
+                }, { once: true });
+            }, 100);
         }
 
         function tutupModalTuntutan() {
