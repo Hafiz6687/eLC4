@@ -355,6 +355,10 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
+            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
+                background-color: transparent !important;
+            }
+            
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
                 background-color: #cbd5e1 !important; 
@@ -512,9 +516,23 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                 </div>
                                 <div id="ruanganWakilMajikan" style="display: none;">
                                     <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" id="namaWakilMajikan" placeholder="Nama Penuh Wakil"></div></div>
-                                    <!-- MAGIK: Tukar label No. Pengenalan ke No. MyKad -->
                                     <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadPemilik(this)"></div></div>
                                     <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanWakilMajikan" placeholder="Jawatan Wakil"></div></div>
+                                    
+                                    <!-- MAGIK: Field Warganegara khas untuk Wakil Majikan -->
+                                    <div class="form-group">
+                                        <label>Warganegara <span>*</span></label>
+                                        <div class="input-wrapper">
+                                            <select id="warganegaraWakil" onchange="if(this.value==='Lain-lain') document.getElementById('ruanganWarganegaraLainWakil').style.display='block'; else { document.getElementById('ruanganWarganegaraLainWakil').style.display='none'; document.getElementById('warganegaraLainWakil').value=''; }">
+                                                <option value="Malaysia" selected>Malaysia</option>
+                                                <option value="Lain-lain">Lain-lain</option>
+                                            </select>
+                                            <div id="ruanganWarganegaraLainWakil" style="display: none; margin-top: 10px;">
+                                                <input type="text" id="warganegaraLainWakil" placeholder="Masukkan warganegara" style="width: 100%;">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                                 </div>
                             </div>
@@ -537,19 +555,20 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </div>
 
                         <div class="form-group">
-                            <label>Jenis Pendaftaran <span>*</span></label>
+                            <label id="labelJenisPendPengadu">Jenis Pendaftaran <span>*</span></label>
                             <div class="input-wrapper">
                                 <select id="jenisDaftarPengadu" onchange="kawalJenisDaftarPengadu()">
-                                    <option value="">-Sila Pilih-</option><option value="MyKad">MyKad</option><option value="Pasport">Pasport</option>
+                                    <option value="MyKad" selected>MyKad</option>
+                                    <option value="Pasport">Pasport</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label id="labelNoPendPengadu">Nombor Pendaftaran <span>*</span></label>
+                            <label id="labelNoPendPengadu">No. MyKad <span>*</span></label>
                             <div class="input-wrapper">
-                                <input type="text" id="noPendPengadu" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="formatMyKad(this, 'jenisDaftarPengadu')" onblur="semakFormatMyKad(this, 'jenisDaftarPengadu')">
-                                <p id="remarkNoPendPengadu" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
+                                <input type="text" id="noPendPengadu" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKad(this, 'jenisDaftarPengadu')" onblur="semakFormatMyKad(this, 'jenisDaftarPengadu')">
+                                <p id="remarkNoPendPengadu" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">Masukkan No. Kad Pengenalan</p>
                             </div>
                         </div>
 
@@ -593,7 +612,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         
                         <div id="tempatAlamatKerja1"></div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="ruanganWarganegaraPengaduAsal">
                             <label>Warganegara <span>*</span></label>
                             <div class="input-wrapper">
                                 <select id="warganegaraPengadu" onchange="kawalWarganegara()"><option value="Malaysia" selected>Malaysia</option></select>
@@ -601,7 +620,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                         </div>
                         
-                        <!-- MAGIK: Wrap Maklumat Perkhidmatan supaya mudah disorok -->
                         <div id="blokMaklumatPerkhidmatan">
                             <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                             
@@ -728,7 +746,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </div>
 
                         <div class="form-group">
-                            <label>Nombor Pendaftaran</label>
+                            <label id="labelNoPendDefendan">Nombor Pendaftaran <span>*</span></label>
                             <div class="input-wrapper">
                                 <input type="text" id="noPendDefendan" placeholder="Sila pilih jenis pendaftaran dahulu" oninput="this.value = this.value.toUpperCase(); formatMyKad(this, 'jenisDaftarDefendan')" onblur="semakFormatMyKad(this, 'jenisDaftarDefendan')">
                                 <p id="remarkNoPendDefendan" style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;"></p>
@@ -959,7 +977,50 @@ Portal rasmi : jtksm.mohr.gov.my</div>
     </main>
 
     <script>
+        function kemaskiniDropdownPendaftaran() {
+            const isMajikan = document.getElementById('majikan').checked;
+            const dropPengadu = document.getElementById('jenisDaftarPengadu');
+            const dropDefendan = document.getElementById('jenisDaftarDefendan');
+            
+            const valPengadu = dropPengadu.value;
+            const valDefendan = dropDefendan.value;
+            
+            if (isMajikan) {
+                dropPengadu.innerHTML = `
+                    <option value="">-Sila Pilih-</option>
+                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                    <option value="MyKad">MyKad</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                `;
+                dropDefendan.innerHTML = `
+                    <option value="MyKad" selected>MyKad</option>
+                    <option value="Pasport">Pasport</option>
+                `;
+            } else {
+                dropPengadu.innerHTML = `
+                    <option value="MyKad" selected>MyKad</option>
+                    <option value="Pasport">Pasport</option>
+                `;
+                dropDefendan.innerHTML = `
+                    <option value="">-Sila Pilih-</option>
+                    <option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>
+                    <option value="SSM (Enterprise)">SSM (Enterprise)</option>
+                    <option value="MyKad">MyKad</option>
+                    <option value="Lain-lain">Lain-lain</option>
+                `;
+            }
+            
+            if(Array.from(dropPengadu.options).some(o => o.value === valPengadu)) dropPengadu.value = valPengadu;
+            if(Array.from(dropDefendan.options).some(o => o.value === valDefendan)) dropDefendan.value = valDefendan;
+            
+            kawalJenisDaftarPengadu();
+            kawalJenisDaftarDefendan();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            kemaskiniDropdownPendaftaran();
+
             const tab1 = document.getElementById('tab1');
             tab1.addEventListener('input', janaKenyataanAwal);
             tab1.addEventListener('change', janaKenyataanAwal);
@@ -1491,12 +1552,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 autoResize(textareaAwal);
             } else if (isMajikan) {
                 // MAGIK LOGIK: MAJIKAN ADALAH PENGADU
-                let namaSyarikat = document.getElementById('namaDefendan').value.trim() || '[Nama Syarikat/Organisasi]';
-                let noPendSyarikat = document.getElementById('noPendDefendan').value.trim();
+                let namaSyarikat = document.getElementById('namaPengadu').value.trim() || '[Nama Syarikat/Organisasi]';
+                let noPendSyarikat = document.getElementById('noPendPengadu').value.trim();
                 let teksPend = noPendSyarikat ? ` (No. Pendaftaran: ${noPendSyarikat})` : '';
 
-                let namaPekerja = document.getElementById('namaPengadu').value.trim() || '[Nama Pekerja]';
-                let noMyKadPekerja = document.getElementById('noPendPengadu').value.trim();
+                let namaPekerja = document.getElementById('namaDefendan').value.trim() || '[Nama Pekerja]';
+                let noMyKadPekerja = document.getElementById('noPendDefendan').value.trim();
                 let teksMyKadPekerja = noMyKadPekerja ? ` (No. MyKad: ${noMyKadPekerja})` : '';
 
                 let p1 = `Saya merupakan wakil majikan yang diberi kuasa mewakili majikan ${namaSyarikat}${teksPend} yang ingin membuat tuntutan terhadap defendan ${namaPekerja}${teksMyKadPekerja}.`;
@@ -1944,6 +2005,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const seksyenMajikan = document.getElementById('seksyenMajikan');
             const ruanganGajiMinima = document.getElementById('ruanganGajiMinima');
             const blokMaklumatPerkhidmatan = document.getElementById('blokMaklumatPerkhidmatan');
+            const ruanganWarganegaraPengadu = document.getElementById('ruanganWarganegaraPengaduAsal');
 
             if (suis.checked) {
                 kad1.style.order = "2"; 
@@ -1966,6 +2028,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "none";
                 if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "none";
+                if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "none";
                 
             } else {
                 kad1.style.order = "1"; 
@@ -1988,8 +2051,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
                 if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "block";
+                if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "grid";
             }
-            kawalJenisDaftarDefendan();
+            kemaskiniDropdownPendaftaran();
             janaKenyataanAwal();
         }
 
@@ -1998,8 +2062,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const labelNo = document.getElementById('labelNoPendPengadu');
             const inputNo = document.getElementById('noPendPengadu');
             const remark = document.getElementById('remarkNoPendPengadu');
+            const labelNama = document.getElementById('labelNamaPengadu');
             const warganegara = document.getElementById('warganegaraPengadu');
             const ruanganLain = document.getElementById('ruanganWarganegaraLain');
+            const isMajikan = document.getElementById('majikan').checked;
 
             if(ruanganLain) { ruanganLain.style.display = 'none'; }
 
@@ -2008,12 +2074,15 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 inputNo.placeholder = "Contoh: 880101-01-1234";
                 inputNo.maxLength = 14;
                 remark.innerText = "Masukkan No. Kad Pengenalan";
+                if(isMajikan) labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>';
+                else labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             } else if (jenis === 'Pasport') {
                 labelNo.innerHTML = 'No. Pasport <span>*</span>';
                 inputNo.placeholder = "Masukkan No. Pasport";
                 inputNo.maxLength = 20;
                 remark.innerText = "Masukkan No. Pasport";
+                labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = `
                     <option value="">-Sila Pilih-</option>
                     <option value="Indonesia">Indonesia</option>
@@ -2025,10 +2094,18 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <option value="Pakistan">Pakistan</option>
                     <option value="Lain-lain">Lain-lain</option>
                 `;
+            } else if (jenis.includes('SSM') || jenis === 'Lain-lain') {
+                labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
+                inputNo.placeholder = "Masukkan No. Pendaftaran";
+                inputNo.maxLength = 20;
+                remark.innerText = "Masukkan No. Pendaftaran";
+                labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
+                warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             } else {
                 labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
                 inputNo.placeholder = "Sila pilih jenis pendaftaran dahulu";
                 remark.innerText = "";
+                labelNama.innerHTML = 'Nama <span>*</span>';
                 warganegara.innerHTML = '<option value="Malaysia" selected>Malaysia</option>';
             }
         }
@@ -2046,6 +2123,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         function kawalJenisDaftarDefendan() {
             const jenis = document.getElementById('jenisDaftarDefendan').value;
+            const labelNo = document.getElementById('labelNoPendDefendan');
             const inputNo = document.getElementById('noPendDefendan');
             const remark = document.getElementById('remarkNoPendDefendan');
             const labelNama = document.getElementById('labelNamaDefendan'); 
@@ -2053,6 +2131,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const isMajikan = document.getElementById('majikan').checked;
 
             if (jenis === 'MyKad') {
+                if(labelNo) labelNo.innerHTML = 'No. MyKad <span>*</span>';
                 inputNo.placeholder = "Contoh: 880101-01-1234";
                 inputNo.maxLength = 14;
                 remark.innerText = "Masukkan No. Kad Pengenalan";
@@ -2060,7 +2139,17 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 ruanganPemilik.style.display = 'none';
                 document.getElementById('namaPemilikDefendan').value = '';
                 document.getElementById('kpPemilikDefendan').value = '';
+            } else if (jenis === 'Pasport') {
+                if(labelNo) labelNo.innerHTML = 'No. Pasport <span>*</span>';
+                inputNo.placeholder = "Masukkan No. Pasport";
+                inputNo.maxLength = 20;
+                remark.innerText = "Masukkan No. Pasport";
+                labelNama.innerHTML = 'Nama <span>*</span>'; 
+                ruanganPemilik.style.display = 'none';
+                document.getElementById('namaPemilikDefendan').value = '';
+                document.getElementById('kpPemilikDefendan').value = '';
             } else if (jenis.includes('SSM') || jenis === 'Lain-lain') {
+                if(labelNo) labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
                 inputNo.placeholder = "Masukkan No. Pendaftaran";
                 inputNo.maxLength = 20;
                 remark.innerText = "Masukkan No. Pendaftaran";
@@ -2074,6 +2163,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     document.getElementById('kpPemilikDefendan').value = '';
                 }
             } else {
+                if(labelNo) labelNo.innerHTML = 'Nombor Pendaftaran <span>*</span>';
                 inputNo.placeholder = "Sila pilih jenis pendaftaran";
                 remark.innerText = "";
                 labelNama.innerHTML = 'Nama <span>*</span>'; 
@@ -2356,13 +2446,21 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const isMajikan = document.getElementById('majikan')?.checked;
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
             
-            const namaPengaduAsal = document.getElementById('namaPengadu')?.value || '-';
-            let namaPengaduCetak = namaPengaduAsal;
+            let namaPengaduCetak = document.getElementById('namaPengadu')?.value || '-';
+            let namaPengaduAsal = namaPengaduCetak;
             
-            if (aduanBerkumpulan && !isMajikan) {
-                const bilPengaduInput = parseInt(document.getElementById('bilanganPengadu')?.value) || 1;
-                if (bilPengaduInput > 1) {
-                    namaPengaduCetak += ` DAN ${bilPengaduInput - 1} YANG LAIN`;
+            let wakilCetak = document.getElementById('namaWakilMajikan')?.value || '-';
+            let myKadWakilCetak = document.getElementById('noMyKadWakil')?.value || '-';
+            let warganegaraWakilCetak = document.getElementById('warganegaraWakil')?.value === 'Lain-lain' ? document.getElementById('warganegaraLainWakil')?.value : (document.getElementById('warganegaraWakil')?.value || '-');
+            
+            if (isMajikan) {
+                namaPengaduCetak = document.getElementById('namaPengadu')?.value || '-';
+            } else {
+                if (aduanBerkumpulan) {
+                    const bilPengaduInput = parseInt(document.getElementById('bilanganPengadu')?.value) || 1;
+                    if (bilPengaduInput > 1) {
+                        namaPengaduCetak += ` DAN ${bilPengaduInput - 1} YANG LAIN`;
+                    }
                 }
             }
             
@@ -2370,7 +2468,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const jantinaPengadu = document.querySelector('input[name="jantinaPengadu"]:checked')?.value || '-';
             const telPengadu = document.getElementById('telPengadu')?.value || '-';
             const hpPengadu = document.getElementById('hpPengadu')?.value || '-';
-            const gajiPengadu = document.getElementById('gajiPokokPengadu')?.value || '-';
             
             const emelPengadu = document.getElementById('emelPengadu')?.value || '-';
             const emelDefendan = document.getElementById('emelDefendan')?.value || '-';
@@ -2394,6 +2491,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
             
+            // MAGIK KEMASKINI: Ejaan dan format tepat SSM Enterprise (Tiada Italic)
             if(jenisDefCetak === 'SSM (Enterprise)') {
                  const pemilikCetak = (document.getElementById('namaPemilikDefendan')?.value || '').toUpperCase();
                  const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
@@ -2405,10 +2503,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                  }
             }
 
-            const kpDefendan = document.getElementById('noPendDefendan')?.value || '-';
             const telDefendan = document.getElementById('telDefendan')?.value || '-';
             const hpDefendan = document.getElementById('hpDefendan')?.value || '-';
-            const sektorDefendan = document.getElementById('sektorDefendan')?.value || '-';
             
             const alamatD1 = document.getElementById('alamatDefendan1')?.value || '';
             const alamatD2 = document.getElementById('alamatDefendan2')?.value || '';
@@ -2480,13 +2576,50 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 htmlJadualTuntutan += `
                     <tr class="footer-row">
                         <td colspan="2" style="text-align:right; font-weight:bold; padding-right: 15px;">JUMLAH KESELURUHAN</td>
-                        <td class="money" style="font-weight:bold;">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        <td class="money" style="font-weight:bold; background-color: #cbd5e1 !important; -webkit-print-color-adjust: exact; color-adjust: exact;">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>
                 `;
             }
 
             const t = new Date();
             const tarikhHariIniFormat = `${t.getDate()} ${bulanMY[t.getMonth()]} ${t.getFullYear()}`;
+
+            // MAGIK KEMASKINI: Logik untuk Muka 3 (Extract dari Wakil jika Majikan)
+            let muka3Nama = namaPengaduAsal;
+            let muka3KP = kpPengadu;
+            let muka3Jantina = jantinaPengadu;
+            let muka3Umur = umurPengadu;
+            let muka3DOB = tarikhLahirPengadu;
+            let muka3Warga = warganegara;
+            let tandatanganNama = namaPengaduAsal;
+
+            if (isMajikan) {
+                muka3Nama = wakilCetak;
+                muka3KP = myKadWakilCetak;
+                muka3Warga = warganegaraWakilCetak;
+                tandatanganNama = wakilCetak;
+
+                const noPendRaw = myKadWakilCetak.replace(/[^0-9]/g, '');
+                if (noPendRaw.length === 12) {
+                    let thn = parseInt(noPendRaw.substring(0, 2));
+                    let bln = parseInt(noPendRaw.substring(2, 4)) - 1;
+                    let hr = parseInt(noPendRaw.substring(4, 6));
+                    let fullYear = thn > 50 ? 1900 + thn : 2000 + thn;
+                    muka3DOB = `${hr} ${bulanMY[bln]} ${fullYear}`;
+                    
+                    let dobDate = new Date(fullYear, bln, hr);
+                    let ageDifMs = Date.now() - dobDate.getTime();
+                    let ageDate = new Date(ageDifMs); 
+                    muka3Umur = Math.abs(ageDate.getUTCFullYear() - 1970) + " tahun";
+
+                    let lastDigit = parseInt(noPendRaw.substring(11, 12));
+                    muka3Jantina = (lastDigit % 2 !== 0) ? "Lelaki" : "Perempuan";
+                } else {
+                    muka3DOB = '-';
+                    muka3Umur = '-';
+                    muka3Jantina = '-';
+                }
+            }
 
             const htmlDokumenRasmi = `
                 <!-- AKUAN PEMFAILAN (MUKA SURAT 1) -->
@@ -2611,14 +2744,14 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 30px; line-height: 1;">
-                        <div>Nama: <span style="text-transform: uppercase;">${namaPengaduAsal}</span></div>
-                        <div style="text-align: right;">Jantina: <span>${jantinaPengadu}</span></div>
+                        <div>Nama: <span style="text-transform: uppercase;">${muka3Nama}</span></div>
+                        <div style="text-align: right;">Jantina: <span>${muka3Jantina}</span></div>
                         
-                        <div>No. Kad Pengenalan: <span>${kpPengadu}</span></div>
-                        <div style="text-align: right;">Umur: <span>${umurPengadu}</span></div>
+                        <div>No. Kad Pengenalan: <span>${muka3KP}</span></div>
+                        <div style="text-align: right;">Umur: <span>${muka3Umur}</span></div>
                         
-                        <div>Tarikh Lahir: <span>${tarikhLahirPengadu}</span></div>
-                        <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
+                        <div>Tarikh Lahir: <span>${muka3DOB}</span></div>
+                        <div style="text-align: right;">Warganegara: <span>${muka3Warga}</span></div>
                     </div>
 
                     <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.5;">
@@ -2661,7 +2794,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                             <div>
                                 <div style="margin-bottom: 40px;">Keterangan Diberi Oleh</div>
-                                <strong style="text-transform: uppercase;">${namaPengaduAsal}</strong><br>
+                                <strong style="text-transform: uppercase;">${tandatanganNama}</strong><br>
                                 (Pengadu)
                             </div>
                         </div>
