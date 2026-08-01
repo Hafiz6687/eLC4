@@ -347,7 +347,6 @@
                 padding: 2.0pt 8px; 
                 line-height: 1;     
             }
-            /* MAGIK KEMASKINI: Hanya header dan footer (JUMLAH KESELURUHAN) digelapkan */
             .print-tbl-tuntutan th { 
                 background-color: #cbd5e1 !important; 
                 -webkit-print-color-adjust: exact; 
@@ -1546,7 +1545,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }, 10);
             }
             
-            // MAGIK KEMASKINI: Smooth scroll yang berfungsi untuk struktur layout aplikasi ini
             document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
         }
 
@@ -1573,7 +1571,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }, 10);
             }
 
-            // MAGIK KEMASKINI: Smooth scroll ke atas
             document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
         }
 
@@ -2351,7 +2348,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
             
-            // MAGIK KEMASKINI: Format pengekstrakan pemilik SSM (Enterprise)
             if(jenisDefCetak === 'SSM (Enterprise)') {
                  const pemilikCetak = document.getElementById('namaPemilikDefendan')?.value || '';
                  const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
@@ -2463,7 +2459,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div style="text-align: center; margin-bottom: 20px;">Dan</div>
                     
                     <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-                        <span style="text-transform: uppercase;">${namaDefendanRaw}</span>
+                        <span style="text-transform: uppercase;">${namaDefendanPDF}</span>
                         <span>Defendan</span>
                     </div>
                     
@@ -2496,7 +2492,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 <div style="font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
                     <div style="text-align: right; margin-bottom: 20px;">Lampiran 1 JTKSM(A)06/01</div>
 
-                    <!-- MAGIK KEMASKINI: PERKATAAN KERJA BESAR -->
                     <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">
                         KETUA PENGARAH TENAGA KERJA KES SAMAN<br>
                         NO. ${noKes}<br>
@@ -2518,7 +2513,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div style="text-align: center; margin-bottom: 5px;">Dan</div>
 
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
-                        <div style="text-transform: uppercase; line-height: 1.15;">${namaDefendanRaw}</div>
+                        <div style="text-transform: uppercase; line-height: 1.15;">${namaDefendanPDF}</div>
                         <div style="line-height: 1.15;">... Defendan</div>
                     </div>
                     <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1.15;">
@@ -2570,7 +2565,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 30px; line-height: 1;">
-                        <!-- MAGIK KEMASKINI: Nama pengadu asal diextract -->
                         <div>Nama: <span style="text-transform: uppercase;">${namaPengaduAsal}</span></div>
                         <div style="text-align: right;">Jantina: <span>${jantinaPengadu}</span></div>
                         
@@ -2581,7 +2575,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
                     </div>
 
-                    <!-- MAGIK KEMASKINI: Paksa ayat 2 baris sentiasa! -->
                     <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.5;">
                         <div style="white-space: nowrap;">Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain</div>
                         <div style="white-space: nowrap;">(Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:</div>
@@ -2622,7 +2615,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                             <div>
                                 <div style="margin-bottom: 40px;">Keterangan Diberi Oleh</div>
-                                <!-- MAGIK KEMASKINI: Hanya panggil nama pengadu asal (Tanpa DAN X YANG LAIN) -->
                                 <strong style="text-transform: uppercase;">${namaPengaduAsal}</strong><br>
                                 (Pengadu)
                             </div>
