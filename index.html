@@ -239,7 +239,7 @@
             border-color: #cbd5e1;
         }
 
-        /* MAGIK KEMASKINI: Boleh drag bucu secara menegak (vertical) untuk melebarkan ruang */
+        /* Magik Auto-Expand Textarea & Placeholder */
         textarea.auto-expand {
             resize: vertical; 
             overflow: hidden;
@@ -342,7 +342,8 @@
                 border-spacing: 0;
                 font-size: 11pt; 
                 text-align: left; 
-                border: 2px solid #000 !important; 
+                /* KEMASKINI: Kurangkan ketebalan border jadual dari 2px ke 1px */
+                border: 1px solid #000 !important; 
             }
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
                 border: none !important; 
@@ -401,14 +402,12 @@
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
         
-        <!-- MAGIK KEMASKINI: PROFIL & GAMBAR DISATUKAN DALAM SATU LINGKARAN & BOLEH EDIT -->
         <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #cbd5e1; border: 1px solid var(--border-color); border-radius: 12px;">
             
             <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik. Seret untuk laras, Scroll/Cubit untuk zoom, Dwi-klik untuk tukar.">
                 <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
                     <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
                 </div>
-                <!-- MAGIK FIX: Gambar diposisikan betul-betul di tengah tanpa object-fit: cover -->
                 <img id="gambarProfil" src="" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
             </div>
@@ -449,7 +448,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             <div style="display: flex; gap: 10px;"><button class="btn-print btn-terapung" onclick="sediaUntukCetak()">🖨️ Cetak PDF</button></div>
         </div>
         
-        <!-- ======================= VIEW 1: SENARAI TUGASAN ======================= -->
         <div id="viewSenaraiTugas" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
             <div class="card full-width">
                 <div class="card-header">Senarai Kes Didaftarkan</div>
@@ -472,7 +470,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             </div>
         </div>
 
-        <!-- ======================= VIEW 2: PENDAFTARAN KES ======================= -->
         <div id="viewPendaftaranKes">
             
             <div class="page-tabs-container">
@@ -497,7 +494,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 </div>
             </div>
 
-            <!-- TAB 1: PENGADU & DEFENDAN -->
             <div class="content-area" id="tab1"> 
                 
                 <div class="card" id="kad1" style="transition: all 0.4s ease;">
@@ -603,7 +599,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                         </div>
                         
-                        <!-- MAKLUMAT PERKHIDMATAN (Tersembunyi secara lalai) -->
                         <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                         
                         <div style="margin-bottom: 20px;">
@@ -2487,12 +2482,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
                     <div style="text-align: center; margin-bottom: 5px;">Antara</div>
 
-                    <!-- Spacing Pengadu Rapat (Single Spacing) -->
+                    <!-- KEMASKINI: Spacing Pengadu (Line Spacing 1.15) -->
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
-                        <div style="text-transform: uppercase; line-height: 1;">${namaPengadu}</div>
-                        <div>... Pengadu</div>
+                        <div style="text-transform: uppercase; line-height: 1.15;">${namaPengadu}</div>
+                        <div style="line-height: 1.15;">... Pengadu</div>
                     </div>
-                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1;">
+                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1.15;">
                         ${alamatPenuhPengaduCetak}<br>
                         NO.TEL: ${hpPengadu !== '-' ? hpPengadu : telPengadu}<br>
                         <span style="text-transform: none;">E-mel: ${emelPengadu !== '-' ? emelPengadu.toLowerCase() : '-'}</span>
@@ -2500,12 +2495,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
                     <div style="text-align: center; margin-bottom: 5px;">Dan</div>
 
-                    <!-- Spacing Defendan Rapat (Single Spacing) -->
+                    <!-- KEMASKINI: Spacing Defendan (Line Spacing 1.15) -->
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
-                        <div style="text-transform: uppercase; line-height: 1;">${namaDefendanRaw}</div>
-                        <div>... Defendan</div>
+                        <div style="text-transform: uppercase; line-height: 1.15;">${namaDefendanRaw}</div>
+                        <div style="line-height: 1.15;">... Defendan</div>
                     </div>
-                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1;">
+                    <div style="margin-bottom: 15px; margin-top: 2px; text-transform: uppercase; line-height: 1.15;">
                         ${alamatPenuhDefendanCetak}<br>
                         NO.TEL: ${hpDefendan !== '-' ? hpDefendan : telDefendan}<br>
                         <span style="text-transform: none;">E-mel: ${emelDefendan !== '-' ? emelDefendan.toLowerCase() : '-'}</span><br>
