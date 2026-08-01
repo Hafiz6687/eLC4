@@ -390,7 +390,6 @@
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
         
-        <!-- MAGIK KEMASKINI: PROFIL & GAMBAR DISATUKAN DALAM SATU LINGKARAN & BOLEH EDIT -->
         <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #e2e8f0; border: 1px solid var(--border-color); border-radius: 12px;">
             
             <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik gambar. Bila gambar dipaparkan, dwi-klik untuk tukar, seret untuk laras.">
@@ -415,7 +414,6 @@
             <li>LAPORAN</li>
         </ul>
         
-        <!-- MAGIK BLOK ALAMAT -->
         <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
             <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
 (KLUANG LABOUR OFFICE)<br>
@@ -761,12 +759,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                 <div class="form-group">
                                     <label></label>
                                     <div class="input-wrapper">
-                                        <!-- MAGIK ALAMAT BERBEZA (Lalai: Tersembunyi) -->
-                                        <div style="display: flex; align-items: center; height: 30px; gap: 10px;">
-                                            <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()"> 
-                                            <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
+                                        <!-- MAGIK ALAMAT BERBEZA: Perbaiki Layout Flex Container -->
+                                        <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px;">
+                                            <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
+                                            <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0; line-height: 1.4;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
                                         </div>
-                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 24px; font-style: italic;">*(tanda kotak di atas jika tempat pekerjaan berbeza)</p>
+                                        <p id="notaSalinAlamat" style="font-size: 0.8em; color: var(--text-muted); margin: 2px 0 0 26px; font-style: italic;">*(tanda kotak di atas jika tempat pekerjaan berbeza)</p>
                                     </div>
                                 </div>
 
@@ -969,13 +967,33 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
             });
             
-            // Setup Gambar
+            // Setup Gambar & Panning
             setupDragProfil();
             
             // MAGIK: Check dan load Nama Pengguna jika wujud dalam memori
             const namaDisimpan = localStorage.getItem('eLC_namaProfil');
             if (namaDisimpan) {
                 document.getElementById('namaProfilEdit').innerHTML = namaDisimpan;
+            }
+
+            // MAGIK: Check dan load Gambar Profil & Posisi jika wujud dalam memori
+            const gambarDisimpan = localStorage.getItem('eLC_gambarProfil');
+            const posDisimpan = localStorage.getItem('eLC_gambarPos');
+            if (gambarDisimpan) {
+                document.getElementById('ikonKamera').style.display = 'none';
+                const img = document.getElementById('gambarProfil');
+                img.style.display = 'block';
+                img.src = gambarDisimpan;
+                img.style.cursor = 'grab';
+
+                if (posDisimpan) {
+                    const pos = JSON.parse(posDisimpan);
+                    currentPosX = pos.x;
+                    currentPosY = pos.y;
+                    img.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
+                } else {
+                    img.style.transform = `translate(0px, 0px) scale(1.5)`;
+                }
             }
         });
 
@@ -1008,8 +1026,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             });
 
             window.addEventListener('mouseup', function() {
-                isDraggingProfil = false;
-                imgProfile.style.cursor = 'grab';
+                if (isDraggingProfil) {
+                    isDraggingProfil = false;
+                    imgProfile.style.cursor = 'grab';
+                    // Simpan koordinat setiap kali lepas drag
+                    localStorage.setItem('eLC_gambarPos', JSON.stringify({x: currentPosX, y: currentPosY}));
+                }
             });
 
             imgProfile.addEventListener('touchstart', function(e) {
@@ -1027,7 +1049,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }, {passive: false});
 
             window.addEventListener('touchend', function() {
-                isDraggingProfil = false;
+                if (isDraggingProfil) {
+                    isDraggingProfil = false;
+                    // Simpan koordinat setiap kali lepas touch/drag
+                    localStorage.setItem('eLC_gambarPos', JSON.stringify({x: currentPosX, y: currentPosY}));
+                }
             });
 
             imgProfile.addEventListener('dblclick', function() {
@@ -1039,14 +1065,23 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
+                    const base64Data = e.target.result;
                     document.getElementById('ikonKamera').style.display = 'none';
                     const img = document.getElementById('gambarProfil');
                     img.style.display = 'block';
-                    img.src = e.target.result;
+                    img.src = base64Data;
                     currentPosX = 0; 
                     currentPosY = 0;
                     img.style.transform = `translate(0px, 0px) scale(1.5)`;
                     img.style.cursor = 'grab';
+
+                    // Simpan ke memory
+                    try {
+                        localStorage.setItem('eLC_gambarProfil', base64Data);
+                        localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
+                    } catch (err) {
+                        console.warn("Gambar terlalu besar untuk disimpan secara kekal dalam memori browser.");
+                    }
                 };
                 reader.readAsDataURL(input.files[0]);
             }
