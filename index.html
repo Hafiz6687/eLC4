@@ -347,7 +347,6 @@
                 padding: 2.0pt 8px; 
                 line-height: 1;     
             }
-            /* MAGIK FIX: Gelapkan header sahaja, biarkan ruangan data (RM) lutsinar */
             .print-tbl-tuntutan th { 
                 background-color: #cbd5e1 !important; 
                 -webkit-print-color-adjust: exact; 
@@ -356,7 +355,12 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
-            /* MAGIK FIX: Hanya gelapkan baris JUMLAH KESELURUHAN */
+            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
+                background-color: #cbd5e1 !important;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
                 background-color: #cbd5e1 !important; 
@@ -706,7 +710,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div class="card-body">
                         
                         <div class="lmd-link" style="display: flex; justify-content: flex-end; gap: 15px;">
-                            <a href="https://hafiz6687.github.io/eLC/https://github.com/Hafiz6687/eLC/actions#start-of-content" target="_blank">🔍 Carian Majikan LMD</a>
+                            <a href="url?id=0" target="_blank">🔍 Carian Majikan LMD</a>
                             <a href="https://hafiz6687.github.io/eLC/https://github.com/" target="_blank">🔍 Carian MyData SSM</a>
                         </div>
                         
@@ -965,6 +969,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             tab1.addEventListener('input', function(e) {
                 const el = e.target;
                 if (el.tagName === 'INPUT' && el.type === 'text') {
+                    // MAGIK KEMASKINI: teksWaktuTidakTetap & teksHariTidakTetap dikecualikan dari Title Case!
                     const abaikan = ['noPendPengadu', 'noPendDefendan', 'noKes', 'telPengadu', 'hpPengadu', 'telDefendan', 'hpDefendan', 'teksWaktuTidakTetap', 'teksHariTidakTetap', 'kpPemilikDefendan', 'namaTempatKerja', 'alamatKerja1', 'alamatKerja2', 'alamatKerja3', 'jenisTuntutanLain'];
                     if (abaikan.includes(el.id) || el.classList.contains('input-elaun-jenis') || el.classList.contains('input-elaun-jumlah')) return;
                     
@@ -1456,7 +1461,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     
                     ayatWaktu = `Waktu kerja saya dari jam ${wMula} hingga ${wTamat}.`;
                 } else if (jenisWaktu === 'Tidak Tetap') {
-                    const wTeks = document.getElementById('teksWaktuTidakTetap').value || '[Waktu kerja tidak tetap]';
+                    // MAGIK KEMASKINI: Paksa huruf depan jadi huruf kecil untuk waktu kerja
+                    let wTeks = document.getElementById('teksWaktuTidakTetap').value.trim();
+                    if(wTeks.length > 0) { wTeks = wTeks.charAt(0).toLowerCase() + wTeks.slice(1); }
+                    else { wTeks = '[waktu kerja tidak tetap]'; }
+                    
                     ayatWaktu = `Waktu kerja saya ${wTeks}.`;
                 }
 
@@ -1468,7 +1477,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     const hTamat = document.getElementById('hariTamat').value || '[Hari akhir]';
                     ayatHari = `Saya bekerja dari hari ${hMula} hingga ${hTamat}.`;
                 } else if (jenisHari === 'Tidak Tetap') {
-                    const hTeks = document.getElementById('teksHariTidakTetap').value || '[Hari kerja tidak tetap]';
+                    // MAGIK KEMASKINI: Paksa huruf depan jadi huruf kecil untuk hari kerja
+                    let hTeks = document.getElementById('teksHariTidakTetap').value.trim();
+                    if(hTeks.length > 0) { hTeks = hTeks.charAt(0).toLowerCase() + hTeks.slice(1); }
+                    else { hTeks = '[hari kerja tidak tetap]'; }
+                    
                     ayatHari = `Hari kerja saya ${hTeks}.`;
                 }
 
@@ -2358,7 +2371,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
             
-            // MAGIK KEMASKINI: Format SSM Enterprise (Teks Pemilik dan No. MyKad tak berubah saiz)
+            // MAGIK KEMASKINI: Ejaan dan format tepat untuk SSM (Enterprise) (Tiada Italic)
             if(jenisDefCetak === 'SSM (Enterprise)') {
                  const pemilikCetak = (document.getElementById('namaPemilikDefendan')?.value || '').toUpperCase();
                  const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
