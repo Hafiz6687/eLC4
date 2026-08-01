@@ -347,7 +347,6 @@
                 padding: 2.0pt 8px; 
                 line-height: 1;     
             }
-            /* MAGIK KEMASKINI: Gelapkan header dan warna sel jumlah RM sama dengan header */
             .print-tbl-tuntutan th { 
                 background-color: #cbd5e1 !important; 
                 -webkit-print-color-adjust: exact; 
@@ -2312,8 +2311,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const isMajikan = document.getElementById('majikan')?.checked;
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
             
-            // MAGIK KEMASKINI: Kira bilangan dan wujudkan teks "DAN X YANG LAIN"
-            let namaPengaduCetak = document.getElementById('namaPengadu')?.value || '-';
+            // MAGIK KEMASKINI: Asingkan pembolehubah namaPengadu asal untuk tandatangan
+            const namaPengaduAsal = document.getElementById('namaPengadu')?.value || '-';
+            let namaPengaduCetak = namaPengaduAsal;
+            
             if (aduanBerkumpulan && !isMajikan) {
                 const bilPengaduInput = parseInt(document.getElementById('bilanganPengadu')?.value) || 1;
                 if (bilPengaduInput > 1) {
@@ -2487,7 +2488,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 <div style="font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
                     <div style="text-align: right; margin-bottom: 20px;">Lampiran 1 JTKSM(A)06/01</div>
 
-                    <!-- MAGIK KEMASKINI: PERKATAAN "KERJA" BESAR -->
                     <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">
                         KETUA PENGARAH TENAGA KERJA KES SAMAN<br>
                         NO. ${noKes}<br>
@@ -2571,8 +2571,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
                     </div>
 
-                    <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; padding: 0 10px;">
-                        Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain (Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:
+                    <!-- MAGIK KEMASKINI: Paksa ayat menjadi 2 baris (line-height dikekalkan 1.5 supaya tak rapat sangat) -->
+                    <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; padding: 0 10px; line-height: 1.5;">
+                        Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain<br>
+                        (Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:
                     </div>
 
                     <div style="margin-bottom: 20px; text-align: justify; line-height: 1.5;">
@@ -2598,7 +2600,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </tbody>
                     </table>
 
-                    <!-- MAGIK KEMASKINI: Ayat dengan spacing 6pt di bawah jadual -->
                     <div style="margin-top: 6pt; margin-bottom: 15px; font-size: 11pt;">
                         Pecahan jenis dan jumlah tuntutan adalah sebagaimana dinyatakan di dalam Borang G1.
                     </div>
@@ -2611,7 +2612,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                             <div>
                                 <div style="margin-bottom: 40px;">Keterangan Diberi Oleh</div>
-                                <strong style="text-transform: uppercase;">${namaPengaduCetak}</strong><br>
+                                <!-- MAGIK KEMASKINI: Hanya panggil nama pengadu asal (Tanpa DAN X YANG LAIN) -->
+                                <strong style="text-transform: uppercase;">${namaPengaduAsal}</strong><br>
                                 (Pengadu)
                             </div>
                         </div>
