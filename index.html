@@ -34,12 +34,14 @@
 
         .sidebar {
             width: 260px;
+            min-width: 260px; /* Magik: elak sidebar penyek bila zoom */
             background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border-color);
             box-shadow: 2px 0 10px rgba(0,0,0,0.05);
             z-index: 10;
+            overflow-y: auto; /* Magik: benarkan scroll bila zoom in! */
         }
         .sidebar-header {
             padding: 24px 20px;
@@ -423,9 +425,9 @@
             <li>LAPORAN</li>
         </ul>
         
-        <!-- MAGIK BLOK ALAMAT (Boleh Edit Tanpa Rupa Kotak Form) -->
+        <!-- MAGIK BLOK ALAMAT (Boleh Edit, Tak Hilang Susunan Bila Zoom) -->
         <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
-            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
+            <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
 (KLUANG LABOUR OFFICE)<br>
 (KEMENTERIAN SUMBER MANUSIA)<br>
 (MINISTRY OF HUMAN RESOURCES)<br>
@@ -433,10 +435,10 @@ JALAN PEJABAT KERAJAAN<br>
 86000 KLUANG<br>
 JOHOR DARUL TAKZIM
 <br><br>
-Telefon : | 07-772 1646/2646<br>
-Telekerja : | 07-7737111<br>
-E-mel : | jtkdkluang@mohr.gov.my<br>
-Portal rasmi : | jtksm.mohr.gov.my</div>
+Telefon : 07-772 1646/2646<br>
+Telekerja : 07-7737111<br>
+E-mel : jtkdkluang@mohr.gov.my<br>
+Portal rasmi : jtksm.mohr.gov.my</div>
         </div>
     </aside>
 
@@ -665,7 +667,6 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
@@ -690,7 +691,6 @@ Portal rasmi : | jtksm.mohr.gov.my</div>
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
-                                        <!-- Magik Textarea Auto-Expand + Capitalize selepas titik -->
                                         <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                                     </div>
                                 </div>
