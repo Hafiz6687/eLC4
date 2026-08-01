@@ -408,7 +408,8 @@
                 <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
                     <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
                 </div>
-                <img id="gambarProfil" src="" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
+                <!-- MAGIK FIX: Gambar diposisikan betul-betul di tengah tanpa object-fit: cover -->
+                <img id="gambarProfil" src="" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                 <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
             </div>
 
@@ -1013,20 +1014,23 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 img.src = gambarDisimpan;
                 img.style.cursor = 'grab';
 
-                if (posDisimpan) {
-                    const pos = JSON.parse(posDisimpan);
-                    currentPosX = pos.x;
-                    currentPosY = pos.y;
-                    
-                    // Pastikan ia mematuhi had jika sistem di-refresh
-                    const MAX_PAN = (BOX_SIZE * currentScale) / 1.5;
-                    currentPosX = clamp(currentPosX, MAX_PAN);
-                    currentPosY = clamp(currentPosY, MAX_PAN);
-                    
-                    img.style.transform = `scale(${currentScale}) translate(${currentPosX}px, ${currentPosY}px)`;
-                } else {
-                    img.style.transform = `scale(${currentScale}) translate(0px, 0px)`;
-                }
+                img.onload = function() {
+                    // Magik Penyelamat Aspect Ratio:
+                    if (this.naturalHeight > this.naturalWidth) {
+                        this.style.width = '100%';
+                        this.style.height = 'auto';
+                    } else {
+                        this.style.width = 'auto';
+                        this.style.height = '100%';
+                    }
+
+                    if (posDisimpan) {
+                        const pos = JSON.parse(posDisimpan);
+                        currentPosX = pos.x;
+                        currentPosY = pos.y;
+                    }
+                    updateTransform();
+                };
             }
         });
 
@@ -1035,13 +1039,13 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             localStorage.setItem('eLC_namaProfil', el.innerHTML);
         }
 
-        // FUNGSI MAGIK: Drag & Zoom Gambar Profil (Sempadan Kebal)
+        // FUNGSI MAGIK: Drag & Zoom Gambar Profil
         let isDraggingProfil = false;
         let startMouseX = 0, startMouseY = 0;
         let startImgX = 0, startImgY = 0;
         let currentPosX = 0, currentPosY = 0;
         
-        let currentScale = 1.5; // Mula dengan sedikit zoom supaya boleh terus di-pan
+        let currentScale = 1.2; 
         const BOX_SIZE = 48; 
 
         function clamp(val, max) {
@@ -1050,13 +1054,14 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         function updateTransform() {
             const imgProfile = document.getElementById('gambarProfil');
-            // MAGIK FIX: Berikan had pergerakan (pan) yang lebih bebas
-            const MAX_PAN = (BOX_SIZE * currentScale) / 1.5; 
+            // MAGIK FIX 2.0: Bebaskan sepenuhnya!
+            const MAX_PAN = 100 * currentScale; 
             
             currentPosX = clamp(currentPosX, MAX_PAN);
             currentPosY = clamp(currentPosY, MAX_PAN);
             
-            imgProfile.style.transform = `scale(${currentScale}) translate(${currentPosX}px, ${currentPosY}px)`;
+            // Transformasi digabungkan supaya imej sentiasa dikira dari tengah box
+            imgProfile.style.transform = `translate(calc(-50% + ${currentPosX}px), calc(-50% + ${currentPosY}px)) scale(${currentScale})`;
         }
 
         function setupDragProfil() {
@@ -1179,21 +1184,32 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     const img = document.getElementById('gambarProfil');
                     img.style.display = 'block';
                     img.src = base64Data;
-                    
-                    // Reset posisi dan scale bila gambar baru
-                    currentScale = 1.5;
-                    currentPosX = 0; 
-                    currentPosY = 0;
-                    img.style.transform = `scale(${currentScale}) translate(0px, 0px)`;
                     img.style.cursor = 'grab';
 
-                    try {
-                        localStorage.setItem('eLC_gambarProfil', base64Data);
-                        localStorage.setItem('eLC_gambarScale', currentScale.toString());
-                        localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-                    } catch (err) {
-                        console.warn("Gambar terlalu besar untuk disimpan secara kekal dalam memori browser.");
-                    }
+                    img.onload = function() {
+                        // Magik Penyelamat Aspect Ratio untuk imej baru
+                        if (this.naturalHeight > this.naturalWidth) {
+                            this.style.width = '100%';
+                            this.style.height = 'auto';
+                        } else {
+                            this.style.width = 'auto';
+                            this.style.height = '100%';
+                        }
+
+                        // Reset posisi dan scale bila gambar baru
+                        currentScale = 1.2;
+                        currentPosX = 0; 
+                        currentPosY = 0;
+                        updateTransform();
+
+                        try {
+                            localStorage.setItem('eLC_gambarProfil', base64Data);
+                            localStorage.setItem('eLC_gambarScale', currentScale.toString());
+                            localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
+                        } catch (err) {
+                            console.warn("Gambar terlalu besar untuk disimpan secara kekal dalam memori browser.");
+                        }
+                    };
                 };
                 reader.readAsDataURL(input.files[0]);
             }
