@@ -239,14 +239,11 @@
             border-color: #cbd5e1;
         }
 
+        /* Magik Auto-Expand Textarea */
         textarea.auto-expand {
             resize: none;
             overflow: hidden;
-            min-height: 40px;
-            padding: 10px 14px;
-            font-family: inherit;
-            font-size: 0.9em;
-            line-height: 1.4;
+            line-height: 1.6;
         }
 
         .radio-group { display: flex; gap: 20px; align-items: center; height: 40px; font-size: 0.9em; }
@@ -390,14 +387,14 @@
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
         
-        <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #e2e8f0; border: 1px solid var(--border-color); border-radius: 12px;">
+        <!-- MAGIK KEMASKINI: PROFIL & GAMBAR DISATUKAN DALAM SATU LINGKARAN & BOLEH EDIT -->
+        <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #cbd5e1; border: 1px solid var(--border-color); border-radius: 12px;">
             
             <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik gambar. Bila gambar dipaparkan, dwi-klik untuk tukar, seret untuk laras.">
                 <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
                     <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
                 </div>
-                <!-- KEMASKINI MAGIK: Saiz gambar dibesarkan siap-siap (150%) untuk mengelak dari terpotong bila di 'drag' -->
-                <img id="gambarProfil" src="" style="display: none; width: 150%; height: 150%; object-fit: cover; position: absolute; top: -25%; left: -25%; max-width: none;">
+                <img id="gambarProfil" src="" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
                 <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
             </div>
 
@@ -415,6 +412,7 @@
             <li>LAPORAN</li>
         </ul>
         
+        <!-- MAGIK BLOK ALAMAT -->
         <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
             <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
 (KLUANG LABOUR OFFICE)<br>
@@ -591,7 +589,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                         </div>
                         
-                        <!-- MAKLUMAT PERKHIDMATAN (Tersembunyi secara lalai) -->
+                        <!-- MAKLUMAT PERKHIDMATAN -->
                         <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                         
                         <div style="margin-bottom: 20px;">
@@ -760,7 +758,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                 <div class="form-group">
                                     <label></label>
                                     <div class="input-wrapper">
-                                        <!-- MAGIK ALAMAT BERBEZA: Perbaiki Layout Flex Container -->
                                         <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 5px;">
                                             <input type="checkbox" id="alamatBerbeza" onchange="toggleAlamatKerja()" style="margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0;"> 
                                             <label for="alamatBerbeza" id="labelAlamatBerbeza" style="width:auto; text-align:left; font-weight:500; margin:0; line-height: 1.4;">Alamat tempat pekerjaan tidak sama dengan alamat defendan</label>
@@ -822,7 +819,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </table>
 
                         <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-                            <button class="btn-save btn-seterusnya" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab2')">Seterusnya ➔</button>
+                            <!-- MAGIK: BUTANG KEMBALI HITAM TRANSPARENT -->
+                            <button type="button" style="background: transparent; color: #1e293b; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 10px 15px; margin-right: auto; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="pergiKeTabBorang('tab2')">
+                                <span style="font-size: 1.3em; line-height: 1;">&#8592;</span> Kembali
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -838,7 +838,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             *Kenyataan ini dijana secara automatik berdasarkan maklumat yang diisi di Tab Pengadu & Defendan. Anda boleh mengemaskini teks ini jika perlu.
                         </p>
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <textarea rows="7" id="kenyataanAwal" readonly class="teks-justify" placeholder="Kenyataan awal pengadu akan di extract di sini..." style="resize: vertical; padding: 15px; font-size: 0.95em; line-height: 1.6; background-color: #f8fafc; border: 1px solid var(--border-color);"></textarea>
+                            <!-- MAGIK KEMASKINI: rows="2" dan autoResize -->
+                            <textarea rows="2" id="kenyataanAwal" readonly class="teks-justify auto-expand" placeholder="Kenyataan awal pengadu akan di extract di sini..." style="padding: 15px; font-size: 0.95em; background-color: #f8fafc; border: 1px solid var(--border-color);" oninput="autoResize(this)"></textarea>
                         </div>
                         
                         <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
@@ -857,7 +858,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div class="card-body">
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
                             <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span></label>
-                            <textarea rows="10" id="kronologiKes" class="teks-justify" placeholder="Taipkan kronologi dan masalah berkaitan tuntutan di sini..." style="resize: vertical; padding: 15px; font-size: 0.95em; line-height: 1.6;" oninput="hurufBesarSelepasTitik(this)"></textarea>
+                            <!-- MAGIK KEMASKINI: rows="2" dan autoResize -->
+                            <textarea rows="2" id="kronologiKes" class="teks-justify auto-expand" placeholder="Taipkan kronologi dan masalah berkaitan tuntutan di sini..." style="padding: 15px; font-size: 0.95em;" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
                         </div>
                     </div>
                 </div>
@@ -902,8 +904,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
                         </div>
                         
-                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 30px;">
-                            <button class="btn-cancel" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab1')">⬅️ Kembali</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+                            <!-- MAGIK: BUTANG KEMBALI HITAM TRANSPARENT -->
+                            <button type="button" style="background: transparent; color: #1e293b; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 10px 15px; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="pergiKeTabBorang('tab1')">
+                                <span style="font-size: 1.3em; line-height: 1;">&#8592;</span> Kembali
+                            </button>
                             <button class="btn-save btn-seterusnya" style="padding: 10px 25px;" onclick="pergiKeTabBorang('tab3')">Seterusnya ➔</button>
                         </div>
                     </div>
@@ -929,7 +934,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </div>
 
                         <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 40px; gap: 15px; flex-wrap: wrap;">
-                            <button class="btn-cancel btn-kemaskini" style="padding: 10px 20px;" onclick="pergiKeTabBorang('tab2')">⬅️ Kembali</button>
+                            <!-- MAGIK: BUTANG KEMBALI HITAM TRANSPARENT -->
+                            <button type="button" class="btn-kemaskini" style="background: transparent; color: #1e293b; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 10px 15px; margin-right: auto; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'" onclick="pergiKeTabBorang('tab2')">
+                                <span style="font-size: 1.3em; line-height: 1;">&#8592;</span> Kembali
+                            </button>
                             <button class="btn-save btn-simpan" style="background-color: var(--primary-blue); padding: 10px 20px;" onclick="alert('Maklumat draf telah disimpan.')">💾 Simpan</button>
                             <button class="btn-save btn-daftar" style="padding: 10px 25px; font-size: 1.05em;" onclick="daftarKesSistem()">🚀 Daftar</button>
                         </div>
@@ -987,14 +995,13 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 img.src = gambarDisimpan;
                 img.style.cursor = 'grab';
 
-                // KEMASKINI MAGIK: scale(1.5) dibuang, diganti dengan saiz gambar sebenar di CSS
                 if (posDisimpan) {
                     const pos = JSON.parse(posDisimpan);
                     currentPosX = pos.x;
                     currentPosY = pos.y;
-                    img.style.transform = `translate(${currentPosX}px, ${currentPosY}px)`;
+                    img.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
                 } else {
-                    img.style.transform = `translate(0px, 0px)`;
+                    img.style.transform = `translate(0px, 0px) scale(1.5)`;
                 }
             }
         });
@@ -1024,8 +1031,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 if (!isDraggingProfil) return;
                 currentPosX = e.clientX - startPosX;
                 currentPosY = e.clientY - startPosY;
-                // KEMASKINI MAGIK: scale(1.5) dibuang
-                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px)`;
+                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
             });
 
             window.addEventListener('mouseup', function() {
@@ -1048,8 +1054,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 e.preventDefault(); 
                 currentPosX = e.touches[0].clientX - startPosX;
                 currentPosY = e.touches[0].clientY - startPosY;
-                // KEMASKINI MAGIK: scale(1.5) dibuang
-                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px)`;
+                imgProfile.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(1.5)`;
             }, {passive: false});
 
             window.addEventListener('touchend', function() {
@@ -1076,8 +1081,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     img.src = base64Data;
                     currentPosX = 0; 
                     currentPosY = 0;
-                    // KEMASKINI MAGIK: scale(1.5) dibuang
-                    img.style.transform = `translate(0px, 0px)`;
+                    img.style.transform = `translate(0px, 0px) scale(1.5)`;
                     img.style.cursor = 'grab';
 
                     // Simpan ke memory
@@ -1131,9 +1135,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
+        // FUNGSI MAGIK KEMASKINI: Auto kembang dengan baris kosong (padding)
         function autoResize(el) {
-            el.style.height = 'auto';
-            el.style.height = el.scrollHeight + 'px';
+            el.style.height = 'auto'; // Reset height
+            el.style.height = (el.scrollHeight + 24) + 'px'; // +24px untuk pastikan ada satu baris/enter kosong di bawah
         }
 
         let isKenyataanEdited = false;
@@ -1169,6 +1174,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
             if (!defNamaRaw && !tarikhMulaRaw && !jawatanRaw && !gajiRaw) {
                 textareaAwal.value = ''; 
+                autoResize(textareaAwal);
                 return;
             }
 
@@ -1332,8 +1338,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 let ayatPenuh = (p1 + '\n\n' + p2).replace(/\.\./g, '.').replace(/\s+/g, ' ');
                 ayatPenuh = ayatPenuh.replace(/ \./g, '.').replace(/ \n/g, '\n');
                 textareaAwal.value = p1.replace(/\.\./g, '.') + '\n\n' + p2.replace(/\.\./g, '.');
+                
+                // Magik trigger resize selepas text generate
+                autoResize(textareaAwal);
             } else {
                 textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan individu (Pekerja).";
+                autoResize(textareaAwal);
             }
         }
 
