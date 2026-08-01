@@ -239,9 +239,9 @@
             border-color: #cbd5e1;
         }
 
-        /* Magik Auto-Expand Textarea & Placeholder */
+        /* MAGIK KEMASKINI: Boleh drag bucu secara menegak (vertical) untuk melebarkan ruang */
         textarea.auto-expand {
-            resize: none;
+            resize: vertical; 
             overflow: hidden;
             min-height: 100px; 
             padding: 10px 14px;
@@ -1536,9 +1536,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             if (tabId === 'tab1') {
                 bukaMaklumatPerkhidmatanDalaman();
             }
-            if (tabId === 'tab2') {
-                janaKenyataanAwal();
-            }
 
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(t => t.classList.remove('active'));
@@ -1552,15 +1549,22 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             document.getElementById('tab3').style.display = 'none';
             
             document.getElementById(tabId).style.display = 'grid';
+
+            // MAGIK FIX: Kira saiz selepas Tab telah bertukar kepada paparan grid!
+            if (tabId === 'tab2') {
+                janaKenyataanAwal();
+                setTimeout(() => {
+                    autoResize(document.getElementById('kenyataanAwal'));
+                    autoResize(document.getElementById('kronologiKes'));
+                }, 10);
+            }
+            
             window.scrollTo(0, 0); 
         }
 
         function bukaTab(tabId, elemenTab) {
             if (tabId === 'tab1') {
                 bukaMaklumatPerkhidmatanDalaman();
-            }
-            if (tabId === 'tab2') {
-                janaKenyataanAwal();
             }
 
             document.getElementById('tab1').style.display = 'none';
@@ -1572,6 +1576,15 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             
             document.getElementById(tabId).style.display = 'grid'; 
             elemenTab.classList.add('active');
+
+            // MAGIK FIX: Kira saiz selepas Tab telah bertukar kepada paparan grid!
+            if (tabId === 'tab2') {
+                janaKenyataanAwal();
+                setTimeout(() => {
+                    autoResize(document.getElementById('kenyataanAwal'));
+                    autoResize(document.getElementById('kronologiKes'));
+                }, 10);
+            }
         }
 
         const dropZone = document.getElementById('dropZone');
