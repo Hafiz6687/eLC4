@@ -355,12 +355,6 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
-            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
-                background-color: #cbd5e1 !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
                 background-color: #cbd5e1 !important; 
@@ -517,9 +511,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                     </div>
                                 </div>
                                 <div id="ruanganWakilMajikan" style="display: none;">
-                                    <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Nama Penuh Wakil"></div></div>
-                                    <div class="form-group"><label>No. Pengenalan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Contoh: 880101-01-1234" maxlength="14"></div></div>
-                                    <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" placeholder="Jawatan Wakil"></div></div>
+                                    <div class="form-group"><label>Wakil Majikan <span>*</span></label><div class="input-wrapper"><input type="text" id="namaWakilMajikan" placeholder="Nama Penuh Wakil"></div></div>
+                                    <!-- MAGIK: Tukar label No. Pengenalan ke No. MyKad -->
+                                    <div class="form-group"><label>No. MyKad <span>*</span></label><div class="input-wrapper"><input type="text" id="noMyKadWakil" placeholder="Contoh: 880101-01-1234" maxlength="14" oninput="formatMyKadPemilik(this)"></div></div>
+                                    <div class="form-group"><label>Jawatan <span>*</span></label><div class="input-wrapper"><input type="text" id="jawatanWakilMajikan" placeholder="Jawatan Wakil"></div></div>
                                     <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                                 </div>
                             </div>
@@ -606,102 +601,105 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             </div>
                         </div>
                         
-                        <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
-                        
-                        <div style="margin-bottom: 20px;">
-                            <div class="togol-header" onclick="toggleMaklumatPerkhidmatan()">
-                                <h4 style="color: var(--primary-blue); margin: 0; font-size: 1.1em;">Maklumat Perkhidmatan</h4>
-                                <span id="labelTogolPerkhidmatan" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">▼ Buka</span>
-                            </div>
-                        </div>
-
-                        <div id="kandunganMaklumatPerkhidmatan" style="display: none;">
+                        <!-- MAGIK: Wrap Maklumat Perkhidmatan supaya mudah disorok -->
+                        <div id="blokMaklumatPerkhidmatan">
+                            <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 30px 0;">
                             
-                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
-                                <label style="margin-top: 0;">Tarikh Mula Kerja</label>
-                                <div class="input-wrapper">
-                                    <input type="date" id="tarikhMulaKerja" style="width: 50%; max-width: 200px;">
-                                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
+                            <div style="margin-bottom: 20px;">
+                                <div class="togol-header" onclick="toggleMaklumatPerkhidmatan()">
+                                    <h4 style="color: var(--primary-blue); margin: 0; font-size: 1.1em;">Maklumat Perkhidmatan</h4>
+                                    <span id="labelTogolPerkhidmatan" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color);">▼ Buka</span>
                                 </div>
                             </div>
 
-                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
-                                <label style="margin-top: 0;">Diberi Kontrak?</label>
-                                <div class="input-wrapper radio-group" style="margin: 0;">
-                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Ya"> Ya</label>
-                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Tidak" checked> Tidak</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="align-items: center; margin-bottom: 15px;">
-                                <label style="margin-top: 0;">Penyata Gaji Diberikan?</label>
-                                <div class="input-wrapper radio-group" style="margin: 0;">
-                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Ya"> Ya</label>
-                                    <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Tidak" checked> Tidak</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="align-items: center; margin-bottom: 10px;">
-                                <label style="margin-top: 0;">Menerima Elaun?</label>
-                                <div class="input-wrapper" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                                    <div class="radio-group" style="margin: 0;">
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Ya" onchange="toggleElaun()"> Ya</label>
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Tidak" onchange="toggleElaun()" checked> Tidak</label>
-                                    </div>
-                                    <button type="button" id="btnTambahElaun" style="display: none; background-color: var(--primary-blue); color: white; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;" onclick="tambahMedanElaun()">+ Tambah Elaun</button>
-                                </div>
-                            </div>
-
-                            <div class="form-group" id="ruanganElaunWrapper" style="display: none; margin-bottom: 15px;">
-                                <label class="hide-mobile"></label>
-                                <div class="input-wrapper" id="senaraiElaun" style="display: flex; flex-direction: column; gap: 10px;">
-                                </div>
-                            </div>
-
-                            <div class="form-group" style="align-items: flex-start; margin-bottom: 15px;">
-                                <label style="margin-top: 2px;">Waktu Kerja</label>
-                                <div class="input-wrapper">
-                                    <div class="radio-group" style="margin-bottom: 10px; height: auto;">
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tetap" onchange="toggleWaktuKerja()"> Tetap</label>
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tidak Tetap" onchange="toggleWaktuKerja()"> Tidak Tetap</label>
-                                    </div>
-                                    <div id="ruanganWaktuTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                        <input type="time" id="waktuMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;"> 
-                                        <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
-                                        <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
-                                        <p style="font-size: 0.8em; color: var(--text-muted); margin: 0; font-style: italic; flex-basis: 100%;">*Boleh key-in manually (jam:minit AM/PM)</p>
-                                    </div>
-                                    <div id="ruanganWaktuTidakTetap" style="display: none;">
-                                        <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
+                            <div id="kandunganMaklumatPerkhidmatan" style="display: none;">
+                                
+                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                    <label style="margin-top: 0;">Tarikh Mula Kerja</label>
+                                    <div class="input-wrapper">
+                                        <input type="date" id="tarikhMulaKerja" style="width: 50%; max-width: 200px;">
+                                        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group" style="align-items: flex-start; margin-bottom: 0;">
-                                <label style="margin-top: 2px;">Hari Kerja Seminggu</label>
-                                <div class="input-wrapper">
-                                    <div class="radio-group" style="margin-bottom: 10px; height: auto;">
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tetap" onchange="toggleHariKerja()"> Tetap</label>
-                                        <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tidak Tetap" onchange="toggleHariKerja()"> Tidak Tetap</label>
+                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                    <label style="margin-top: 0;">Diberi Kontrak?</label>
+                                    <div class="input-wrapper radio-group" style="margin: 0;">
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Ya"> Ya</label>
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaKontrak" value="Tidak" checked> Tidak</label>
                                     </div>
-                                    <div id="ruanganHariTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                        <select id="hariMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
-                                            <option value="">-Mula-</option>
-                                            <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
-                                        </select>
-                                        <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
-                                        <select id="hariTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
-                                            <option value="">-Akhir-</option>
-                                            <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
-                                        </select>
+                                </div>
+
+                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+                                    <label style="margin-top: 0;">Penyata Gaji Diberikan?</label>
+                                    <div class="input-wrapper radio-group" style="margin: 0;">
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Ya"> Ya</label>
+                                        <label style="display: flex; align-items: center;"><input type="radio" name="adaPenyata" value="Tidak" checked> Tidak</label>
                                     </div>
-                                    <div id="ruanganHariTidakTetap" style="display: none;">
-                                        <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)" onblur="semakTutupSelesaiHari()"></textarea>
+                                </div>
+
+                                <div class="form-group" style="align-items: center; margin-bottom: 10px;">
+                                    <label style="margin-top: 0;">Menerima Elaun?</label>
+                                    <div class="input-wrapper" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                        <div class="radio-group" style="margin: 0;">
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Ya" onchange="toggleElaun()"> Ya</label>
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="adaElaun" value="Tidak" onchange="toggleElaun()" checked> Tidak</label>
+                                        </div>
+                                        <button type="button" id="btnTambahElaun" style="display: none; background-color: var(--primary-blue); color: white; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85em; font-weight: 600;" onclick="tambahMedanElaun()">+ Tambah Elaun</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="ruanganElaunWrapper" style="display: none; margin-bottom: 15px;">
+                                    <label class="hide-mobile"></label>
+                                    <div class="input-wrapper" id="senaraiElaun" style="display: flex; flex-direction: column; gap: 10px;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="align-items: flex-start; margin-bottom: 15px;">
+                                    <label style="margin-top: 2px;">Waktu Kerja</label>
+                                    <div class="input-wrapper">
+                                        <div class="radio-group" style="margin-bottom: 10px; height: auto;">
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tetap" onchange="toggleWaktuKerja()"> Tetap</label>
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="jenisWaktu" value="Tidak Tetap" onchange="toggleWaktuKerja()"> Tidak Tetap</label>
+                                        </div>
+                                        <div id="ruanganWaktuTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <input type="time" id="waktuMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;"> 
+                                            <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
+                                            <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                            <p style="font-size: 0.8em; color: var(--text-muted); margin: 0; font-style: italic; flex-basis: 100%;">*Boleh key-in manually (jam:minit AM/PM)</p>
+                                        </div>
+                                        <div id="ruanganWaktuTidakTetap" style="display: none;">
+                                            <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="align-items: flex-start; margin-bottom: 0;">
+                                    <label style="margin-top: 2px;">Hari Kerja Seminggu</label>
+                                    <div class="input-wrapper">
+                                        <div class="radio-group" style="margin-bottom: 10px; height: auto;">
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tetap" onchange="toggleHariKerja()"> Tetap</label>
+                                            <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tidak Tetap" onchange="toggleHariKerja()"> Tidak Tetap</label>
+                                        </div>
+                                        <div id="ruanganHariTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <select id="hariMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
+                                                <option value="">-Mula-</option>
+                                                <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
+                                            </select>
+                                            <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
+                                            <select id="hariTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
+                                                <option value="">-Akhir-</option>
+                                                <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
+                                            </select>
+                                        </div>
+                                        <div id="ruanganHariTidakTetap" style="display: none;">
+                                            <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)" onblur="semakTutupSelesaiHari()"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
 
@@ -710,7 +708,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div class="card-body">
                         
                         <div class="lmd-link" style="display: flex; justify-content: flex-end; gap: 15px;">
-                            <a href="url?id=0" target="_blank">🔍 Carian Majikan LMD</a>
+                            <a href="https://hafiz6687.github.io/eLC/https://github.com/Hafiz6687/eLC/actions#start-of-content" target="_blank">🔍 Carian Majikan LMD</a>
                             <a href="https://hafiz6687.github.io/eLC/https://github.com/" target="_blank">🔍 Carian MyData SSM</a>
                         </div>
                         
@@ -1461,7 +1459,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     
                     ayatWaktu = `Waktu kerja saya dari jam ${wMula} hingga ${wTamat}.`;
                 } else if (jenisWaktu === 'Tidak Tetap') {
-                    // MAGIK KEMASKINI: Paksa huruf depan jadi huruf kecil untuk waktu kerja
                     let wTeks = document.getElementById('teksWaktuTidakTetap').value.trim();
                     if(wTeks.length > 0) { wTeks = wTeks.charAt(0).toLowerCase() + wTeks.slice(1); }
                     else { wTeks = '[waktu kerja tidak tetap]'; }
@@ -1477,7 +1474,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     const hTamat = document.getElementById('hariTamat').value || '[Hari akhir]';
                     ayatHari = `Saya bekerja dari hari ${hMula} hingga ${hTamat}.`;
                 } else if (jenisHari === 'Tidak Tetap') {
-                    // MAGIK KEMASKINI: Paksa huruf depan jadi huruf kecil untuk hari kerja
                     let hTeks = document.getElementById('teksHariTidakTetap').value.trim();
                     if(hTeks.length > 0) { hTeks = hTeks.charAt(0).toLowerCase() + hTeks.slice(1); }
                     else { hTeks = '[hari kerja tidak tetap]'; }
@@ -1493,8 +1489,29 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 textareaAwal.value = textLengkap.replace(/\.\./g, '.');
                 
                 autoResize(textareaAwal);
+            } else if (isMajikan) {
+                // MAGIK LOGIK: MAJIKAN ADALAH PENGADU
+                let namaSyarikat = document.getElementById('namaDefendan').value.trim() || '[Nama Syarikat/Organisasi]';
+                let noPendSyarikat = document.getElementById('noPendDefendan').value.trim();
+                let teksPend = noPendSyarikat ? ` (No. Pendaftaran: ${noPendSyarikat})` : '';
+
+                let namaPekerja = document.getElementById('namaPengadu').value.trim() || '[Nama Pekerja]';
+                let noMyKadPekerja = document.getElementById('noPendPengadu').value.trim();
+                let teksMyKadPekerja = noMyKadPekerja ? ` (No. MyKad: ${noMyKadPekerja})` : '';
+
+                let p1 = `Saya merupakan wakil majikan yang diberi kuasa mewakili majikan ${namaSyarikat}${teksPend} yang ingin membuat tuntutan terhadap defendan ${namaPekerja}${teksMyKadPekerja}.`;
+
+                let jawatanPekerja = document.getElementById('jawatanPengadu').value.trim() || '[Jawatan]';
+                let gajiPekerja = document.getElementById('gajiPokokPengadu').value.trim() || '[Gaji pokok]';
+
+                let p2 = `Jawatan terakhir defendan sebagai ${jawatanPekerja}. Gaji pokok terakhir defendan ialah RM${gajiPekerja}.`;
+
+                let textLengkap = p1 + '\n\n' + p2;
+                textareaAwal.value = textLengkap.replace(/\.\./g, '.');
+                
+                autoResize(textareaAwal);
             } else {
-                textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan berstatus Pekerja (Individu / Berkumpulan).";
+                textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan berstatus Pekerja (Individu / Berkumpulan) atau Majikan.";
                 autoResize(textareaAwal);
             }
         }
@@ -1926,6 +1943,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const seksyenPekerja = document.getElementById('seksyenPekerja');
             const seksyenMajikan = document.getElementById('seksyenMajikan');
             const ruanganGajiMinima = document.getElementById('ruanganGajiMinima');
+            const blokMaklumatPerkhidmatan = document.getElementById('blokMaklumatPerkhidmatan');
 
             if (suis.checked) {
                 kad1.style.order = "2"; 
@@ -1947,6 +1965,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     seksyenMajikan.style.display = "block";
                 }
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "none";
+                if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "none";
                 
             } else {
                 kad1.style.order = "1"; 
@@ -1968,7 +1987,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     seksyenMajikan.style.display = "none";
                 }
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
+                if(blokMaklumatPerkhidmatan) blokMaklumatPerkhidmatan.style.display = "block";
             }
+            kawalJenisDaftarDefendan();
+            janaKenyataanAwal();
         }
 
         function kawalJenisDaftarPengadu() {
@@ -2028,6 +2050,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const remark = document.getElementById('remarkNoPendDefendan');
             const labelNama = document.getElementById('labelNamaDefendan'); 
             const ruanganPemilik = document.getElementById('ruanganPemilikEnterprise');
+            const isMajikan = document.getElementById('majikan').checked;
 
             if (jenis === 'MyKad') {
                 inputNo.placeholder = "Contoh: 880101-01-1234";
@@ -2043,7 +2066,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 remark.innerText = "Masukkan No. Pendaftaran";
                 labelNama.innerHTML = 'Nama Syarikat/ Nama Organisasi <span>*</span>'; 
                 
-                if (jenis === 'SSM (Enterprise)') {
+                if (jenis === 'SSM (Enterprise)' && !isMajikan) {
                     ruanganPemilik.style.display = 'block';
                 } else {
                     ruanganPemilik.style.display = 'none';
@@ -2371,7 +2394,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
             
-            // MAGIK KEMASKINI: Ejaan dan format tepat untuk SSM (Enterprise) (Tiada Italic)
             if(jenisDefCetak === 'SSM (Enterprise)') {
                  const pemilikCetak = (document.getElementById('namaPemilikDefendan')?.value || '').toUpperCase();
                  const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
