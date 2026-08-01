@@ -34,14 +34,14 @@
 
         .sidebar {
             width: 260px;
-            min-width: 260px; /* Magik: elak sidebar penyek bila zoom */
+            min-width: 260px;
             background-color: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
             border-right: 1px solid var(--border-color);
             box-shadow: 2px 0 10px rgba(0,0,0,0.05);
             z-index: 10;
-            overflow-y: auto; /* Magik: benarkan scroll bila zoom in! */
+            overflow-y: auto; 
         }
         .sidebar-header {
             padding: 24px 20px;
@@ -59,16 +59,6 @@
             margin: 4px 0 0;
             color: var(--text-muted);
             font-weight: 500;
-        }
-        .user-info {
-            padding: 16px 20px;
-            font-size: 0.9em;
-            text-align: center;
-            background-color: #ffffff;
-            margin: 0 16px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .nav-menu {
             list-style: none;
@@ -400,21 +390,21 @@
     <aside class="sidebar">
         <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
         
-        <!-- MAGIK PROFIL & GAMBAR DRAG/PAN -->
-        <div style="display: flex; gap: 8px; margin: 0 16px 16px; align-items: stretch; position: relative;">
-            <div id="bekasProfil" style="flex-shrink: 0; width: 55px; background-color: #ffffff; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative;" title="Klik untuk muat naik gambar. Bila gambar dipaparkan, dwi-klik untuk tukar, seret untuk laras.">
-                
+        <!-- MAGIK KEMASKINI: PROFIL & GAMBAR DISATUKAN DALAM SATU LINGKARAN & BOLEH EDIT -->
+        <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #e2e8f0; border: 1px solid var(--border-color); border-radius: 12px;">
+            
+            <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik gambar. Bila gambar dipaparkan, dwi-klik untuk tukar, seret untuk laras.">
                 <div id="ikonKamera" style="display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center;" onclick="document.getElementById('uploadProfil').click()">
-                    <span style="font-size: 1.5em; color: var(--text-muted);">👤</span>
+                    <span style="font-size: 1.3em; color: var(--text-muted);">👤</span>
                 </div>
-                
                 <img id="gambarProfil" src="" style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
                 <input type="file" id="uploadProfil" accept="image/*" style="display: none;" onchange="muatNaikGambarProfil(this)">
             </div>
 
-            <div class="user-info" style="margin: 0; flex-grow: 1; padding: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-color);">
-                <strong>Mohamad Hafiz b<br>Abu Bakar</strong>
+            <div style="flex-grow: 1; overflow: hidden;">
+                <div id="namaProfilEdit" contenteditable="true" spellcheck="false" style="font-size: 0.85em; font-weight: 700; color: var(--text-main); line-height: 1.3; outline: none; padding: 4px; border-radius: 6px; transition: all 0.2s; word-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none'; simpanNamaProfil(this);" title="Klik untuk edit nama">Mohamad Hafiz b<br>Abu Bakar</div>
             </div>
+            
         </div>
 
         <ul class="nav-menu">
@@ -425,7 +415,7 @@
             <li>LAPORAN</li>
         </ul>
         
-        <!-- MAGIK BLOK ALAMAT (Boleh Edit, Tak Hilang Susunan Bila Zoom) -->
+        <!-- MAGIK BLOK ALAMAT -->
         <div class="stats" style="text-align: left; font-size: 0.75em; padding: 15px; color: var(--text-muted); border-top: 1px solid var(--border-color);">
             <div contenteditable="true" spellcheck="false" style="outline: none; line-height: 1.4; padding: 6px; border-radius: 6px; transition: background 0.2s; word-wrap: break-word; overflow-wrap: break-word;" onfocus="this.style.backgroundColor='#ffffff'; this.style.boxShadow='inset 0 0 0 1px var(--primary-blue)';" onblur="this.style.backgroundColor='transparent'; this.style.boxShadow='none';"><strong>PEJABAT TENAGA KERJA KLUANG</strong><br>
 (KLUANG LABOUR OFFICE)<br>
@@ -979,9 +969,20 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
             });
             
-            // Initial setup drag script for profile picture
+            // Setup Gambar
             setupDragProfil();
+            
+            // MAGIK: Check dan load Nama Pengguna jika wujud dalam memori
+            const namaDisimpan = localStorage.getItem('eLC_namaProfil');
+            if (namaDisimpan) {
+                document.getElementById('namaProfilEdit').innerHTML = namaDisimpan;
+            }
         });
+
+        // FUNGSI MAGIK: Save Nama ke LocalStorage
+        function simpanNamaProfil(el) {
+            localStorage.setItem('eLC_namaProfil', el.innerHTML);
+        }
 
         // FUNGSI MAGIK: Drag & Pan Gambar Profil
         let isDraggingProfil = false;
@@ -1011,7 +1012,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 imgProfile.style.cursor = 'grab';
             });
 
-            // Touch support for mobile
             imgProfile.addEventListener('touchstart', function(e) {
                 isDraggingProfil = true;
                 startPosX = e.touches[0].clientX - currentPosX;
@@ -1030,7 +1030,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 isDraggingProfil = false;
             });
 
-            // Double click to change picture
             imgProfile.addEventListener('dblclick', function() {
                 inputProfil.click();
             });
@@ -1044,7 +1043,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     const img = document.getElementById('gambarProfil');
                     img.style.display = 'block';
                     img.src = e.target.result;
-                    // Reset position and set scale to 1.5x for panning room
                     currentPosX = 0; 
                     currentPosY = 0;
                     img.style.transform = `translate(0px, 0px) scale(1.5)`;
@@ -1054,7 +1052,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // FUNGSI MAGIK: Buka auto Maklumat Perkhidmatan jika no tel/emel diisi
         function semakBukaMaklumatPerkhidmatan() {
             const tel = document.getElementById('telPengadu').value.trim();
             const hp = document.getElementById('hpPengadu').value.trim();
@@ -1070,7 +1067,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // FUNGSI MAGIK: Huruf Besar Pangkal untuk satu huruf pertama ayat sahaja
         function hurufBesarAyatPertama(input) {
             let start = input.selectionStart;
             let end = input.selectionEnd;
