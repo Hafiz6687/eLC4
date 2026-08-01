@@ -347,6 +347,7 @@
                 padding: 2.0pt 8px; 
                 line-height: 1;     
             }
+            /* MAGIK FIX: Gelapkan header sahaja, biarkan ruangan data (RM) lutsinar */
             .print-tbl-tuntutan th { 
                 background-color: #cbd5e1 !important; 
                 -webkit-print-color-adjust: exact; 
@@ -355,12 +356,7 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
-            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
-                background-color: #cbd5e1 !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
+            /* MAGIK FIX: Hanya gelapkan baris JUMLAH KESELURUHAN */
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
                 background-color: #cbd5e1 !important; 
@@ -1671,7 +1667,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // MAGIK KEMASKINI: Ditambah fungsi auto-focus ke kotak Jenis Tuntutan
         function bukaModalTuntutan(indexEdit = -1) {
             document.getElementById('modalTuntutan').style.display = 'flex';
             
@@ -1718,7 +1713,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 document.getElementById('indexTuntutanEdit').value = "-1";
             }
 
-            // MAGIK KEMASKINI: Auto-fokus ke kotak Jenis Tuntutan supaya user bersedia untuk memilih
             setTimeout(() => {
                 document.getElementById('jenisTuntutan').focus();
                 document.getElementById('jenisTuntutan').style.boxShadow = '0 0 0 2px rgba(37, 99, 235, 0.3)';
@@ -2364,14 +2358,15 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
             
+            // MAGIK KEMASKINI: Format SSM Enterprise (Teks Pemilik dan No. MyKad tak berubah saiz)
             if(jenisDefCetak === 'SSM (Enterprise)') {
-                 const pemilikCetak = document.getElementById('namaPemilikDefendan')?.value || '';
+                 const pemilikCetak = (document.getElementById('namaPemilikDefendan')?.value || '').toUpperCase();
                  const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
                  
                  if(pemilikCetak && kpPemilikCetak) {
-                     namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak} (No. MyKad: ${kpPemilikCetak}))</span>`;
+                     namaDefendanPDF += `<br><span style="font-weight:normal; text-transform:none;">(Pemilik: ${pemilikCetak} (No. MyKad: ${kpPemilikCetak}))</span>`;
                  } else if(pemilikCetak) {
-                     namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak})</span>`;
+                     namaDefendanPDF += `<br><span style="font-weight:normal; text-transform:none;">(Pemilik: ${pemilikCetak})</span>`;
                  }
             }
 
