@@ -347,6 +347,7 @@
                 padding: 2.0pt 8px; 
                 line-height: 1;     
             }
+            /* MAGIK KEMASKINI: Hanya header dan footer (JUMLAH KESELURUHAN) digelapkan */
             .print-tbl-tuntutan th { 
                 background-color: #cbd5e1 !important; 
                 -webkit-print-color-adjust: exact; 
@@ -355,14 +356,11 @@
                 text-align: center; 
                 border-bottom: 1px solid #000 !important; 
             }
-            .print-tbl-tuntutan th.money-col, .print-tbl-tuntutan td.money {
-                background-color: #cbd5e1 !important;
-                -webkit-print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
             .print-tbl-tuntutan tr.footer-row td {
                 border-top: 1px solid #000 !important;
+                background-color: #cbd5e1 !important; 
+                -webkit-print-color-adjust: exact; 
+                color-adjust: exact; 
             }
             
             .print-tbl-tuntutan td.num { text-align: center; }
@@ -1548,7 +1546,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }, 10);
             }
             
-            window.scrollTo(0, 0); 
+            // MAGIK KEMASKINI: Smooth scroll yang berfungsi untuk struktur layout aplikasi ini
+            document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
         }
 
         function bukaTab(tabId, elemenTab) {
@@ -1573,6 +1572,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     autoResize(document.getElementById('kronologiKes'));
                 }, 10);
             }
+
+            // MAGIK KEMASKINI: Smooth scroll ke atas
+            document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' }); 
         }
 
         const dropZone = document.getElementById('dropZone');
@@ -2311,7 +2313,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const isMajikan = document.getElementById('majikan')?.checked;
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
             
-            // MAGIK KEMASKINI: Asingkan pembolehubah namaPengadu asal untuk tandatangan
             const namaPengaduAsal = document.getElementById('namaPengadu')?.value || '-';
             let namaPengaduCetak = namaPengaduAsal;
             
@@ -2349,10 +2350,17 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const namaDefendanRaw = document.getElementById('namaDefendan')?.value || '-';
             let namaDefendanPDF = namaDefendanRaw;
             const jenisDefCetak = document.getElementById('jenisDaftarDefendan')?.value;
+            
+            // MAGIK KEMASKINI: Format pengekstrakan pemilik SSM (Enterprise)
             if(jenisDefCetak === 'SSM (Enterprise)') {
-                 const pemilikCetak = document.getElementById('namaPemilikDefendan')?.value || '-';
-                 const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '-';
-                 namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak}, MyKad: ${kpPemilikCetak})</span>`;
+                 const pemilikCetak = document.getElementById('namaPemilikDefendan')?.value || '';
+                 const kpPemilikCetak = document.getElementById('kpPemilikDefendan')?.value || '';
+                 
+                 if(pemilikCetak && kpPemilikCetak) {
+                     namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak} (No. MyKad: ${kpPemilikCetak}))</span>`;
+                 } else if(pemilikCetak) {
+                     namaDefendanPDF += `<br><span style="font-weight:normal; font-style:italic;">(Pemilik: ${pemilikCetak})</span>`;
+                 }
             }
 
             const kpDefendan = document.getElementById('noPendDefendan')?.value || '-';
@@ -2488,6 +2496,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 <div style="font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
                     <div style="text-align: right; margin-bottom: 20px;">Lampiran 1 JTKSM(A)06/01</div>
 
+                    <!-- MAGIK KEMASKINI: PERKATAAN KERJA BESAR -->
                     <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">
                         KETUA PENGARAH TENAGA KERJA KES SAMAN<br>
                         NO. ${noKes}<br>
@@ -2526,7 +2535,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             <tr>
                                 <th style="width: 5%;">Bil</th>
                                 <th style="width: 70%;">Jenis & Keterangan Tuntutan</th>
-                                <th class="money-col" style="width: 25%; text-align: left !important;">Jumlah (RM)</th>
+                                <th style="width: 25%; text-align: left !important;">Jumlah (RM)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2561,7 +2570,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 30px; line-height: 1;">
-                        <div>Nama: <span style="text-transform: uppercase;">${namaPengaduCetak}</span></div>
+                        <!-- MAGIK KEMASKINI: Nama pengadu asal diextract -->
+                        <div>Nama: <span style="text-transform: uppercase;">${namaPengaduAsal}</span></div>
                         <div style="text-align: right;">Jantina: <span>${jantinaPengadu}</span></div>
                         
                         <div>No. Kad Pengenalan: <span>${kpPengadu}</span></div>
@@ -2571,10 +2581,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
                     </div>
 
-                    <!-- MAGIK KEMASKINI: Paksa ayat menjadi 2 baris (line-height dikekalkan 1.5 supaya tak rapat sangat) -->
-                    <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; padding: 0 10px; line-height: 1.5;">
-                        Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain<br>
-                        (Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:
+                    <!-- MAGIK KEMASKINI: Paksa ayat 2 baris sentiasa! -->
+                    <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; line-height: 1.5;">
+                        <div style="white-space: nowrap;">Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain</div>
+                        <div style="white-space: nowrap;">(Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:</div>
                     </div>
 
                     <div style="margin-bottom: 20px; text-align: justify; line-height: 1.5;">
@@ -2592,7 +2602,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             <tr>
                                 <th style="width: 5%;">Bil</th>
                                 <th style="width: 70%;">Jenis & Keterangan Tuntutan</th>
-                                <th class="money-col" style="width: 25%; text-align: left !important;">Jumlah (RM)</th>
+                                <th style="width: 25%; text-align: left !important;">Jumlah (RM)</th>
                             </tr>
                         </thead>
                         <tbody>
