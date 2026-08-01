@@ -680,18 +680,18 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                         <label style="display: flex; align-items: center;"><input type="radio" name="jenisHari" value="Tidak Tetap" onchange="toggleHariKerja()"> Tidak Tetap</label>
                                     </div>
                                     <div id="ruanganHariTetap" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                        <select id="hariMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                        <select id="hariMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
                                             <option value="">-Mula-</option>
                                             <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
                                         </select>
                                         <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
-                                        <select id="hariTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                        <select id="hariTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;" onchange="semakTutupSelesaiHari()">
                                             <option value="">-Akhir-</option>
                                             <option>Isnin</option><option>Selasa</option><option>Rabu</option><option>Khamis</option><option>Jumaat</option><option>Sabtu</option><option>Ahad</option>
                                         </select>
                                     </div>
                                     <div id="ruanganHariTidakTetap" style="display: none;">
-                                        <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
+                                        <textarea id="teksHariTidakTetap" class="auto-expand" placeholder="Nyatakan hari kerja (Cth: 5 hari bekerja bergantung kepada jadual)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)" onblur="semakTutupSelesaiHari()"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -987,6 +987,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             // Setup Gambar & Panning
             setupDragProfil();
             
+            // MAGIK: Bila user klik/fokus pada kad Defendan (kad2) atau Tuntutan (kad3), Maklumat Perkhidmatan auto tutup
+            document.getElementById('kad2').addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
+            document.getElementById('kad3').addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
+            
             // MAGIK: Check dan load Nama Pengguna jika wujud dalam memori
             const namaDisimpan = localStorage.getItem('eLC_namaProfil');
             if (namaDisimpan) {
@@ -1015,7 +1019,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     currentPosY = pos.y;
                     
                     // Pastikan ia mematuhi had jika sistem di-refresh
-                    const MAX_PAN = ((BOX_SIZE * currentScale) - BOX_SIZE) / 2 / currentScale;
+                    const MAX_PAN = (BOX_SIZE * currentScale) / 1.5;
                     currentPosX = clamp(currentPosX, MAX_PAN);
                     currentPosY = clamp(currentPosY, MAX_PAN);
                     
@@ -1046,13 +1050,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         function updateTransform() {
             const imgProfile = document.getElementById('gambarProfil');
-            // Pengiraan sempadan max pan bergantung kpd tahap zoom
-            const MAX_PAN = ((BOX_SIZE * currentScale) - BOX_SIZE) / 2 / currentScale;
+            // MAGIK FIX: Berikan had pergerakan (pan) yang lebih bebas
+            const MAX_PAN = (BOX_SIZE * currentScale) / 1.5; 
             
             currentPosX = clamp(currentPosX, MAX_PAN);
             currentPosY = clamp(currentPosY, MAX_PAN);
             
-            // Susunan transform: scale dahulu, kemudian translate
             imgProfile.style.transform = `scale(${currentScale}) translate(${currentPosX}px, ${currentPosY}px)`;
         }
 
@@ -1075,11 +1078,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
             window.addEventListener('mousemove', function(e) {
                 if (!isDraggingProfil) return;
-                
-                // Mengambil kira scale supaya pergerakan selari dengan kelajuan mouse
                 let dx = (e.clientX - startMouseX) / currentScale;
                 let dy = (e.clientY - startMouseY) / currentScale;
-                
                 currentPosX = startImgX + dx;
                 currentPosY = startImgY + dy;
                 updateTransform();
@@ -1089,7 +1089,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 if (isDraggingProfil) {
                     isDraggingProfil = false;
                     imgProfile.style.cursor = 'grab';
-                    // Simpan memori koordinat
                     localStorage.setItem('eLC_gambarPos', JSON.stringify({x: currentPosX, y: currentPosY}));
                 }
             });
@@ -1125,6 +1124,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     initialPinchScale = currentScale;
                     isDraggingProfil = false;
                 } else if (e.touches.length === 1) {
+                    e.preventDefault(); // MAGIK FIX: Halang skrin dari scroll bila drag atas/bawah
                     isDraggingProfil = true;
                     startMouseX = e.touches[0].clientX;
                     startMouseY = e.touches[0].clientY;
@@ -1167,10 +1167,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
             });
 
-            // Double click untuk upload baru
-            imgProfile.addEventListener('dblclick', function() {
-                inputProfil.click();
-            });
+            imgProfile.addEventListener('dblclick', function() { inputProfil.click(); });
         }
 
         function muatNaikGambarProfil(input) {
@@ -1202,18 +1199,49 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        function semakBukaMaklumatPerkhidmatan() {
-            const tel = document.getElementById('telPengadu').value.trim();
-            const hp = document.getElementById('hpPengadu').value.trim();
-            const emel = document.getElementById('emelPengadu').value.trim();
+        // ================= MAGIK AUTOMASI MAKLUMAT PERKHIDMATAN =================
+        function bukaMaklumatPerkhidmatanDalaman() {
             const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
             const labelTogol = document.getElementById('labelTogolPerkhidmatan');
-            
-            if ((tel !== '' || hp !== '' || emel !== '') && kandungan.style.display === 'none') {
+            if (kandungan) {
                 kandungan.style.display = 'block';
                 labelTogol.innerHTML = '▲ Sembunyi';
                 labelTogol.style.backgroundColor = '#eff6ff';
                 labelTogol.style.color = 'var(--primary-blue)';
+            }
+        }
+
+        function tutupMaklumatPerkhidmatanDalaman() {
+            const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
+            const labelTogol = document.getElementById('labelTogolPerkhidmatan');
+            if (kandungan && kandungan.style.display === 'block') {
+                kandungan.style.display = 'none';
+                labelTogol.innerHTML = '▼ Buka';
+                labelTogol.style.backgroundColor = '#f1f5f9';
+                labelTogol.style.color = 'var(--text-muted)';
+            }
+        }
+
+        function semakTutupSelesaiHari() {
+            const jenisHari = document.querySelector('input[name="jenisHari"]:checked')?.value;
+            if (jenisHari === 'Tetap') {
+                const mula = document.getElementById('hariMula').value;
+                const tamat = document.getElementById('hariTamat').value;
+                if (mula && tamat) { tutupMaklumatPerkhidmatanDalaman(); }
+            } else if (jenisHari === 'Tidak Tetap') {
+                const teks = document.getElementById('teksHariTidakTetap').value.trim();
+                if (teks !== '') { tutupMaklumatPerkhidmatanDalaman(); }
+            }
+        }
+        // ========================================================================
+
+        function semakBukaMaklumatPerkhidmatan() {
+            const tel = document.getElementById('telPengadu').value.trim();
+            const hp = document.getElementById('hpPengadu').value.trim();
+            const emel = document.getElementById('emelPengadu').value.trim();
+            
+            if ((tel !== '' || hp !== '' || emel !== '')) {
+                bukaMaklumatPerkhidmatanDalaman();
             }
         }
 
@@ -1489,6 +1517,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
         }
 
         function pergiKeTabBorang(tabId) {
+            if (tabId === 'tab1') {
+                bukaMaklumatPerkhidmatanDalaman();
+            }
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
             }
@@ -1509,6 +1540,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
         }
 
         function bukaTab(tabId, elemenTab) {
+            if (tabId === 'tab1') {
+                bukaMaklumatPerkhidmatanDalaman();
+            }
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
             }
