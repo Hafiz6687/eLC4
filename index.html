@@ -239,7 +239,6 @@
             border-color: #cbd5e1;
         }
 
-        /* Magik Auto-Expand Textarea & Placeholder */
         textarea.auto-expand {
             resize: vertical; 
             overflow: hidden;
@@ -252,7 +251,6 @@
 
         .radio-group { display: flex; gap: 20px; align-items: center; height: 40px; font-size: 0.9em; }
 
-        /* Magik Butang Terapung */
         .btn-terapung {
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
@@ -342,7 +340,6 @@
                 border-spacing: 0;
                 font-size: 11pt; 
                 text-align: left; 
-                /* KEMASKINI: Kurangkan ketebalan border jadual dari 2px ke 1px */
                 border: 1px solid #000 !important; 
             }
             .print-tbl-tuntutan th, .print-tbl-tuntutan td { 
@@ -377,7 +374,10 @@
             <input type="hidden" id="indexTuntutanEdit" value="-1">
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Jenis Tuntutan <span>*</span></label>
-                <select id="jenisTuntutan"><option value="">-Sila Pilih-</option></select>
+                <!-- MAGIK: Tambahan onchange untuk Jenis Tuntutan -->
+                <select id="jenisTuntutan" onchange="semakJenisTuntutanLain()"><option value="">-Sila Pilih-</option></select>
+                <!-- MAGIK: Field baru untuk Lain-lain -->
+                <input type="text" id="jenisTuntutanLain" placeholder="Sila nyatakan jenis tuntutan lain" style="display: none; margin-top: 8px; width: 100%;" oninput="hurufBesarAyatPertama(this)">
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
@@ -614,6 +614,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                 <label style="margin-top: 0;">Tarikh Mula Kerja</label>
                                 <div class="input-wrapper">
                                     <input type="date" id="tarikhMulaKerja" style="width: 50%; max-width: 200px;">
+                                    <!-- MAGIK REMARK: Boleh key-in manually -->
+                                    <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
                                 </div>
                             </div>
 
@@ -661,6 +663,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                                         <input type="time" id="waktuMula" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;"> 
                                         <span style="font-weight: 500; color: var(--text-muted); font-size: 0.9em;">hingga</span> 
                                         <input type="time" id="waktuTamat" style="flex: 1; min-width: 0; font-size: 0.85em; padding: 8px 10px;">
+                                        <!-- MAGIK REMARK: Boleh key-in manually (Jam:Minit AM/PM) -->
+                                        <p style="font-size: 0.8em; color: var(--text-muted); margin: 0; font-style: italic; flex-basis: 100%;">*Boleh key-in manually (jam:minit AM/PM)</p>
                                     </div>
                                     <div id="ruanganWaktuTidakTetap" style="display: none;">
                                         <textarea id="teksWaktuTidakTetap" class="auto-expand" placeholder="Nyatakan waktu kerja (Cth: Mengikut syif / Tidak tetap)" rows="1" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
@@ -820,7 +824,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <table id="jadualTuntutan">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">#</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
+                                    <!-- MAGIK: Tukar # kepada Bil. -->
+                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
                                     <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
                                 </tr>
                             </thead>
@@ -962,7 +967,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             tab1.addEventListener('input', function(e) {
                 const el = e.target;
                 if (el.tagName === 'INPUT' && el.type === 'text') {
-                    const abaikan = ['noPendPengadu', 'noPendDefendan', 'noKes', 'telPengadu', 'hpPengadu', 'telDefendan', 'hpDefendan', 'teksWaktuTidakTetap', 'teksHariTidakTetap', 'kpPemilikDefendan', 'namaTempatKerja', 'alamatKerja1', 'alamatKerja2', 'alamatKerja3'];
+                    const abaikan = ['noPendPengadu', 'noPendDefendan', 'noKes', 'telPengadu', 'hpPengadu', 'telDefendan', 'hpDefendan', 'teksWaktuTidakTetap', 'teksHariTidakTetap', 'kpPemilikDefendan', 'namaTempatKerja', 'alamatKerja1', 'alamatKerja2', 'alamatKerja3', 'jenisTuntutanLain'];
                     if (abaikan.includes(el.id) || el.classList.contains('input-elaun-jenis') || el.classList.contains('input-elaun-jumlah')) return;
                     
                     let start = el.selectionStart;
@@ -983,17 +988,14 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             // Setup Gambar & Panning
             setupDragProfil();
             
-            // MAGIK: Bila user klik/fokus pada kad Defendan (kad2) atau Tuntutan (kad3), Maklumat Perkhidmatan auto tutup
             document.getElementById('kad2').addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
             document.getElementById('kad3').addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
             
-            // MAGIK: Check dan load Nama Pengguna jika wujud dalam memori
             const namaDisimpan = localStorage.getItem('eLC_namaProfil');
             if (namaDisimpan) {
                 document.getElementById('namaProfilEdit').innerHTML = namaDisimpan;
             }
 
-            // MAGIK: Check dan load Gambar Profil & Posisi jika wujud dalam memori
             const gambarDisimpan = localStorage.getItem('eLC_gambarProfil');
             const posDisimpan = localStorage.getItem('eLC_gambarPos');
             const scaleDisimpan = localStorage.getItem('eLC_gambarScale');
@@ -1010,7 +1012,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 img.style.cursor = 'grab';
 
                 img.onload = function() {
-                    // Magik Penyelamat Aspect Ratio:
                     if (this.naturalHeight > this.naturalWidth) {
                         this.style.width = '100%';
                         this.style.height = 'auto';
@@ -1029,12 +1030,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         });
 
-        // FUNGSI MAGIK: Save Nama ke LocalStorage
         function simpanNamaProfil(el) {
             localStorage.setItem('eLC_namaProfil', el.innerHTML);
         }
 
-        // FUNGSI MAGIK: Drag & Zoom Gambar Profil
         let isDraggingProfil = false;
         let startMouseX = 0, startMouseY = 0;
         let startImgX = 0, startImgY = 0;
@@ -1049,13 +1048,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
         function updateTransform() {
             const imgProfile = document.getElementById('gambarProfil');
-            // MAGIK FIX 2.0: Bebaskan sepenuhnya!
             const MAX_PAN = 100 * currentScale; 
             
             currentPosX = clamp(currentPosX, MAX_PAN);
             currentPosY = clamp(currentPosY, MAX_PAN);
             
-            // Transformasi digabungkan supaya imej sentiasa dikira dari tengah box
             imgProfile.style.transform = `translate(calc(-50% + ${currentPosX}px), calc(-50% + ${currentPosY}px)) scale(${currentScale})`;
         }
 
@@ -1064,7 +1061,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const bekasProfil = document.getElementById('bekasProfil');
             const inputProfil = document.getElementById('uploadProfil');
 
-            // --- FUNGSI MOUSE (DRAG) ---
             imgProfile.addEventListener('mousedown', function(e) {
                 e.preventDefault(); 
                 if (imgProfile.style.display === 'none') return;
@@ -1093,7 +1089,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
             });
 
-            // --- FUNGSI SCROLL ZOOM (MOUSE WHEEL) ---
             bekasProfil.addEventListener('wheel', function(e) {
                 if (imgProfile.style.display === 'none') return;
                 e.preventDefault(); 
@@ -1108,7 +1103,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 localStorage.setItem('eLC_gambarPos', JSON.stringify({x: currentPosX, y: currentPosY}));
             }, { passive: false });
 
-            // --- FUNGSI TOUCH (PAN & PINCH ZOOM) ---
             let initialPinchDist = null;
             let initialPinchScale = 1;
 
@@ -1124,7 +1118,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     initialPinchScale = currentScale;
                     isDraggingProfil = false;
                 } else if (e.touches.length === 1) {
-                    e.preventDefault(); // MAGIK FIX: Halang skrin dari scroll bila drag atas/bawah
+                    e.preventDefault();
                     isDraggingProfil = true;
                     startMouseX = e.touches[0].clientX;
                     startMouseY = e.touches[0].clientY;
@@ -1182,7 +1176,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     img.style.cursor = 'grab';
 
                     img.onload = function() {
-                        // Magik Penyelamat Aspect Ratio untuk imej baru
                         if (this.naturalHeight > this.naturalWidth) {
                             this.style.width = '100%';
                             this.style.height = 'auto';
@@ -1191,7 +1184,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                             this.style.height = '100%';
                         }
 
-                        // Reset posisi dan scale bila gambar baru
                         currentScale = 1.2;
                         currentPosX = 0; 
                         currentPosY = 0;
@@ -1210,7 +1202,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // ================= MAGIK AUTOMASI MAKLUMAT PERKHIDMATAN =================
         function bukaMaklumatPerkhidmatanDalaman() {
             const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
             const labelTogol = document.getElementById('labelTogolPerkhidmatan');
@@ -1244,7 +1235,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 if (teks !== '') { tutupMaklumatPerkhidmatanDalaman(); }
             }
         }
-        // ========================================================================
 
         function semakBukaMaklumatPerkhidmatan() {
             const tel = document.getElementById('telPengadu').value.trim();
@@ -1280,10 +1270,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // FUNGSI MAGIK KEMASKINI: Auto kembang dengan baris kosong di bawah
         function autoResize(el) {
-            el.style.height = 'auto'; // Reset height dahulu
-            el.style.height = (el.scrollHeight + 24) + 'px'; // +24px untuk pastikan ada satu enter (ruang) di bawah
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight + 24) + 'px'; 
         }
 
         let isKenyataanEdited = false;
@@ -1309,6 +1298,7 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             if (isKenyataanEdited) return; 
 
             const isIndividu = document.getElementById('aduanIndividu').checked;
+            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
             const isMajikan = document.getElementById('majikan').checked;
             const textareaAwal = document.getElementById('kenyataanAwal');
 
@@ -1323,7 +1313,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 return;
             }
 
-            if (isIndividu && !isMajikan) {
+            // MAGIK KEMASKINI: Trigger untuk Individu ATAU Berkumpulan
+            if ((isIndividu || aduanBerkumpulan) && !isMajikan) {
                 
                 const defNama = defNamaRaw || '[Nama Syarikat/Organisasi]';
                 const jenisDef = document.getElementById('jenisDaftarDefendan').value;
@@ -1331,40 +1322,40 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 const pemilik = document.getElementById('namaPemilikDefendan').value.trim();
                 const kpPemilik = document.getElementById('kpPemilikDefendan').value.trim();
                 
+                let p0 = "";
+                if (aduanBerkumpulan) {
+                    let bilPengadu = parseInt(document.getElementById('bilanganPengadu').value) || 1;
+                    let wakil = bilPengadu > 1 ? bilPengadu - 1 : 0;
+                    let teksDefendanKumpulan = defNama;
+                    
+                    if (jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain' || jenisDef === 'SSM (Enterprise)') {
+                        if (defNo) teksDefendanKumpulan += ` (No. Pendaftaran: ${defNo})`;
+                    } else if (jenisDef === 'MyKad') {
+                        if (defNo) teksDefendanKumpulan += ` (No. MyKad: ${defNo})`;
+                    }
+                    
+                    p0 = `Saya telah diberi kuasa/dilantik mewakili ${wakil} orang yang lain untuk membuat tuntutan terhadap defendan ${teksDefendanKumpulan}.`;
+                }
+
                 let ayatDefendan = "";
-                
                 if (jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain') {
-                    if (defNo) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`;
-                    } else {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
-                    }
+                    if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`; } 
+                    else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
                 } else if (jenisDef === 'MyKad') {
-                    if (defNo) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. MyKad: ${defNo})`;
-                    } else {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
-                    }
+                    if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. MyKad: ${defNo})`; } 
+                    else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
                 } else if (jenisDef === 'SSM (Enterprise)') {
-                    if (defNo && pemilik && kpPemilik) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`;
-                    } else if (!defNo && pemilik && kpPemilik) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`;
-                    } else if (!defNo && pemilik && !kpPemilik) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik}`;
-                    } else if (defNo && !pemilik && !kpPemilik) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`;
-                    } else if (defNo && pemilik && !kpPemilik) {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik}`;
-                    } else {
-                        ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
-                    }
+                    if (defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
+                    else if (!defNo && pemilik && kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik} (No. MyKad: ${kpPemilik})`; } 
+                    else if (!defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} yang dimiliki oleh ${pemilik}`; } 
+                    else if (defNo && !pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`; } 
+                    else if (defNo && pemilik && !kpPemilik) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo}) yang dimiliki oleh ${pemilik}`; } 
+                    else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
                 } else {
                     ayatDefendan = `Saya bekerja dengan defendan ${defNama}`;
                 }
                 
                 const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '[Tarikh mula kerja]';
-                
                 const jawatan = jawatanRaw || '[Jawatan]';
                 const gaji = gajiRaw || '[Gaji pokok]';
                 
@@ -1376,7 +1367,15 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     const senaraiJumlah = document.querySelectorAll('.input-elaun-jumlah');
                     let butiranElaun = [];
                     for(let i=0; i<senaraiJenis.length; i++) {
-                        if(senaraiJenis[i].value) butiranElaun.push(`${senaraiJenis[i].value} sebanyak RM${senaraiJumlah[i].value || '0'}`);
+                        if(senaraiJenis[i].value) {
+                            let jenisElaun = senaraiJenis[i].value.trim();
+                            // MAGIK FIX: Potong perkataan "Elaun " jika di hadapan
+                            if (jenisElaun.toLowerCase().startsWith('elaun ')) {
+                                jenisElaun = jenisElaun.substring(6).trim();
+                                if(jenisElaun.length > 0) { jenisElaun = jenisElaun.charAt(0).toUpperCase() + jenisElaun.slice(1); }
+                            }
+                            butiranElaun.push(`${jenisElaun} sebanyak RM${senaraiJumlah[i].value || '0'}`);
+                        }
                     }
                     if(butiranElaun.length > 0) {
                         ayatElaun = "Saya dibayar elaun " + butiranElaun.join(', ') + ".";
@@ -1480,14 +1479,14 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
                 const p2 = `${ayatKontrak} ${ayatPenyata} ${ayatWaktu} ${ayatHari}`;
 
-                let ayatPenuh = (p1 + '\n\n' + p2).replace(/\.\./g, '.').replace(/\s+/g, ' ');
-                ayatPenuh = ayatPenuh.replace(/ \./g, '.').replace(/ \n/g, '\n');
-                textareaAwal.value = p1.replace(/\.\./g, '.') + '\n\n' + p2.replace(/\.\./g, '.');
+                let textLengkap = p1 + '\n\n' + p2;
+                if (p0 !== "") { textLengkap = p0 + '\n\n' + textLengkap; }
+
+                textareaAwal.value = textLengkap.replace(/\.\./g, '.');
                 
-                // Magik trigger resize selepas text generate
                 autoResize(textareaAwal);
             } else {
-                textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan individu (Pekerja).";
+                textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan berstatus Pekerja (Individu / Berkumpulan).";
                 autoResize(textareaAwal);
             }
         }
@@ -1545,7 +1544,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             
             document.getElementById(tabId).style.display = 'grid';
 
-            // MAGIK FIX: Kira saiz selepas Tab telah bertukar kepada paparan grid!
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
                 setTimeout(() => {
@@ -1572,7 +1570,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             document.getElementById(tabId).style.display = 'grid'; 
             elemenTab.classList.add('active');
 
-            // MAGIK FIX: Kira saiz selepas Tab telah bertukar kepada paparan grid!
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
                 setTimeout(() => {
@@ -1662,11 +1659,24 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             input.value = input.value.replace(/,/g, ''); 
         }
 
+        // MAGIK KEMASKINI: Function untuk check Lain-lain
+        function semakJenisTuntutanLain() {
+            const val = document.getElementById('jenisTuntutan').value;
+            const jenisTuntutanLain = document.getElementById('jenisTuntutanLain');
+            if(val === 'Lain-lain') {
+                jenisTuntutanLain.style.display = 'block';
+            } else {
+                jenisTuntutanLain.style.display = 'none';
+                jenisTuntutanLain.value = '';
+            }
+        }
+
         function bukaModalTuntutan(indexEdit = -1) {
             document.getElementById('modalTuntutan').style.display = 'flex';
             
             const isMajikan = document.getElementById('majikan').checked;
             const dropdown = document.getElementById('jenisTuntutan');
+            const jenisTuntutanLain = document.getElementById('jenisTuntutanLain');
             
             dropdown.innerHTML = '<option value="">-Sila Pilih-</option>';
             const senaraiPilihan = isMajikan ? senaraiTuntutanMajikan : senaraiTuntutanPekerja;
@@ -1677,7 +1687,18 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             
             if(indexEdit > -1) {
                 document.getElementById('tajukModal').innerHTML = "Kemaskini Tuntutan";
-                document.getElementById('jenisTuntutan').value = memoriTuntutan[indexEdit].jenis;
+                
+                const storedJenis = memoriTuntutan[indexEdit].jenis;
+                if (senaraiPilihan.includes(storedJenis)) {
+                    document.getElementById('jenisTuntutan').value = storedJenis;
+                    jenisTuntutanLain.style.display = 'none';
+                    jenisTuntutanLain.value = '';
+                } else {
+                    document.getElementById('jenisTuntutan').value = 'Lain-lain';
+                    jenisTuntutanLain.style.display = 'block';
+                    jenisTuntutanLain.value = storedJenis;
+                }
+                
                 let ketRaw = memoriTuntutan[indexEdit].keterangan;
                 if(ketRaw.startsWith('(') && ketRaw.endsWith(')')){ ketRaw = ketRaw.slice(1,-1); }
                 document.getElementById('keteranganTuntutan').value = ketRaw;
@@ -1689,6 +1710,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             } else {
                 document.getElementById('tajukModal').innerHTML = "Tambah Tuntutan";
                 document.getElementById('jenisTuntutan').value = "";
+                jenisTuntutanLain.style.display = 'none';
+                jenisTuntutanLain.value = "";
                 document.getElementById('keteranganTuntutan').value = "";
                 document.getElementById('jumlahTuntutan').value = "";
                 document.getElementById('indexTuntutanEdit').value = "-1";
@@ -1700,10 +1723,19 @@ Portal rasmi : jtksm.mohr.gov.my</div>
         }
 
         function simpanTuntutan() {
-            const jenis = document.getElementById('jenisTuntutan').value;
+            let jenis = document.getElementById('jenisTuntutan').value;
+            let jenisLain = document.getElementById('jenisTuntutanLain').value.trim();
             let keterangan = document.getElementById('keteranganTuntutan').value.trim();
             let jumlah = document.getElementById('jumlahTuntutan').value.replace(/,/g, ''); 
             const index = parseInt(document.getElementById('indexTuntutanEdit').value);
+
+            if (jenis === 'Lain-lain') {
+                if (jenisLain === "") {
+                    alert("Sila nyatakan jenis tuntutan lain.");
+                    return;
+                }
+                jenis = jenisLain;
+            }
 
             if (jenis === "" || keterangan === "" || jumlah.trim() === "" || isNaN(jumlah)) {
                 alert("Sila lengkapkan Jenis, Keterangan, dan pastikan Jumlah Tuntutan adalah nombor.");
@@ -1834,7 +1866,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             document.getElementById('ruanganHariTidakTetap').style.display = isTetap ? 'none' : 'block';
         }
 
-        // FUNGSI MAGIK: Buka / Tutup Ruangan Alamat Kerja
         function toggleAlamatKerja() {
             const berbeza = document.getElementById('alamatBerbeza').checked;
             const ruanganKerja = document.getElementById('ruanganAlamatKerja');
@@ -2140,19 +2171,16 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             }
         }
 
-        // ================= MAGIK KUNCI BORANG (OPTION 1) =================
         function setStatusBorang(isReadonly) {
             const container = document.getElementById('viewPendaftaranKes');
             
-            // 1. Kunci semua input, select, textarea di dalam borang
             const inputs = container.querySelectorAll('input, select, textarea');
             inputs.forEach(el => {
-                if (el.id !== 'carianTugasan') { // kecualikan carian
+                if (el.id !== 'carianTugasan') { 
                     el.disabled = isReadonly;
                 }
             });
             
-            // 2. Sembunyikan butang-butang action (Tambah/Hapus/Simpan/Daftar)
             const actionButtons = container.querySelectorAll('.btn-add, .btn-delete-tbl, .btn-edit-tbl, .btn-kemaskini, .btn-simpan, .btn-daftar');
             actionButtons.forEach(btn => {
                 if (isReadonly) {
@@ -2163,15 +2191,12 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 }
             });
 
-            // 3. Papar/Sembunyi butang "Kemaskini Borang" di header borang
             const btnEdit = document.getElementById('btnEditBorangKes');
             if (btnEdit) {
                 btnEdit.style.display = isReadonly ? 'inline-block' : 'none';
             }
         }
-        // =================================================================
 
-        // --- KEMASKINI MAGIK: KAWALAN PAPARAN (VIEW) ---
         function tukarView(jenisView) {
             const navSenarai = document.getElementById('navSenarai');
             const navDaftar = document.getElementById('navDaftar');
@@ -2194,12 +2219,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 viewDaftar.style.display = 'block';
                 tajukHalaman.innerHTML = 'Pendaftaran Kes Buruh';
                 
-                // Magik: Buka kunci borang jika pengguna klik menu daftar
                 setStatusBorang(false);
             }
         }
 
-        // --- KEMASKINI MAGIK: RENDER SENARAI TUGASAN ---
         function renderSenaraiTugas() {
             const tbody = document.getElementById('bodySenaraiTugas');
             tbody.innerHTML = '';
@@ -2264,7 +2287,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             document.getElementById('noKes').value = kes.noKes;
             document.getElementById('namaPengadu').value = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
             
-            // Buang tag HTML jika ada sebelum masukkan dalam input
             let defAsal = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
             if (defAsal.includes('<br>')) {
                 defAsal = defAsal.split('<br>')[0]; 
@@ -2281,11 +2303,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             tukarView('daftar');
             pergiKeTabBorang('tab1');
             
-            // Magik: Kunci borang terus lepas dibuka!
             setStatusBorang(true);
         }
 
-        // FUNGSI MAGIK: Untuk menukar huruf besar setiap perkataan (Title Case)
         function toTitleCase(str) {
             if (!str || str === '-') return '-';
             return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
@@ -2309,7 +2329,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const jenisPerniagaan = document.getElementById('jenisPerniagaan')?.value || '-';
             const jenisPerniagaanTitleCase = toTitleCase(jenisPerniagaan);
             
-            // Format Alamat Pengadu (Bandar dan Negeri baris baharu)
             const alamatP1 = document.getElementById('alamatPengadu1')?.value || '';
             const alamatP2 = document.getElementById('alamatPengadu2')?.value || '';
             const alamatP3 = document.getElementById('alamatPengadu3')?.value || '';
@@ -2337,7 +2356,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             const hpDefendan = document.getElementById('hpDefendan')?.value || '-';
             const sektorDefendan = document.getElementById('sektorDefendan')?.value || '-';
             
-            // Format Alamat Defendan (Bandar dan Negeri baris baharu)
             const alamatD1 = document.getElementById('alamatDefendan1')?.value || '';
             const alamatD2 = document.getElementById('alamatDefendan2')?.value || '';
             const alamatD3 = document.getElementById('alamatDefendan3')?.value || '';
@@ -2351,12 +2369,10 @@ Portal rasmi : jtksm.mohr.gov.my</div>
             if(negeriD) alamatPenuhDefendanCetak += `<br>${negeriD}`;
             if(!alamatPenuhDefendanCetak) alamatPenuhDefendanCetak = '-';
 
-            // Ambil Warganegara
             const wgDropdown = document.getElementById('warganegaraPengadu')?.value;
             const wgLain = document.getElementById('warganegaraLain')?.value;
             const warganegara = (wgDropdown === 'Lain-lain') ? (wgLain || '-') : (wgDropdown || '-');
 
-            // Magik Kira Umur & Tarikh Lahir dari MyKad
             const bulanMY = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
             let umurPengadu = '-';
             let tarikhLahirPengadu = '-';
@@ -2368,7 +2384,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 let bln = parseInt(noPendRaw.substring(2, 4)) - 1;
                 let hr = parseInt(noPendRaw.substring(4, 6));
                 
-                // Logik tahun: jika atas 50 (19xx), jika bawah 50 (20xx) - sesuai untuk kegunaan 2026
                 let fullYear = thn > 50 ? 1900 + thn : 2000 + thn;
                 tarikhLahirPengadu = `${hr} ${bulanMY[bln]} ${fullYear}`;
                 
@@ -2378,21 +2393,17 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                 umurPengadu = Math.abs(ageDate.getUTCFullYear() - 1970) + " tahun";
             }
 
-            // Ambil Checkbox Kes Luar / Gaji Minima
             const isLuarKawasan = document.getElementById('luarKawasan')?.checked;
             const isGajiMinima = document.getElementById('gajiMinima')?.checked;
             const cbLuar = isLuarKawasan ? '☑' : '☐';
             const cbGaji = isGajiMinima ? '☑' : '☐';
 
-            // Ambil Seksyen Tuntutan
             const seksyenTerpilih = document.querySelector('input[name="seksyen"]:checked')?.value || '-';
             const subSeksyens = Array.from(document.querySelectorAll('input[name="subSeksyen"]:checked')).map(cb => cb.value).join('');
             
-            // Magik Tambah Akta Kerja 1955 secara automatik
             const teksSeksyen = seksyenTerpilih !== '-' ? "Seksyen " + seksyenTerpilih + subSeksyens : '-';
             const teksSeksyenPenuh = teksSeksyen !== '-' ? teksSeksyen + " Akta Kerja 1955" : '-';
 
-            // Dapatkan Kenyataan
             const kenyataanAwalText = document.getElementById('kenyataanAwal')?.value.replace(/\n/g, '<br>') || '-';
             const kronologiKesText = document.getElementById('kronologiKes')?.value.replace(/\n/g, '<br>') || '-';
 
@@ -2407,7 +2418,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     htmlJadualTuntutan += `
                         <tr>
                             <td class="num">${index + 1}</td>
-                            <!-- Magik Keterangan Bersebelahan & Unbold Jenis Tuntutan -->
                             <td>${item.jenis} <span style="font-size: 0.9em; color: #333;">${item.keterangan}</span></td>
                             <td class="money">RM ${Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                         </tr>
@@ -2477,12 +2487,11 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                     <div style="text-align: center; font-weight: bold; margin-bottom: 20px;">
                         KETUA PENGARAH TENAGA KERJA KES SAMAN<br>
                         NO. ${noKes}<br>
-                        DI PEJABAT TENAGA KERJA KLUANG NEGERI JOHOR
+                        DI PEJABAT TENAGA Kerja KLUANG NEGERI JOHOR
                     </div>
 
                     <div style="text-align: center; margin-bottom: 5px;">Antara</div>
 
-                    <!-- KEMASKINI: Spacing Pengadu (Line Spacing 1.15) -->
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
                         <div style="text-transform: uppercase; line-height: 1.15;">${namaPengadu}</div>
                         <div style="line-height: 1.15;">... Pengadu</div>
@@ -2495,7 +2504,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
 
                     <div style="text-align: center; margin-bottom: 5px;">Dan</div>
 
-                    <!-- KEMASKINI: Spacing Defendan (Line Spacing 1.15) -->
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0;">
                         <div style="text-transform: uppercase; line-height: 1.15;">${namaDefendanRaw}</div>
                         <div style="line-height: 1.15;">... Defendan</div>
@@ -2507,10 +2515,8 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <span style="text-transform: none;">Jenis Perusahaan: ${jenisPerniagaanTitleCase}</span>
                     </div>
 
-                    <!-- Spacing ke jadual dirapatkan ke 0 -->
                     <div style="text-align: left; font-weight: bold; margin-bottom: 0;">JENIS TUNTUTAN</div>
 
-                    <!-- Spacing Jadual 1 enter untuk bawahnya -->
                     <table class="print-tbl-tuntutan" style="margin-top: 0; margin-bottom: 15px;">
                         <thead>
                             <tr>
@@ -2524,7 +2530,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </tbody>
                     </table>
 
-                    <!-- BLOK KEBAL MUKA 2 -->
                     <div style="page-break-inside: avoid; display: inline-block; width: 100%;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
                             <div>
@@ -2562,7 +2567,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         <div style="text-align: right;">Warganegara: <span>${warganegara}</span></div>
                     </div>
 
-                    <!-- Magik: Teks angkat sumpah dalam 2 baris (font-size 10.5pt), margin-bottom dikurangkan -->
                     <div style="text-align: center; margin-bottom: 10px; font-size: 10.5pt; padding: 0 10px;">
                         Setelah mengangkat sumpah dan memberi keterangan dalam Bahasa Melayu/Cina/Tamil/lain-lain (Diterjemahkan oleh :______________________________), selepas diperiksa seperti berikut:
                     </div>
@@ -2590,7 +2594,6 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </tbody>
                     </table>
 
-                    <!-- BLOK KEBAL MUKA 3 (PERTAMA) -->
                     <div style="page-break-inside: avoid; display: inline-block; width: 100%;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-bottom: 5px;">
                             <div>
@@ -2605,11 +2608,9 @@ Portal rasmi : jtksm.mohr.gov.my</div>
                         </div>
                     </div>
 
-                    <!-- BLOK KEBAL MUKA 3 (KEDUA) -->
                     <div style="page-break-inside: avoid; display: inline-block; width: 100%;">
                         <hr style="border: 0; border-top: 1px solid #000; margin: 10px 0;">
 
-                        <!-- Magik: Teks Seksyen 69 diletakkan satu baris (nowrap), saiz ditambah kpd 10.5pt, jarak tandatangan tambah 1 enter -->
                         <div style="text-align: center; margin-top: 10px; margin-bottom: 50px; white-space: nowrap; font-size: 10.5pt;">
                             Saya berpuashati bahawa aduan ini berasas disiasat di bawah ${teksSeksyenPenuh}.
                         </div>
