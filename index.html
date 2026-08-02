@@ -1363,31 +1363,33 @@ Portal rasmi : jtksm.mohr.gov.my
             const p_isMyKad = /^\d{6}-?\d{2}-?\d{4}$/.test(p_id);
             const lbl_p_id = p_isMyKad ? 'No. MyKad' : 'No. Passport';
 
-            // BINA HTML PENGADU SECARA DINAMIK (Disusun Mengikut Baris - Row)
+            // BINA HTML PENGADU SECARA DINAMIK
             let htmlPengadu = '';
             if (isMajikan) {
                 // Pengadu = Majikan
                 htmlPengadu = `
-                    <!-- Baris 1 -->
-                    <div><div class="info-label">Nama Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_nama}</div></div>
-                    <div><div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div></div>
-                    <div><div class="info-label">Alamat tempat pekerjaan defendan</div><div class="info-value" style="margin-bottom:0;">Sama seperti alamat defendan</div></div>
+                    <!-- Kumpulan Kolum Atas (Nama, Alamat, dll dirapatkan dalam 1 blok) -->
+                    <div>
+                        <div class="info-label">Nama Pengadu</div><div class="info-value">${p_nama}</div>
+                        <div class="info-label" style="margin-top:15px;">${lbl_p_id}</div><div class="info-value" style="margin-bottom:0;">${p_id}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat tempat pekerjaan defendan</div><div class="info-value" style="margin-bottom:0;">Sama seperti alamat defendan</div>
+                    </div>
                     
-                    <!-- Baris 2 -->
-                    <div><div class="info-label">${lbl_p_id}</div><div class="info-value" style="margin-bottom:0;">${p_id}</div></div>
-                    <div></div> <!-- Blok kosong untuk kekalkan kolum -->
-                    <div></div>
-                    
-                    <!-- Baris 3 -->
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <!-- Kumpulan Kolum Bawah (Sebaris) -->
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${p_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${p_tel}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${p_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${p_hp}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">Emel:</span>
                         <a href="mailto:${p_emel}" class="info-link" style="font-weight:500; font-size:0.95em;">✉️ ${p_emel}</a>
                     </div>
@@ -1395,26 +1397,29 @@ Portal rasmi : jtksm.mohr.gov.my
             } else {
                 // Pengadu = Pekerja (Individu/Berkumpulan)
                 htmlPengadu = `
-                    <!-- Baris 1 -->
-                    <div><div class="info-label">Nama Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_nama}</div></div>
-                    <div><div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div></div>
-                    <div><div class="info-label">Alamat tempat pekerjaan</div><div class="info-value" style="margin-bottom:0;">${p_alamat_kerja}</div></div>
+                    <!-- Kumpulan Kolum Atas (Nama, Alamat, dll dirapatkan dalam 1 blok) -->
+                    <div>
+                        <div class="info-label">Nama Pengadu</div><div class="info-value">${p_nama}</div>
+                        <div class="info-label" style="margin-top:15px;">${lbl_p_id}</div><div class="info-value" style="margin-bottom:0;">${p_id}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat tempat pekerjaan</div><div class="info-value" style="margin-bottom:0;">${p_alamat_kerja}</div>
+                        ${isBerkumpulan ? `<div class="info-label" style="margin-top:15px;">Bilangan pengadu (Termasuk ketua)</div><div class="info-value" style="margin-bottom:0;">${p_bil_pengadu}</div>` : ''}
+                    </div>
                     
-                    <!-- Baris 2 -->
-                    <div><div class="info-label">${lbl_p_id}</div><div class="info-value" style="margin-bottom:0;">${p_id}</div></div>
-                    <div></div> <!-- Blok kosong untuk kekalkan kolum -->
-                    <div>${isBerkumpulan ? `<div class="info-label">Bilangan pengadu (Termasuk ketua)</div><div class="info-value" style="margin-bottom:0;">${p_bil_pengadu}</div>` : ''}</div>
-                    
-                    <!-- Baris 3 -->
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <!-- Kumpulan Kolum Bawah (Sebaris) -->
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${p_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${p_tel}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${p_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${p_hp}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">Emel:</span>
                         <a href="mailto:${p_emel}" class="info-link" style="font-weight:500; font-size:0.95em;">✉️ ${p_emel}</a>
                     </div>
@@ -1422,25 +1427,27 @@ Portal rasmi : jtksm.mohr.gov.my
             }
             document.getElementById('mk_grid_pengadu').innerHTML = htmlPengadu;
 
-            // BINA HTML DEFENDAN SECARA DINAMIK (Disusun Mengikut Baris - Row)
+            // BINA HTML DEFENDAN SECARA DINAMIK
             let htmlDefendan = '';
             if (isMajikan) {
                 // Defendan = Pekerja
                 document.getElementById('mk_header_defendan').innerText = 'Maklumat Defendan (Pekerja)';
                 htmlDefendan = `
-                    <!-- Baris 1 -->
-                    <div><div class="info-label">Nama Defendan</div><div class="info-value" style="margin-bottom:0;">${d_nama}</div></div>
-                    <div><div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div></div>
+                    <!-- Kumpulan Kolum Atas (Dirapatkan dalam 1 blok) -->
+                    <div>
+                        <div class="info-label">Nama Defendan</div><div class="info-value">${d_nama}</div>
+                        <div class="info-label" style="margin-top:15px;">No. MyKad atau No. Passport</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div>
+                    </div>
                     
-                    <!-- Baris 2 -->
-                    <div><div class="info-label">No. MyKad atau No. Passport</div><div class="info-value" style="margin-bottom:0;">${d_id}</div></div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <!-- Kumpulan Kolum Bawah -->
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${d_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${d_hp}</a>
                     </div>
-                    
-                    <!-- Baris 3 -->
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${d_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${d_tel}</a>
                     </div>
@@ -1454,19 +1461,21 @@ Portal rasmi : jtksm.mohr.gov.my
                 document.getElementById('mk_header_defendan').innerText = 'Maklumat Defendan (Majikan)';
                 let lbl_id = d_isMyKad ? 'No. MyKad' : 'No. Pendaftaran';
                 htmlDefendan = `
-                    <!-- Baris 1 -->
-                    <div><div class="info-label">Nama Defendan</div><div class="info-value" style="margin-bottom:0;">${d_nama}</div></div>
-                    <div><div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div></div>
+                    <!-- Kumpulan Kolum Atas (Dirapatkan dalam 1 blok) -->
+                    <div>
+                        <div class="info-label">Nama Defendan</div><div class="info-value">${d_nama}</div>
+                        <div class="info-label" style="margin-top:15px;">${lbl_id}</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                    </div>
+                    <div>
+                        <div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div>
+                    </div>
                     
-                    <!-- Baris 2 -->
-                    <div><div class="info-label">${lbl_id}</div><div class="info-value" style="margin-bottom:0;">${d_id}</div></div>
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <!-- Kumpulan Kolum Bawah -->
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${d_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${d_hp}</a>
                     </div>
-                    
-                    <!-- Baris 3 -->
-                    <div style="display:flex; gap:8px; align-items:center;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${d_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${d_tel}</a>
                     </div>
