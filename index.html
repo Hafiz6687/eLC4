@@ -3002,11 +3002,14 @@ function tukarPeranan() {
             if (jenisBorang === 'G1 Ketua') {
                 console.log("Menjana maklumat pengadu untuk G1 Ketua...");
 
-                // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU
-                const namaKetua = document.getElementById('nama') ? document.getElementById('nama').value : document.querySelector('input[placeholder="Nama penuh"]')?.value || '-';
-                const noKpKetua = document.getElementById('noKp') ? document.getElementById('noKp').value : document.querySelector('input[placeholder*="880101"]')?.value || '-';
-                const jantinaKetua = document.querySelector('input[name="jantina"]:checked') ? document.querySelector('input[name="jantina"]:checked').value : '-';
-                const telKetua = document.getElementById('telBimbit') ? document.getElementById('telBimbit').value : document.querySelector('input[placeholder*="012-3456789"]')?.value || '-';
+                // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU (MENGGUNAKAN ID SEBENAR SISTEM TUAN)
+                const namaKetua = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '-';
+                const noKpKetua = document.getElementById('noPendPengadu') ? document.getElementById('noPendPengadu').value : '-';
+                
+                const jantinaNode = document.querySelector('input[name="jantinaPengadu"]:checked');
+                const jantinaKetua = jantinaNode ? jantinaNode.value : '-';
+                
+                const telKetua = document.getElementById('hpPengadu') ? document.getElementById('hpPengadu').value : '-';
 
                 // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1
                 const htmlG1 = `
@@ -3019,9 +3022,9 @@ function tukarPeranan() {
                         <h3 style="background-color: #f0f0f0; padding: 8px; border-left: 5px solid var(--primary-blue);">A. MAKLUMAT KETUA PENGADU</h3>
                         <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1.1em;">
                             <tr><td style="width: 25%; font-weight: bold; padding: 8px 0;">Nama Penuh</td><td>: <span style="text-transform: uppercase;">${namaKetua}</span></td></tr>
-                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Kad Pengenalan</td><td>: ${noKpKetua}</td></tr>
+                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Kad Pengenalan / Pasport</td><td>: ${noKpKetua}</td></tr>
                             <tr><td style="font-weight: bold; padding: 8px 0;">Jantina</td><td>: ${jantinaKetua}</td></tr>
-                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Telefon bimbit</td><td>: ${telKetua}</td></tr>
+                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Telefon Bimbit</td><td>: ${telKetua}</td></tr>
                         </table>
                         <br><br>
                         <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">
@@ -3033,21 +3036,20 @@ function tukarPeranan() {
                 // 3. SETKAN SUIS MOD CETAK 
                 modCetakSemasa = jenisBorang;
                 
-                // 4. PEMBETULAN: MASUKKAN HTML KE DALAM ID 'previewContent' YANG SEBENAR
+                // 4. MASUKKAN HTML KE DALAM ID 'previewContent' & 'printArea'
                 const kawasanPreview = document.getElementById('previewContent');
                 if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
 
                 const kawasanCetak = document.getElementById('printArea');
                 if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
 
-                // 5. PEMBETULAN: GUNAKAN ID SKRIN YANG BETUL UNTUK BUKA PREVIEW
-                const borangUtama = document.getElementById('mainForm') || document.querySelector('.container');
-                const skrinPreview = document.getElementById('previewScreen');
+                // 5. BUKA SKRIN PREVIEW MENGGUNAKAN ID MODAL TUAN YANG SEBENAR
+                document.getElementById('modalPreview').style.display = 'flex';
                 
-                if (borangUtama) borangUtama.style.display = 'none';
-                if (skrinPreview) skrinPreview.style.display = 'block';
-                
-                window.scrollTo(0, 0); // Scroll automatik ke atas
+                // 6. SEMBUNYIKAN MENU CETAK LAIN DALAM DROPDOWN AGAR TIDAK KELIRU
+                document.getElementById('menuCetakAkuan').style.display = 'none';
+                document.getElementById('menuCetakKenyataan').style.display = 'none';
+                document.getElementById('menuDaftar').style.display = 'none';
             } 
             else if (jenisBorang === 'G1 Borang') {
                 alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
