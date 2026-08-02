@@ -1082,24 +1082,58 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
 
-                <div class="card full-width" id="kad3" style="order: 3;">
-                    <div class="card-header">Maklumat Tuntutan</div>
-                    <div class="card-body">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-                            <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan()">+ Tambah Maklumat Tuntutan</button>
+<div class="card full-width" id="kad3" style="order: 3;">
+                    
+                    <!-- 1. BLOK TUNTUTAN KETUA PENGADU (Hanya Muncul Jika Berkumpulan) -->
+                    <div id="blokTuntutanKetua" style="display: none; border-bottom: 2px dashed #cbd5e1; margin-bottom: 20px;">
+                        <div class="card-header" style="background-color: transparent; color: var(--primary-blue); padding-bottom: 0;">
+                            | Maklumat Tuntutan Ketua Pengadu
                         </div>
-                        
-                        <table id="jadualTuntutan">
-                            <thead>
-                                <tr>
-                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
-                                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
-                        </table>
+                        <div class="card-body">
+                            <!-- Mesej Amaran Ketua -->
+                            <div id="mesejAmaranKetua" style="color: var(--danger); font-style: italic; margin-bottom: 15px;">
+                                * Sila lengkapkan <strong>Sektor</strong> dan <strong>Jenis Perniagaan</strong> di bahagian atas terlebih dahulu.
+                            </div>
 
+                            <!-- Kandungan Ketua -->
+                            <div id="kandunganTuntutanKetua" style="display: none;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                                    <p class="note" style="margin: 0; color: var(--danger);">* Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu</p>
+                                    <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('ketua')">+ Tambah Tuntutan Ketua</button>
+                                </div>
+                                <!-- Boleh letak jadual ketua di sini nanti jika perlu -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. BLOK TUNTUTAN SEDIA ADA (Keseluruhan / Individu) -->
+                    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
+                    <div class="card-body">
+                        
+                        <!-- Mesej Amaran Sedia Ada -->
+                        <div id="mesejAmaranSediaAda" style="color: var(--danger); font-style: italic; margin-bottom: 15px;">
+                            * Sila lengkapkan <strong>Sektor</strong> dan <strong>Jenis Perniagaan</strong> di bahagian atas terlebih dahulu.
+                        </div>
+
+                        <!-- Kandungan Tuntutan & Jadual -->
+                        <div id="kandunganTuntutanSediaAda" style="display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                                <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+                                <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan()">+ Tambah Maklumat Tuntutan</button>
+                            </div>
+                            
+                            <table id="jadualTuntutan">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
+                                        <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
+                                    </tr>
+                                </thead>
+                                <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Butang Seterusnya (Dikekalkan di bawah) -->
                         <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
                             <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
                         </div>
