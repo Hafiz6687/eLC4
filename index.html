@@ -2997,8 +2997,7 @@ function tukarPeranan() {
         }
 // Suis pintar untuk mengesan jenis dokumen yang sedang di-preview
         let modCetakSemasa = 'Borang Utama'; 
-
-        // Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
+// Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
         function bukaPreviewPDF(jenisBorang) {
             if (jenisBorang === 'G1 Ketua') {
                 console.log("Menjana maklumat pengadu untuk G1 Ketua...");
@@ -3034,27 +3033,27 @@ function tukarPeranan() {
                 // 3. SETKAN SUIS MOD CETAK 
                 modCetakSemasa = jenisBorang;
                 
-                // 4. MASUKKAN HTML KE DALAM RUANG PAPARAN PREVIEW DAN PRINT AREA
-                const kawasanPreview = document.getElementById('paparanPreview');
+                // 4. PEMBETULAN: MASUKKAN HTML KE DALAM ID 'previewContent' YANG SEBENAR
+                const kawasanPreview = document.getElementById('previewContent');
                 if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
 
                 const kawasanCetak = document.getElementById('printArea');
                 if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
 
-                // 5. SEMBUNYIKAN BORANG UTAMA & BUKA SKRIN PREVIEW (SEPERTI SEMAK & CETAK)
-                const borangUtama = document.getElementById('borangUtama');
-                const skrinPreview = document.getElementById('skrinPreview');
+                // 5. PEMBETULAN: GUNAKAN ID SKRIN YANG BETUL UNTUK BUKA PREVIEW
+                const borangUtama = document.getElementById('mainForm') || document.querySelector('.container');
+                const skrinPreview = document.getElementById('previewScreen');
                 
-                if (borangUtama && skrinPreview) {
-                    borangUtama.style.display = 'none';
-                    skrinPreview.style.display = 'block';
-                    window.scrollTo(0, 0); // Scroll automatik ke atas
-                }
+                if (borangUtama) borangUtama.style.display = 'none';
+                if (skrinPreview) skrinPreview.style.display = 'block';
+                
+                window.scrollTo(0, 0); // Scroll automatik ke atas
             } 
             else if (jenisBorang === 'G1 Borang') {
                 alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
             }
         }
+
 // Kemaskini fungsi ini supaya ia jadi 'bijak'
         function sediaUntukCetak() { 
             // Ia hanya jana semula HTML jika mod = Borang Utama.
