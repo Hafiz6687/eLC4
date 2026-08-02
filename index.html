@@ -1878,10 +1878,13 @@ Portal rasmi : jtksm.mohr.gov.my
                             localStorage.setItem('eLC_gambarProfil', base64Data);
                             localStorage.setItem('eLC_gambarScale', currentScale.toString());
                             localStorage.setItem('eLC_gambarPos', JSON.stringify({x: 0, y: 0}));
-                        } catch (err) { console.warn("Gambar terlalu besar."); }
+                        } catch (err) { 
+                            console.warn("Gambar terlalu besar.");
+                            alert("⚠️ AMARAN: Saiz gambar terlalu besar. Sistem hanya boleh memaparkannya sementara, tetapi ia akan HILANG apabila halaman di-refresh. Sila gunakan gambar yang bersaiz lebih kecil (bawah 1MB).");
+                        }
                     };
                 };
-                reader.readAsDataURL(input.files[0]);
+                   reader.readAsDataURL(input.files[0]);
             }
         }
 
