@@ -1105,9 +1105,9 @@ Portal rasmi : jtksm.mohr.gov.my
                             <button type="button" class="icon-btn" style="width: 36px; height: 36px; font-size: 20px; padding-bottom: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan">
                                 ⋮
                             </button>
-                            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
-                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Ketua sedang dijana...');">📄 G1 Ketua</a>
-                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Borang sedang dijana...');">📄 G1 Borang</a>
+                         <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
+                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Ketua');">📄 G1 Ketua</a>
+                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Borang');">📄 G1 Borang</a>
                             </div>
                         </div>
                     </div>
@@ -2995,7 +2995,13 @@ function tukarPeranan() {
                 </div>
             `;
         }
-
+// Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
+        function bukaPreviewPDF(jenisBorang) {
+            console.log("Sistem memproses Preview untuk: " + jenisBorang);
+            
+            // Alert sementara untuk menguji butang
+            alert("Skrin Preview untuk dokumen [" + jenisBorang + "] sedang dibuka! \n\n(Nota: Alert ini akan digantikan dengan fungsi cetakan sebenar nanti).");
+        }
         function sediaUntukCetak() { document.getElementById('printArea').innerHTML = janaHTMLCetak(); window.print(); }
 
         function bukaPreview() {
