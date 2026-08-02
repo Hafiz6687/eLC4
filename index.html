@@ -1086,44 +1086,19 @@ Portal rasmi : jtksm.mohr.gov.my
 <div class="card full-width" id="kad3" style="order: 3;">
                     
                     <!-- 1. BLOK TUNTUTAN KETUA PENGADU (Hanya Muncul Jika Berkumpulan) -->
-                    <div id="blokTuntutanKetua" style="display: none; border-bottom: 2px dashed #cbd5e1; margin-bottom: 20px;">
-                        <div class="card-header" style="background-color: transparent; color: var(--primary-blue); padding-bottom: 0;">
+                    <div id="blokTuntutanKetua" style="display: none; border-bottom: 1px solid var(--border-color);">
+                        <div class="card-header" style="background-color: transparent; color: var(--primary-blue); border-bottom: none; padding-bottom: 0;">
                             | Maklumat Tuntutan Ketua Pengadu
                         </div>
-                        <div class="card-body">
-                            <!-- Mesej Amaran Ketua -->
-                            <div id="mesejAmaranKetua" style="color: var(--danger); font-style: italic; margin-bottom: 15px;">
-                                * Sila lengkapkan <strong>Sektor</strong> dan <strong>Jenis Perniagaan</strong> di bahagian atas terlebih dahulu.
-                            </div>
-
-                            <!-- Kandungan Ketua -->
-                            <div id="kandunganTuntutanKetua" style="display: none;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                                    <p class="note" style="margin: 0; color: var(--danger);">* Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu</p>
-                                    <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('ketua')">+ Tambah Tuntutan Ketua</button>
-                                </div>
-                                <!-- Boleh letak jadual ketua di sini nanti jika perlu -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. BLOK TUNTUTAN SEDIA ADA (Keseluruhan / Individu) -->
-                    <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
-                    <div class="card-body">
                         
-                        <!-- Mesej Amaran Sedia Ada -->
-                        <div id="mesejAmaranSediaAda" style="color: var(--danger); font-style: italic; margin-bottom: 15px;">
-                            * Sila lengkapkan <strong>Sektor</strong> dan <strong>Jenis Perniagaan</strong> di bahagian atas terlebih dahulu.
-                        </div>
-
-                        <!-- Kandungan Tuntutan & Jadual -->
-                        <div id="kandunganTuntutanSediaAda" style="display: none;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                                <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-                                <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
+                        <!-- Kandungan Ketua (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
+                        <div class="card-body" id="kandunganTuntutanKetua" style="display: none; padding-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                                <p class="note" style="margin: 0; color: var(--primary-blue);">* Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu</p>
+                                <button class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap;" onclick="bukaModalTuntutan('ketua')">+ Tambah Tuntutan Ketua</button>
                             </div>
                             
-                            <table id="jadualTuntutan">
+                            <table id="jadualTuntutanKetua">
                                 <thead>
                                     <tr>
                                         <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
@@ -1133,9 +1108,34 @@ Portal rasmi : jtksm.mohr.gov.my
                                 <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
                             </table>
                         </div>
+                    </div>
 
-                        <!-- Butang Seterusnya (Dikekalkan di bawah) -->
-                        <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                    <!-- 2. BLOK TUNTUTAN SEDIA ADA (Keseluruhan / Individu) -->
+                    <div class="card-header" id="tajukTuntutanSediaAda" style="background-color: transparent; border-bottom: none; padding-bottom: 0; padding-top: 20px;">
+                        | Maklumat Tuntutan
+                    </div>
+                    
+                    <!-- Kandungan Tuntutan Keseluruhan (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
+                    <div class="card-body" id="kandunganTuntutanSediaAda" style="display: none; padding-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                            <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
+                            <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
+                        </div>
+                        
+                        <table id="jadualTuntutan">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
+                                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
+                                </tr>
+                            </thead>
+                            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Butang Seterusnya (Dikekalkan di bawah) -->
+                    <div class="card-body" style="padding-top: 0;">
+                        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
                             <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
                         </div>
                     </div>
@@ -2330,13 +2330,13 @@ function janaKenyataanAwal() {
         function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
 
         // --- FUNGSI simpanTuntutan TELAH DIKEMASKINI ---
-        function simpanTuntutan() {
+function simpanTuntutan() {
             let jenis = document.getElementById('jenisTuntutan').value;
             let jenisLain = document.getElementById('jenisTuntutanLain').value.trim();
             let keterangan = document.getElementById('keteranganTuntutan').value.trim();
             let jumlah = document.getElementById('jumlahTuntutan').value.replace(/,/g, ''); 
             const index = parseInt(document.getElementById('indexTuntutanEdit').value);
-            const jenisJadual = document.getElementById('jenisJadualTuntutan').value; // Penanda array
+            const jenisJadual = document.getElementById('jenisJadualTuntutan').value; 
 
             if (jenis === 'Lain-lain') { if (jenisLain === "") { alert("Sila nyatakan jenis tuntutan lain."); return; } jenis = jenisLain; }
             if (jenis === "" || keterangan === "" || jumlah.trim() === "" || isNaN(jumlah)) { alert("Sila lengkapkan Jenis, Keterangan, dan pastikan Jumlah Tuntutan adalah nombor."); return; }
@@ -2345,32 +2345,63 @@ function janaKenyataanAwal() {
             if (jenisJadual === 'ketua') {
                 if (index > -1) { memoriTuntutanKetua[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; } 
                 else { memoriTuntutanKetua.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); }
-                alert("Maklumat tuntutan ketua telah disimpan (Logik paparan jadual ketua boleh ditambah kemudian).");
             } else {
                 if (index > -1) { memoriTuntutan[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; } 
                 else { memoriTuntutan.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); }
-                renderJadualTuntutan();
             }
 
+            renderJadualTuntutan(); // Update jadual tanpa mesej 'alert' yang mengganggu
             tutupModalTuntutan(); 
         }
 
-        function hapusTuntutan(index) { if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) { memoriTuntutan.splice(index, 1); renderJadualTuntutan(); } }
-
-        function renderJadualTuntutan() {
+function hapusTuntutan(index, jenisJadual = 'biasa') { 
+            if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) { 
+                if (jenisJadual === 'ketua') {
+                    memoriTuntutanKetua.splice(index, 1); 
+                } else {
+                    memoriTuntutan.splice(index, 1); 
+                }
+                renderJadualTuntutan(); 
+            } 
+        }
+function renderJadualTuntutan() {
+            // Render Jadual Biasa / Keseluruhan
             const tbody = document.querySelector("#jadualTuntutan tbody");
-            tbody.innerHTML = ""; 
-            if (memoriTuntutan.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; return; }
-            memoriTuntutan.forEach((item, index) => {
-                const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index + 1}</td><td>${item.jenis}</td><td>${item.keterangan}</td><td>RM ${jumlahCantik}</td>
-                    <td><button class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
-                    <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index})">🗑️ Hapus</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
+            if (tbody) {
+                tbody.innerHTML = ""; 
+                if (memoriTuntutan.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; } 
+                else {
+                    memoriTuntutan.forEach((item, index) => {
+                        const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td><td>${item.jenis}</td><td>${item.keterangan}</td><td>RM ${jumlahCantik}</td>
+                            <td><button class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
+                            <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'biasa')">🗑️ Hapus</button></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            }
+
+            // Render Jadual Ketua (Hanya jika wujud di skrin)
+            const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
+            if (tbodyKetua) {
+                tbodyKetua.innerHTML = ""; 
+                if (memoriTuntutanKetua.length === 0) { tbodyKetua.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; } 
+                else {
+                    memoriTuntutanKetua.forEach((item, index) => {
+                        const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td><td>${item.jenis}</td><td>${item.keterangan}</td><td>RM ${jumlahCantik}</td>
+                            <td><button class="btn-edit-tbl" style="background-color: #0284c7;" onclick="bukaModalTuntutan('ketua', ${index})">✏️ Edit</button></td>
+                            <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index}, 'ketua')">🗑️ Hapus</button></td>
+                        `;
+                        tbodyKetua.appendChild(tr);
+                    });
+                }
+            }
         }
 
         function toggleMaklumatPerkhidmatan() {
@@ -3052,27 +3083,23 @@ function tukarPeranan() {
         }
 
         // Fungsi 2: Membuka kunci butang "+ Tambah" jika syarat dipenuhi
-        function semakKelayakanTuntutan() {
+function semakKelayakanTuntutan() {
             const sektor = document.getElementById('sektorDefendan') ? document.getElementById('sektorDefendan').value : '';
             const jenisPerniagaan = document.getElementById('jenisPerniagaan') ? document.getElementById('jenisPerniagaan').value.trim() : '';
             
-            // Logik Syarat: Jika Sektor ADA isian DAN Jenis Perniagaan ADA isian = LAYAK
             const isLayak = (sektor !== '' && jenisPerniagaan !== '');
 
             const kandKetua = document.getElementById('kandunganTuntutanKetua');
-            const mesejKetua = document.getElementById('mesejAmaranKetua');
-            
             const kandSediaAda = document.getElementById('kandunganTuntutanSediaAda');
-            const mesejSediaAda = document.getElementById('mesejAmaranSediaAda');
 
             if (isLayak) {
-                // Syarat dipenuhi: Munculkan butang tambah, sembunyikan mesej amaran
-                if(kandKetua && mesejKetua) { kandKetua.style.display = 'block'; mesejKetua.style.display = 'none'; }
-                if(kandSediaAda && mesejSediaAda) { kandSediaAda.style.display = 'block'; mesejSediaAda.style.display = 'none'; }
+                // Munculkan butang dan jadual tanpa sebarang amaran merah
+                if(kandKetua) kandKetua.style.display = 'block';
+                if(kandSediaAda) kandSediaAda.style.display = 'block';
             } else {
-                // Syarat belum dipenuhi: Sembunyikan butang tambah, paparkan mesej amaran
-                if(kandKetua && mesejKetua) { kandKetua.style.display = 'none'; mesejKetua.style.display = 'block'; }
-                if(kandSediaAda && mesejSediaAda) { kandSediaAda.style.display = 'none'; mesejSediaAda.style.display = 'block'; }
+                // Sembunyikan sepenuhnya
+                if(kandKetua) kandKetua.style.display = 'none';
+                if(kandSediaAda) kandSediaAda.style.display = 'none';
             }
         }
     </script>
