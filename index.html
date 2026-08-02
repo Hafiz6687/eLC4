@@ -178,8 +178,8 @@
         }
         .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-        .content-area {
-            padding: 32px;
+.content-area {
+            padding: 32px 32px 70px 32px; 
             max-width: 1600px; 
             margin: 0 auto;
             width: 100%;
@@ -420,7 +420,7 @@
             .mobile-label { display: none; }
         }
 
-        /* KELAS KHUSUS UNTUK CETAKAN ASING (Custom Print Media Queries) */
+/* KELAS KHUSUS UNTUK CETAKAN ASING (Custom Print Media Queries) */
         @media print {
             .kertas-a4 { margin: 0; padding: 0; box-shadow: none; width: 100%; min-height: auto; page-break-after: always; }
             .kertas-a4:last-child { page-break-after: auto; }
@@ -431,7 +431,9 @@
 
             /* Logik sembunyikan muka surat berdasarkan pilihan cetakan */
             body.print-only-akuan .page-borang, body.print-only-akuan .page-kenyataan { display: none !important; }
-            body.print-only-kenyataan .page-akuan, body.print-only-kenyataan .page-borang { display: none !important; }
+            
+            /* Sembunyikan AKUAN SAHAJA apabila cetak Kenyataan Tuntutan (Muka 1 & Muka 2 akan dicetak) */
+            body.print-only-kenyataan .page-akuan { display: none !important; } 
         }
     </style>
 </head>
@@ -470,8 +472,6 @@
     <!-- PREVIEW MODAL & ACTION ICON BUTTON -->
     <div class="modal-overlay" id="modalPreview" style="z-index: 2000; flex-direction: column; padding: 0; background: rgba(0,0,0,0.8); position: relative;">
         
-
-
         <!-- Bahagian Paparan Kertas (A4) -->
         <div style="width: 100%; height: 100vh; overflow-y: auto; background: #525659; display: flex; justify-content: center; padding: 40px 20px;">
             <div id="previewContent" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
@@ -484,11 +484,12 @@
             <button class="icon-btn" onclick="document.getElementById('actionMenu').classList.toggle('show')" title="Tindakan">
                 ⋮
             </button>
-            <div id="actionMenu" class="dropdown-menu">
+<div id="actionMenu" class="dropdown-menu">
                 <a href="#" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
-                <a href="#" onclick="cetakKhusus('akuan', true)">🖨️ Cetak Akuan Pemfailan</a>
-                <a href="#" onclick="cetakKhusus('kenyataan', true)">🖨️ Cetak Kenyataan Tuntutan</a>
-                <a href="#" onclick="daftarDariPreview()">🚀 Daftar</a>
+                <a href="#" id="menuCetakAkuan" onclick="cetakKhusus('akuan')">🖨️ Cetak Akuan Pemfailan</a>
+                <a href="#" id="menuCetakKenyataan" onclick="cetakKhusus('kenyataan')">🖨️ Cetak Kenyataan Tuntutan</a>
+                <a href="#" id="menuDaftar" onclick="daftarDariPreview()" style="display: none;">🚀 Daftar</a>
+                <a href="#" onclick="document.getElementById('modalPreview').style.display='none'; batalPemfailan();" style="color: var(--danger);">🗑️ Batal Pemfailan</a>
             </div>
         </div>
     </div> <!-- END OF MODAL PREVIEW -->
@@ -540,9 +541,12 @@ Portal rasmi : jtksm.mohr.gov.my
     </aside>
 
     <main class="main-content">
-        <div class="top-header">
+<div class="top-header">
             <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Kes Buruh</span></div>
-            <div style="display: flex; gap: 10px;" id="butangCetakHeader"><button class="btn-print btn-terapung" onclick="sediaUntukCetak()">🖨️ Cetak PDF</button></div>
+            <div style="display: flex; gap: 10px;" id="butangCetakHeader">
+                <!-- Butang ini disembunyikan secara lalai (display: none) -->
+                <button id="btnBukaPreviewTop" class="btn-save btn-terapung" style="padding: 8px 16px; font-size: 0.9em; background-color: var(--primary-blue); display: none;" onclick="bukaPreview()">📄 Semak & Cetak</button>
+            </div>
         </div>
         
         <div id="viewSenaraiTugas" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
@@ -679,7 +683,7 @@ Portal rasmi : jtksm.mohr.gov.my
         <!-- VIEW PENDAFTARAN (FORM) ASAL -->
         <div id="viewPendaftaranKes">
             
-            <div class="page-tabs-container">
+<div class="page-tabs-container">
                 <div class="tabs">
                     <div class="tab active" onclick="bukaTab('tab1', this)">Pengadu & Defendan</div>
                     <div class="tab" onclick="bukaTab('tab2', this)">Kenyataan Pengadu</div>
@@ -689,13 +693,16 @@ Portal rasmi : jtksm.mohr.gov.my
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <button id="btnEditBorangKes" onclick="setStatusBorang(false)" style="display: none; background: #eab308; color: #713f12; border: none; padding: 6px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; margin-right: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">✏️ Kemaskini Borang</button>
                     
-                    <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
-                    <input type="text" id="noKes" value="KBR/10103/2026/0112" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
-                    <div class="tooltip-container">
-                        <span style="font-size: 1.2em; color: var(--primary-blue);">ℹ️</span>
-                        <div class="tooltip-text">
-                            *Sila dikemaskini secara manual jika No. Kes tidak mengikut turutan pemfailan.
-                            <br><br><span style="color: #cbd5e1; font-weight: 400;">Format: Kod Kawasan/Tahun/Bilangan</span>
+                    <!-- Dibungkus dan disembunyikan (display:none) secara lalai -->
+                    <div id="ruanganNoKes" style="display: none; align-items: center; gap: 8px;">
+                        <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
+                        <input type="text" id="noKes" value="KBR/10103/2026/0112" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
+                        <div class="tooltip-container">
+                            <span style="font-size: 1.2em; color: var(--primary-blue);">ℹ️</span>
+                            <div class="tooltip-text">
+                                *Sila dikemaskini secara manual jika No. Kes tidak mengikut turutan pemfailan.
+                                <br><br><span style="color: #cbd5e1; font-weight: 400;">Format: Kod Kawasan/Tahun/Bilangan</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1063,12 +1070,12 @@ Portal rasmi : jtksm.mohr.gov.my
                                     </div>
                                 </div>
                                 
-                                <div class="form-group" id="ruanganJenisPerniagaan" style="display: none; margin-bottom: 0;">
-                                    <label>Jenis Perniagaan <span>*</span></label>
-                                    <div class="input-wrapper">
-                                        <input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan" onblur="semakTutupSyarikat()">
-                                    </div>
-                                </div>
+<div class="form-group" id="ruanganJenisPerniagaan" style="display: none; margin-bottom: 0;">
+    <label>Jenis Perniagaan <span>*</span></label>
+    <div class="input-wrapper">
+        <input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan" onblur="semakTutupSyarikat()" onkeydown="if(event.key === 'Tab' && !event.shiftKey && document.getElementById('majikan').checked) { event.preventDefault(); document.getElementById('noPendPengadu').focus(); }">
+    </div>
+</div>
                                 
                             </div> <!-- TAMAT KANDUNGAN MAKLUMAT SYARIKAT -->
                         </div> <!-- TAMAT WRAPPER MAKLUMAT SYARIKAT -->
@@ -1119,7 +1126,7 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
 
-                <div class="card full-width">
+<div class="card full-width">
                     <div class="card-header">
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <span>Kenyataan Pengadu / Kronologi Kes</span>
@@ -1128,8 +1135,11 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                     <div class="card-body">
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span></label>
-                            <textarea id="kronologiKes" class="teks-justify auto-expand" placeholder="Taipkan kronologi dan masalah berkaitan tuntutan di sini..." style="padding: 15px;" oninput="autoResize(this); hurufBesarSelepasTitik(this)"></textarea>
+                            <label style="text-align: left; font-size: 1em; margin-bottom: 10px;">
+                                Sila nyatakan kronologi kes atau kenyataan ringkas aduan anda: <span>*</span>
+                                <span style="display: block; font-size: 0.75em; color: var(--text-muted); font-weight: 500; font-style: italic; margin-top: 4px;">Taipkan kronologi dan masalah berkaitan tuntutan di sini...</span>
+                            </label>
+                            <textarea id="kronologiKes" class="teks-justify auto-expand" style="padding: 15px;" oninput="autoResize(this); hurufBesarSelepasTitik(this)">Masalahnya, </textarea>
                         </div>
                     </div>
                 </div>
@@ -1202,14 +1212,11 @@ Portal rasmi : jtksm.mohr.gov.my
                         <div id="fileList" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
                         </div>
 
-                        <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 40px; gap: 15px; flex-wrap: wrap;">
-                            <button type="button" class="btn-terapung" style="background-color: #cbd5e1; color: #1e293b; border: none; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 25px; margin-right: auto;" onclick="pergiKeTabBorang('tab2')">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; flex-wrap: wrap; width: 100%;">
+                            <button type="button" class="btn-terapung" style="background-color: #cbd5e1; color: #1e293b; border: none; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 25px;" onclick="pergiKeTabBorang('tab2')">
                                 <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali
                             </button>
                             <button class="btn-save btn-simpan btn-terapung" style="background-color: var(--primary-blue); padding: 10px 20px;" onclick="alert('Maklumat draf telah disimpan.')">💾 Simpan</button>
-                            
-                            <button id="btnBukaPreview" class="btn-save btn-terapung" style="padding: 10px 25px; font-size: 1.05em; background-color: var(--primary-blue);" onclick="bukaPreview()">📄 Semak & Cetak</button>
-                            <button id="btnDaftarSistem" class="btn-save btn-daftar btn-terapung" style="padding: 10px 25px; font-size: 1.05em; display: none; background-color: var(--success);" onclick="daftarKesSistem()">🚀 Daftar</button>
                         </div>
 
                     </div>
@@ -1217,6 +1224,10 @@ Portal rasmi : jtksm.mohr.gov.my
             </div>
 
         </div> 
+<!-- BUTANG BATAL PEMFAILAN TERAPUNG (KIRI BAWAH) -->
+        <button id="btnBatalPemfailan" class="btn-terapung" style="position: fixed; bottom: 25px; left: 290px; z-index: 999; display: flex; background-color: #dc2626; color: white; border: none; padding: 8px 16px; font-weight: 700; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4); font-size: 0.9em; align-items: center; gap: 6px;" onclick="batalPemfailan()">
+            🗑️ Batal Pemfailan
+        </button>
     </main>
 
     <script>
@@ -1238,10 +1249,22 @@ Portal rasmi : jtksm.mohr.gov.my
         let memoriTuntutan = []; 
         let memoriSenaraiKes = [];
         let indexKesSemasa = -1; // Simpan indeks kes yang sedang dibuka untuk dikemaskini
+        let isAkuanPrinted = false;
+        let isKenyataanPrinted = false;
 
         document.addEventListener('DOMContentLoaded', function() {
             kemaskiniDropdownPendaftaran();
             semakWakilLengkap();
+
+            // Fungsi baharu untuk menutup Dropdown menu sekiranya klik di luar kawasan
+            window.addEventListener('click', function(e) {
+                const actionMenu = document.getElementById('actionMenu');
+                if (actionMenu && actionMenu.classList.contains('show')) {
+                    if (!e.target.closest('.action-dropdown-container')) {
+                        actionMenu.classList.remove('show');
+                    }
+                }
+            });
 
             const tab1 = document.getElementById('tab1');
             tab1.addEventListener('input', janaKenyataanAwal);
@@ -1363,6 +1386,42 @@ Portal rasmi : jtksm.mohr.gov.my
             const p_isMyKad = /^\d{6}-?\d{2}-?\d{4}$/.test(p_id);
             const lbl_p_id = p_isMyKad ? 'No. MyKad' : 'No. Passport';
 
+            // --- EKSTRAK ALAMAT TEMPAT PEKERJAAN DARI BORANG ---
+            let tempatKerjaPaparan = '';
+            const alamatBerbeza = document.getElementById('alamatBerbeza').checked;
+            
+            if (!alamatBerbeza) {
+                // Sama dengan alamat pengadu (majikan) -> Ekstrak dari Maklumat Organisasi
+                const syarikatNama = document.getElementById('namaDefendan').value.trim();
+                const a1 = document.getElementById('alamatDefendan1').value.trim();
+                const a2 = document.getElementById('alamatDefendan2').value.trim();
+                const a3 = document.getElementById('alamatDefendan3').value.trim();
+                const pos = document.getElementById('poskodDefendan').value.trim();
+                const bdr = document.getElementById('bandarDefendan').value.trim();
+                const ngr = document.getElementById('negeriDefendan').value.trim();
+                
+                let alamatArr = [syarikatNama, a1, a2, a3].filter(Boolean);
+                let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                if(posBdr) alamatArr.push(posBdr);
+                if(ngr) alamatArr.push(ngr);
+                tempatKerjaPaparan = alamatArr.join(',<br>') || '-'; // Guna <br> supaya tersusun turun ke bawah
+            } else {
+                // Tidak sama -> Ekstrak dari ruangan Alamat Tempat Pekerjaan
+                const namaTK = document.getElementById('namaTempatKerja').value.trim();
+                const a1 = document.getElementById('alamatKerja1').value.trim();
+                const a2 = document.getElementById('alamatKerja2').value.trim();
+                const a3 = document.getElementById('alamatKerja3').value.trim();
+                const pos = document.getElementById('poskodKerja').value.trim();
+                const bdr = document.getElementById('bandarKerja').value.trim();
+                const ngr = document.getElementById('negeriKerja').value.trim();
+                
+                let alamatArr = [namaTK, a1, a2, a3].filter(Boolean);
+                let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                if(posBdr) alamatArr.push(posBdr);
+                if(ngr) alamatArr.push(ngr);
+                tempatKerjaPaparan = alamatArr.join(',<br>') || '-';
+            }
+
             // BINA HTML PENGADU SECARA DINAMIK
             let htmlPengadu = '';
             if (isMajikan) {
@@ -1377,7 +1436,8 @@ Portal rasmi : jtksm.mohr.gov.my
                         <div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div>
                     </div>
                     <div>
-                        <div class="info-label">Alamat tempat pekerjaan defendan</div><div class="info-value" style="margin-bottom:0;">Sama seperti alamat defendan</div>
+                        <!-- Paparan hasil Ekstrak Alamat Tempat Pekerjaan -->
+                        <div class="info-label">Alamat tempat pekerjaan defendan</div><div class="info-value" style="margin-bottom:0;">${tempatKerjaPaparan}</div>
                     </div>
                     
                     <!-- Kumpulan Kolum Bawah (Sebaris) -->
@@ -1406,7 +1466,8 @@ Portal rasmi : jtksm.mohr.gov.my
                         <div class="info-label">Alamat Pengadu</div><div class="info-value" style="margin-bottom:0;">${p_alamat}</div>
                     </div>
                     <div>
-                        <div class="info-label">Alamat tempat pekerjaan</div><div class="info-value" style="margin-bottom:0;">${p_alamat_kerja}</div>
+                        <!-- Paparan hasil Ekstrak Alamat Tempat Pekerjaan -->
+                        <div class="info-label">Alamat tempat pekerjaan</div><div class="info-value" style="margin-bottom:0;">${tempatKerjaPaparan}</div>
                         ${isBerkumpulan ? `<div class="info-label" style="margin-top:15px;">Bilangan pengadu (Termasuk ketua)</div><div class="info-value" style="margin-bottom:0;">${p_bil_pengadu}</div>` : ''}
                     </div>
                     
@@ -1433,21 +1494,25 @@ Portal rasmi : jtksm.mohr.gov.my
                 // Defendan = Pekerja
                 document.getElementById('mk_header_defendan').innerText = 'Maklumat Defendan (Pekerja)';
                 htmlDefendan = `
-                    <!-- Kumpulan Kolum Atas (Dirapatkan dalam 1 blok) -->
+                    <!-- Row 1 -->
                     <div>
-                        <div class="info-label">Nama Defendan</div><div class="info-value">${d_nama}</div>
-                        <div class="info-label" style="margin-top:15px;">No. MyKad atau No. Passport</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                        <div class="info-label">Nama Defendan</div><div class="info-value" style="margin-bottom:0;">${d_nama}</div>
                     </div>
                     <div>
                         <div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div>
                     </div>
                     
-                    <!-- Kumpulan Kolum Bawah -->
-                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+                    <!-- Row 2 -->
+                    <div>
+                        <div class="info-label">No. MyKad atau No. Passport</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${d_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${d_hp}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+                    
+                    <!-- Row 3 -->
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${d_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${d_tel}</a>
                     </div>
@@ -1461,21 +1526,25 @@ Portal rasmi : jtksm.mohr.gov.my
                 document.getElementById('mk_header_defendan').innerText = 'Maklumat Defendan (Majikan)';
                 let lbl_id = d_isMyKad ? 'No. MyKad' : 'No. Pendaftaran';
                 htmlDefendan = `
-                    <!-- Kumpulan Kolum Atas (Dirapatkan dalam 1 blok) -->
+                    <!-- Row 1 -->
                     <div>
-                        <div class="info-label">Nama Defendan</div><div class="info-value">${d_nama}</div>
-                        <div class="info-label" style="margin-top:15px;">${lbl_id}</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                        <div class="info-label">Nama Defendan</div><div class="info-value" style="margin-bottom:0;">${d_nama}</div>
                     </div>
                     <div>
                         <div class="info-label">Alamat Defendan</div><div class="info-value" style="margin-bottom:0;">${d_alamat}</div>
                     </div>
                     
-                    <!-- Kumpulan Kolum Bawah -->
-                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+                    <!-- Row 2 -->
+                    <div>
+                        <div class="info-label">${lbl_id}</div><div class="info-value" style="margin-bottom:0;">${d_id}</div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <span class="info-label" style="margin:0;">No. Tel. (H/P):</span>
                         <a href="https://wa.me/6${d_hp.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">💬 ${d_hp}</a>
                     </div>
-                    <div style="display:flex; gap:8px; align-items:center; margin-top:10px;">
+                    
+                    <!-- Row 3 -->
+                    <div style="display:flex; gap:8px; align-items:center;">
                         <span class="info-label" style="margin:0;">No. Tel.:</span>
                         <a href="tel:${d_tel.replace(/-/g,'')}" class="info-link" style="font-weight:500; font-size:0.95em;">📞 ${d_tel}</a>
                     </div>
@@ -1857,7 +1926,7 @@ Portal rasmi : jtksm.mohr.gov.my
             }
         }
 
-        function janaKenyataanAwal() {
+function janaKenyataanAwal() {
             if (isKenyataanEdited) return; 
 
             const isIndividu = document.getElementById('aduanIndividu').checked;
@@ -1875,6 +1944,39 @@ Portal rasmi : jtksm.mohr.gov.my
                 autoResize(textareaAwal);
                 return;
             }
+
+            // --- EKSTRAK ALAMAT TEMPAT PEKERJAAN ---
+            let tempatKerja = '';
+            const alamatBerbeza = document.getElementById('alamatBerbeza').checked;
+            const namaTK = document.getElementById('namaTempatKerja').value.trim();
+            
+            if (!alamatBerbeza) {
+                const a1 = document.getElementById('alamatDefendan1').value.trim();
+                const a2 = document.getElementById('alamatDefendan2').value.trim();
+                const a3 = document.getElementById('alamatDefendan3').value.trim();
+                const pos = document.getElementById('poskodDefendan').value.trim();
+                const bdr = document.getElementById('bandarDefendan').value.trim();
+                const ngr = document.getElementById('negeriDefendan').value.trim();
+                let alamatArr = [namaTK || document.getElementById('namaDefendan').value.trim(), a1, a2, a3].filter(Boolean);
+                let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                if(posBdr) alamatArr.push(posBdr);
+                if(ngr) alamatArr.push(ngr);
+                tempatKerja = alamatArr.join(', ');
+            } else {
+                const a1 = document.getElementById('alamatKerja1').value.trim();
+                const a2 = document.getElementById('alamatKerja2').value.trim();
+                const a3 = document.getElementById('alamatKerja3').value.trim();
+                const pos = document.getElementById('poskodKerja').value.trim();
+                const bdr = document.getElementById('bandarKerja').value.trim();
+                const ngr = document.getElementById('negeriKerja').value.trim();
+                let alamatArr = [namaTK, a1, a2, a3].filter(Boolean);
+                let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                if(posBdr) alamatArr.push(posBdr);
+                if(ngr) alamatArr.push(ngr);
+                tempatKerja = alamatArr.join(', ');
+            }
+            if (!tempatKerja || tempatKerja === document.getElementById('namaDefendan').value.trim()) { tempatKerja = '[Alamat tempat pekerjaan]'; }
+            // ----------------------------------------
 
             if ((isIndividu || aduanBerkumpulan) && !isMajikan) {
                 const defNama = defNamaRaw || '[Nama Syarikat/Organisasi]';
@@ -1931,38 +2033,10 @@ Portal rasmi : jtksm.mohr.gov.my
                     if(butiranElaun.length > 0) { ayatElaun = "Saya dibayar elaun " + butiranElaun.join(', ') + "."; } else { ayatElaun = "Saya dibayar elaun."; }
                 }
 
-                let tempatKerja = '';
-                const alamatBerbeza = document.getElementById('alamatBerbeza').checked;
-                const namaTK = document.getElementById('namaTempatKerja').value.trim();
-                
-                if (!alamatBerbeza) {
-                    const a1 = document.getElementById('alamatDefendan1').value.trim();
-                    const a2 = document.getElementById('alamatDefendan2').value.trim();
-                    const a3 = document.getElementById('alamatDefendan3').value.trim();
-                    const pos = document.getElementById('poskodDefendan').value.trim();
-                    const bdr = document.getElementById('bandarDefendan').value.trim();
-                    const ngr = document.getElementById('negeriDefendan').value.trim();
-                    let alamatArr = [namaTK || document.getElementById('namaDefendan').value.trim(), a1, a2, a3].filter(Boolean);
-                    let posBdr = [pos, bdr].filter(Boolean).join(' ');
-                    if(posBdr) alamatArr.push(posBdr);
-                    if(ngr) alamatArr.push(ngr);
-                    tempatKerja = alamatArr.join(', ');
-                } else {
-                    const a1 = document.getElementById('alamatKerja1').value.trim();
-                    const a2 = document.getElementById('alamatKerja2').value.trim();
-                    const a3 = document.getElementById('alamatKerja3').value.trim();
-                    const pos = document.getElementById('poskodKerja').value.trim();
-                    const bdr = document.getElementById('bandarKerja').value.trim();
-                    const ngr = document.getElementById('negeriKerja').value.trim();
-                    let alamatArr = [namaTK, a1, a2, a3].filter(Boolean);
-                    let posBdr = [pos, bdr].filter(Boolean).join(' ');
-                    if(posBdr) alamatArr.push(posBdr);
-                    if(ngr) alamatArr.push(ngr);
-                    tempatKerja = alamatArr.join(', ');
-                }
-                if (!tempatKerja || tempatKerja === document.getElementById('namaDefendan').value.trim()) { tempatKerja = '[Alamat tempat pekerjaan]'; }
+                // AYAT TEMPAT KERJA UNTUK PEKERJA (INDIVIDU/BERKUMPULAN)
+                let ayatTempatKerja = alamatBerbeza ? `Tempat pekerjaan defendan di ${tempatKerja}.` : `Tempat pekerjaan saya di ${tempatKerja}.`;
 
-                const p1 = `${ayatDefendan} bermula pada ${tarikhMula}. Jawatan terakhir saya sebagai ${jawatan}. Gaji pokok terakhir saya ialah RM${gaji}. ${ayatElaun} Tempat pekerjaan saya di ${tempatKerja}.`;
+                const p1 = `${ayatDefendan} bermula pada ${tarikhMula}. Jawatan terakhir saya sebagai ${jawatan}. Gaji pokok terakhir saya ialah RM${gaji}. ${ayatElaun} ${ayatTempatKerja}`;
                 const rKontrak = document.querySelector('input[name="adaKontrak"]:checked');
                 const kontrak = rKontrak ? rKontrak.value : '';
                 const ayatKontrak = kontrak === 'Ya' ? 'Saya ada diberikan kontrak perkhidmatan.' : (kontrak === 'Tidak' ? 'Saya tiada diberi kontrak perkhidmatan.' : 'Saya [Ada/Tiada] diberikan kontrak perkhidmatan.');
@@ -2020,6 +2094,7 @@ Portal rasmi : jtksm.mohr.gov.my
 
                 textareaAwal.value = textLengkap.replace(/\.\./g, '.');
                 autoResize(textareaAwal);
+
             } else if (isMajikan) {
                 let namaSyarikat = document.getElementById('namaDefendan').value.trim() || '[Nama Syarikat/Organisasi]';
                 let noPendSyarikat = document.getElementById('noPendDefendan').value.trim();
@@ -2031,10 +2106,18 @@ Portal rasmi : jtksm.mohr.gov.my
                 let p1 = `Saya merupakan wakil majikan yang diberi kuasa mewakili majikan ${namaSyarikat}${teksPend} yang ingin membuat tuntutan terhadap defendan ${namaPekerja}${teksMyKadPekerja}.`;
                 let jawatanPekerja = document.getElementById('jawatanPengadu').value.trim() || '[Jawatan]';
                 let gajiPekerja = document.getElementById('gajiPokokPengadu').value.trim() || '[Gaji pokok]';
-                let p2 = `Jawatan terakhir defendan sebagai ${jawatanPekerja}. Gaji pokok terakhir defendan ialah RM${gajiPekerja}.`;
+                
+                // AYAT TEMPAT KERJA UNTUK MAJIKAN
+                let ayatTempatKerjaMajikan = '';
+                if (alamatBerbeza) {
+                    ayatTempatKerjaMajikan = ` Tempat pekerjaan defendan di ${tempatKerja}.`;
+                }
+
+                let p2 = `Jawatan terakhir defendan sebagai ${jawatanPekerja}. Gaji pokok terakhir defendan ialah RM${gajiPekerja}.${ayatTempatKerjaMajikan}`;
                 let textLengkap = p1 + '\n\n' + p2;
                 textareaAwal.value = textLengkap.replace(/\.\./g, '.');
                 autoResize(textareaAwal);
+
             } else {
                 textareaAwal.value = "Kenyataan awal automatik hanya dijana untuk aduan berstatus Pekerja (Individu / Berkumpulan) atau Majikan.";
                 autoResize(textareaAwal);
@@ -2072,6 +2155,20 @@ Portal rasmi : jtksm.mohr.gov.my
             input.value = val;
         }
 
+// Fungsi baharu untuk mengawal kemunculan butang & No Kes di Tab 3
+        function kawalPaparanTab3(tabId) {
+            const ruanganNoKes = document.getElementById('ruanganNoKes');
+            const btnPreviewTop = document.getElementById('btnBukaPreviewTop');
+            
+            if (tabId === 'tab3') {
+                if (ruanganNoKes) ruanganNoKes.style.display = 'flex';
+                if (btnPreviewTop) btnPreviewTop.style.display = 'block';
+            } else {
+                if (ruanganNoKes) ruanganNoKes.style.display = 'none';
+                if (btnPreviewTop) btnPreviewTop.style.display = 'none';
+            }
+        }
+
         function pergiKeTabBorang(tabId) {
             if (tabId === 'tab1') { bukaMaklumatPerkhidmatanDalaman(); }
             const tabs = document.querySelectorAll('.tab');
@@ -2085,6 +2182,8 @@ Portal rasmi : jtksm.mohr.gov.my
             document.getElementById('tab3').style.display = 'none';
             
             document.getElementById(tabId).style.display = 'grid';
+
+            kawalPaparanTab3(tabId); // <--- Memanggil fungsi kawalan
 
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
@@ -2104,6 +2203,8 @@ Portal rasmi : jtksm.mohr.gov.my
             
             document.getElementById(tabId).style.display = 'grid'; 
             elemenTab.classList.add('active');
+
+            kawalPaparanTab3(tabId); // <--- Memanggil fungsi kawalan
 
             if (tabId === 'tab2') {
                 janaKenyataanAwal();
@@ -2281,7 +2382,7 @@ Portal rasmi : jtksm.mohr.gov.my
             janaKenyataanAwal();
         }
 
-        function tukarPeranan() {
+function tukarPeranan() {
             const suis = document.getElementById('majikan');
             const kad1 = document.getElementById('kad1');
             const kad2 = document.getElementById('kad2');
@@ -2318,7 +2419,18 @@ Portal rasmi : jtksm.mohr.gov.my
                 if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "none";
                 tempatKerja1.appendChild(ruanganAlamatKerja);
                 labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat pengadu (majikan)'; notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
-                if(seksyenPekerja && seksyenMajikan) { seksyenPekerja.style.display = "none"; seksyenMajikan.style.display = "block"; }
+                
+                if(seksyenPekerja && seksyenMajikan) { 
+                    seksyenPekerja.style.display = "none"; 
+                    seksyenMajikan.style.display = "block"; 
+                    
+                    // AUTO-SELECT SEKSYEN MAJIKAN 69(2)(iii)
+                    const radioMaj = seksyenMajikan.querySelector('input[type="radio"]');
+                    if(radioMaj) radioMaj.checked = true;
+                    // NYAHTANDA SUB-SEKSYEN (a)(b)(c) JIKA ADA
+                    document.querySelectorAll('input[name="subSeksyen"]').forEach(cb => cb.checked = false);
+                }
+                
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "none";
                 if(ruanganHeaderSyarikat) ruanganHeaderSyarikat.style.display = "block";
             } else {
@@ -2331,7 +2443,16 @@ Portal rasmi : jtksm.mohr.gov.my
                 if(ruanganWarganegaraPengadu) ruanganWarganegaraPengadu.style.display = "grid";
                 tempatKerja2.appendChild(ruanganAlamatKerja);
                 labelBerbeza.innerHTML = 'Alamat tempat pekerjaan tidak sama dengan alamat defendan'; notaBerbeza.innerHTML = '*(tanda kotak di atas jika tempat pekerjaan berbeza)';
-                if(seksyenPekerja && seksyenMajikan) { seksyenPekerja.style.display = "grid"; seksyenMajikan.style.display = "none"; }
+                
+                if(seksyenPekerja && seksyenMajikan) { 
+                    seksyenPekerja.style.display = "grid"; 
+                    seksyenMajikan.style.display = "none"; 
+                    
+                    // KOSONGKAN PILIHAN JIKA KEMBALI KEPADA PEKERJA
+                    const radioMaj = seksyenMajikan.querySelector('input[type="radio"]');
+                    if(radioMaj) radioMaj.checked = false;
+                }
+                
                 if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
                 if(ruanganHeaderSyarikat) ruanganHeaderSyarikat.style.display = "none";
             }
@@ -2769,25 +2890,52 @@ Portal rasmi : jtksm.mohr.gov.my
             const htmlDokumen = janaHTMLCetak();
             document.getElementById('previewContent').innerHTML = htmlDokumen;
             document.getElementById('printArea').innerHTML = htmlDokumen;
+            
+            // Reset status cetakan setiap kali preview dibuka
+            isAkuanPrinted = false;
+            isKenyataanPrinted = false;
+            
+            // Susun atur menu dropdown
+            document.getElementById('menuCetakAkuan').style.display = 'flex';
+            document.getElementById('menuCetakKenyataan').style.display = 'flex';
+            document.getElementById('menuDaftar').style.display = 'none';
+
             document.getElementById('modalPreview').style.display = 'flex';
         }
 
         function tutupPreview() { document.getElementById('modalPreview').style.display = 'none'; }
 
         function cetakKhusus(jenis) {
-            if(jenis === 'akuan') { document.body.classList.add('print-only-akuan'); } 
-            else if (jenis === 'kenyataan') { document.body.classList.add('print-only-kenyataan'); }
+            if(jenis === 'akuan') { 
+                document.body.classList.add('print-only-akuan'); 
+                window.print();
+                document.body.classList.remove('print-only-akuan');
+                
+                isAkuanPrinted = true;
+                document.getElementById('menuCetakAkuan').style.display = 'none'; // Hilangkan menu ini
+            } 
+            else if (jenis === 'kenyataan') { 
+                document.body.classList.add('print-only-kenyataan');
+                window.print();
+                document.body.classList.remove('print-only-kenyataan');
+                
+                isKenyataanPrinted = true;
+                document.getElementById('menuCetakKenyataan').style.display = 'none'; // Hilangkan menu ini
+            }
             
-            window.print();
+            // Tutup dropdown selepas klik, tetapi BIARKAN preview terus terbuka
+            document.getElementById('actionMenu').classList.remove('show');
             
-            document.body.classList.remove('print-only-akuan', 'print-only-kenyataan');
-            tutupPreview();
-            document.getElementById('btnBukaPreview').style.display = 'none';
-            document.querySelector('.btn-simpan').style.display = 'none';
-            document.getElementById('btnDaftarSistem').style.display = 'inline-block';
-            
-            setTimeout(() => { alert("Dokumen telah berjaya dicetak. Anda kini boleh mendaftarkan kes ke dalam sistem dengan menekan butang 'Daftar'."); }, 500);
+            // Jika KEDUA-DUA dokumen telah dicetak
+            if (isAkuanPrinted && isKenyataanPrinted) {
+                document.getElementById('menuDaftar').style.display = 'flex'; // Munculkan pilihan Daftar
+                
+                setTimeout(() => { 
+                    alert("Dokumen telah berjaya dicetak. Anda kini boleh mendaftarkan kes ke dalam sistem dengan menekan butang 'Daftar' di menu tindakan."); 
+                }, 500);
+            }
         }
+
         function kemaskiniDariPreview() {
             tutupPreview();
             document.getElementById('actionMenu').classList.remove('show');
@@ -2797,7 +2945,7 @@ Portal rasmi : jtksm.mohr.gov.my
         function daftarDariPreview() {
             tutupPreview();
             document.getElementById('actionMenu').classList.remove('show');
-            daftarKesSistem(); // Jalankan pendaftaran dan terus ke senarai kes
+            daftarKesSistem(); // Jalankan pendaftaran dan terus ke senarai kes (Alert "Tahniah" ada dalam fungsi ini)
         }
     </script>
 </body>
