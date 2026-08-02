@@ -178,7 +178,7 @@
         }
         .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-.content-area {
+        .content-area {
             padding: 32px 32px 70px 32px; 
             max-width: 1600px; 
             margin: 0 auto;
@@ -420,7 +420,7 @@
             .mobile-label { display: none; }
         }
 
-/* KELAS KHUSUS UNTUK CETAKAN ASING (Custom Print Media Queries) */
+        /* KELAS KHUSUS UNTUK CETAKAN ASING (Custom Print Media Queries) */
         @media print {
             .kertas-a4 { margin: 0; padding: 0; box-shadow: none; width: 100%; min-height: auto; page-break-after: always; }
             .kertas-a4:last-child { page-break-after: auto; }
@@ -445,6 +445,7 @@
         <div class="modal-box">
             <div class="modal-title" id="tajukModal">Tambah Tuntutan</div>
             <input type="hidden" id="indexTuntutanEdit" value="-1">
+            <input type="hidden" id="jenisJadualTuntutan" value="biasa"> <!-- PENANDA JENIS JADUAL -->
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Jenis Tuntutan <span>*</span></label>
                 <select id="jenisTuntutan" onchange="semakJenisTuntutanLain()"><option value="">-Sila Pilih-</option></select>
@@ -484,7 +485,7 @@
             <button class="icon-btn" onclick="document.getElementById('actionMenu').classList.toggle('show')" title="Tindakan">
                 ⋮
             </button>
-<div id="actionMenu" class="dropdown-menu">
+            <div id="actionMenu" class="dropdown-menu">
                 <a href="#" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
                 <a href="#" id="menuCetakAkuan" onclick="cetakKhusus('akuan')">🖨️ Cetak Akuan Pemfailan</a>
                 <a href="#" id="menuCetakKenyataan" onclick="cetakKhusus('kenyataan')">🖨️ Cetak Kenyataan Tuntutan</a>
@@ -541,7 +542,7 @@ Portal rasmi : jtksm.mohr.gov.my
     </aside>
 
     <main class="main-content">
-<div class="top-header">
+        <div class="top-header">
             <div><span style="font-size: 1.2em;">🏠</span> <span id="tajukHalamanAtas">Pendaftaran Kes Buruh</span></div>
             <div style="display: flex; gap: 10px;" id="butangCetakHeader">
                 <!-- Butang ini disembunyikan secara lalai (display: none) -->
@@ -683,7 +684,7 @@ Portal rasmi : jtksm.mohr.gov.my
         <!-- VIEW PENDAFTARAN (FORM) ASAL -->
         <div id="viewPendaftaranKes">
             
-<div class="page-tabs-container">
+            <div class="page-tabs-container">
                 <div class="tabs">
                     <div class="tab active" onclick="bukaTab('tab1', this)">Pengadu & Defendan</div>
                     <div class="tab" onclick="bukaTab('tab2', this)">Kenyataan Pengadu</div>
@@ -1119,7 +1120,7 @@ Portal rasmi : jtksm.mohr.gov.my
                         <div id="kandunganTuntutanSediaAda" style="display: none;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                                 <p class="note" style="margin: 0;">* Sila isi sekurang-kurangnya SATU tuntutan</p>
-                                <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan()">+ Tambah Maklumat Tuntutan</button>
+                                <button class="btn-add btn-terapung" style="margin: 0; white-space: nowrap;" onclick="bukaModalTuntutan('biasa')">+ Tambah Maklumat Tuntutan</button>
                             </div>
                             
                             <table id="jadualTuntutan">
@@ -1281,6 +1282,7 @@ Portal rasmi : jtksm.mohr.gov.my
         ];
 
         let memoriTuntutan = []; 
+        let memoriTuntutanKetua = []; // Array baharu untuk menyimpan tuntutan ketua pengadu
         let memoriSenaraiKes = [];
         let indexKesSemasa = -1; // Simpan indeks kes yang sedang dibuka untuk dikemaskini
         let isAkuanPrinted = false;
@@ -2281,8 +2283,11 @@ function janaKenyataanAwal() {
             if(val === 'Lain-lain') { jenisTuntutanLain.style.display = 'block'; } else { jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = ''; }
         }
 
-        function bukaModalTuntutan(indexEdit = -1) {
+        // --- FUNGSI bukaModalTuntutan TELAH DIKEMASKINI ---
+        function bukaModalTuntutan(jenisJadual = 'biasa', indexEdit = -1) {
             document.getElementById('modalTuntutan').style.display = 'flex';
+            document.getElementById('jenisJadualTuntutan').value = jenisJadual;
+            
             const isMajikan = document.getElementById('majikan').checked;
             const dropdown = document.getElementById('jenisTuntutan');
             const jenisTuntutanLain = document.getElementById('jenisTuntutanLain');
@@ -2294,20 +2299,25 @@ function janaKenyataanAwal() {
             
             if(indexEdit > -1) {
                 document.getElementById('tajukModal').innerHTML = "Kemaskini Tuntutan";
-                const storedJenis = memoriTuntutan[indexEdit].jenis;
+                
+                // Tentukan array mana yang sedang diedit
+                const targetArray = (jenisJadual === 'ketua') ? memoriTuntutanKetua : memoriTuntutan;
+                const storedJenis = targetArray[indexEdit].jenis;
+                
                 if (senaraiPilihan.includes(storedJenis)) {
                     document.getElementById('jenisTuntutan').value = storedJenis; jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = '';
                 } else {
                     document.getElementById('jenisTuntutan').value = 'Lain-lain'; jenisTuntutanLain.style.display = 'block'; jenisTuntutanLain.value = storedJenis;
                 }
-                let ketRaw = memoriTuntutan[indexEdit].keterangan;
+                let ketRaw = targetArray[indexEdit].keterangan;
                 if(ketRaw.startsWith('(') && ketRaw.endsWith(')')){ ketRaw = ketRaw.slice(1,-1); }
                 document.getElementById('keteranganTuntutan').value = ketRaw;
-                const jumlahEdit = memoriTuntutan[indexEdit].jumlah;
+                const jumlahEdit = targetArray[indexEdit].jumlah;
                 document.getElementById('jumlahTuntutan').value = Number(jumlahEdit).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 document.getElementById('indexTuntutanEdit').value = indexEdit;
             } else {
-                document.getElementById('tajukModal').innerHTML = "Tambah Tuntutan";
+                // Tambah baru
+                document.getElementById('tajukModal').innerHTML = (jenisJadual === 'ketua') ? "Tambah Tuntutan Ketua" : "Tambah Tuntutan";
                 document.getElementById('jenisTuntutan').value = "";
                 jenisTuntutanLain.style.display = 'none'; jenisTuntutanLain.value = "";
                 document.getElementById('keteranganTuntutan').value = "";
@@ -2319,21 +2329,30 @@ function janaKenyataanAwal() {
 
         function tutupModalTuntutan() { document.getElementById('modalTuntutan').style.display = 'none'; }
 
+        // --- FUNGSI simpanTuntutan TELAH DIKEMASKINI ---
         function simpanTuntutan() {
             let jenis = document.getElementById('jenisTuntutan').value;
             let jenisLain = document.getElementById('jenisTuntutanLain').value.trim();
             let keterangan = document.getElementById('keteranganTuntutan').value.trim();
             let jumlah = document.getElementById('jumlahTuntutan').value.replace(/,/g, ''); 
             const index = parseInt(document.getElementById('indexTuntutanEdit').value);
+            const jenisJadual = document.getElementById('jenisJadualTuntutan').value; // Penanda array
 
             if (jenis === 'Lain-lain') { if (jenisLain === "") { alert("Sila nyatakan jenis tuntutan lain."); return; } jenis = jenisLain; }
             if (jenis === "" || keterangan === "" || jumlah.trim() === "" || isNaN(jumlah)) { alert("Sila lengkapkan Jenis, Keterangan, dan pastikan Jumlah Tuntutan adalah nombor."); return; }
             if (!keterangan.startsWith('(')) { keterangan = '(' + keterangan; } if (!keterangan.endsWith(')')) { keterangan = keterangan + ')'; }
 
-            if (index > -1) { memoriTuntutan[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; } 
-            else { memoriTuntutan.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); }
+            if (jenisJadual === 'ketua') {
+                if (index > -1) { memoriTuntutanKetua[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; } 
+                else { memoriTuntutanKetua.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); }
+                alert("Maklumat tuntutan ketua telah disimpan (Logik paparan jadual ketua boleh ditambah kemudian).");
+            } else {
+                if (index > -1) { memoriTuntutan[index] = { jenis: jenis, keterangan: keterangan, jumlah: jumlah }; } 
+                else { memoriTuntutan.push({ jenis: jenis, keterangan: keterangan, jumlah: jumlah }); }
+                renderJadualTuntutan();
+            }
 
-            tutupModalTuntutan(); renderJadualTuntutan();
+            tutupModalTuntutan(); 
         }
 
         function hapusTuntutan(index) { if (confirm("Adakah anda pasti mahu memadam tuntutan ini?")) { memoriTuntutan.splice(index, 1); renderJadualTuntutan(); } }
@@ -2347,7 +2366,7 @@ function janaKenyataanAwal() {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td><td>${item.jenis}</td><td>${item.keterangan}</td><td>RM ${jumlahCantik}</td>
-                    <td><button class="btn-edit-tbl" onclick="bukaModalTuntutan(${index})">✏️ Edit</button></td>
+                    <td><button class="btn-edit-tbl" onclick="bukaModalTuntutan('biasa', ${index})">✏️ Edit</button></td>
                     <td><button class="btn-delete-tbl" onclick="hapusTuntutan(${index})">🗑️ Hapus</button></td>
                 `;
                 tbody.appendChild(tr);
@@ -2981,6 +3000,28 @@ function tukarPeranan() {
             document.getElementById('actionMenu').classList.remove('show');
             daftarKesSistem(); // Jalankan pendaftaran dan terus ke senarai kes (Alert "Tahniah" ada dalam fungsi ini)
         }
+
+        // --- FUNGSI batalPemfailan TELAH DITAMBAH DI SINI ---
+        function batalPemfailan() {
+            if (confirm("Adakah anda pasti mahu membatalkan pemfailan kes ini? Semua maklumat akan ditetapkan semula.")) {
+                
+                // Kosongkan memori sementara
+                memoriTuntutan = [];
+                memoriTuntutanKetua = [];
+                renderJadualTuntutan();
+                
+                // Tutup preview sekiranya sedang dibuka
+                document.getElementById('modalPreview').style.display = 'none';
+                const actionMenu = document.getElementById('actionMenu');
+                if(actionMenu) actionMenu.classList.remove('show');
+                
+                alert("Pemfailan kes telah berjaya dibatalkan.");
+                
+                // Kembali ke senarai utama
+                tukarView('senarai');
+            }
+        }
+
     </script>
 </body>
 </html>
