@@ -1074,7 +1074,7 @@ Portal rasmi : jtksm.mohr.gov.my
 <div class="form-group" id="ruanganJenisPerniagaan" style="display: none; margin-bottom: 0;">
     <label>Jenis Perniagaan <span>*</span></label>
     <div class="input-wrapper">
-        <input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan" onblur="semakTutupSyarikat()" onkeydown="if(event.key === 'Tab' && !event.shiftKey && document.getElementById('majikan').checked) { event.preventDefault(); document.getElementById('noPendPengadu').focus(); }">
+   <input type="text" id="jenisPerniagaan" placeholder="Masukkan jenis perniagaan" onkeyup="semakKelayakanTuntutan()" onblur="semakTutupSyarikat()" onkeydown="if(event.key === 'Tab' && !event.shiftKey && document.getElementById('majikan').checked) { event.preventDefault(); document.getElementById('noPendPengadu').focus(); }">
     </div>
 </div>
                                 
@@ -2586,6 +2586,8 @@ function tukarPeranan() {
             const ruanganJP = document.getElementById('ruanganJenisPerniagaan');
             if (sektor === 'Lain-lain') { ruanganLain.style.display = 'block'; } else { ruanganLain.style.display = 'none'; document.getElementById('sektorLain').value = ''; }
             if (sektor !== '') { ruanganJP.style.display = 'grid'; } else { ruanganJP.style.display = 'none'; document.getElementById('jenisPerniagaan').value = ''; }
+            
+            semakKelayakanTuntutan(); // <--- TAMBAH BARIS INI
         }
 
         async function cariPoskodAutomatik(idPoskod, idNegeri, idBandar) {
@@ -2632,6 +2634,8 @@ function tukarPeranan() {
             const labelNama = document.getElementById('labelNamaPengadu');
             if (aduanBerkumpulan) { ruanganBilangan.style.display = 'grid'; labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; } 
             else { ruanganBilangan.style.display = 'none'; labelNama.innerHTML = 'Nama <span>*</span>'; }
+            
+            kawalJenisAduanTuntutan(); // <--- TAMBAH BARIS INI
         }
 
         function setStatusBorang(isReadonly) {
@@ -3021,7 +3025,56 @@ function tukarPeranan() {
                 tukarView('senarai');
             }
         }
+// ==========================================
+        // FUNGSI KAWALAN MAKLUMAT TUNTUTAN
+        // ==========================================
 
+        // Fungsi 1: Mengawal Tajuk & Paparan Blok (Berkumpulan vs Individu)
+        function kawalJenisAduanTuntutan() {
+            const isBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+            const isMajikan = document.getElementById('majikan')?.checked;
+            
+            const blokKetua = document.getElementById('blokTuntutanKetua');
+            const tajukSediaAda = document.getElementById('tajukTuntutanSediaAda');
+
+            if (blokKetua && tajukSediaAda) {
+                // Jika Berkumpulan DAN bukan majikan (sebab majikan tiada berkumpulan)
+                if (isBerkumpulan && !isMajikan) {
+                    blokKetua.style.display = 'block'; // Tunjuk blok Tuntutan Ketua
+                    tajukSediaAda.innerHTML = '| Maklumat Tuntutan Keseluruhan'; // Tukar tajuk jadual bawah
+                } else {
+                    blokKetua.style.display = 'none'; // Sembunyi blok Tuntutan Ketua
+                    tajukSediaAda.innerHTML = 'Maklumat Tuntutan'; // Kekal tajuk asal
+                }
+            }
+            
+            semakKelayakanTuntutan(); // Semak status butang setiap kali tukar jenis aduan
+        }
+
+        // Fungsi 2: Membuka kunci butang "+ Tambah" jika syarat dipenuhi
+        function semakKelayakanTuntutan() {
+            const sektor = document.getElementById('sektorDefendan') ? document.getElementById('sektorDefendan').value : '';
+            const jenisPerniagaan = document.getElementById('jenisPerniagaan') ? document.getElementById('jenisPerniagaan').value.trim() : '';
+            
+            // Logik Syarat: Jika Sektor ADA isian DAN Jenis Perniagaan ADA isian = LAYAK
+            const isLayak = (sektor !== '' && jenisPerniagaan !== '');
+
+            const kandKetua = document.getElementById('kandunganTuntutanKetua');
+            const mesejKetua = document.getElementById('mesejAmaranKetua');
+            
+            const kandSediaAda = document.getElementById('kandunganTuntutanSediaAda');
+            const mesejSediaAda = document.getElementById('mesejAmaranSediaAda');
+
+            if (isLayak) {
+                // Syarat dipenuhi: Munculkan butang tambah, sembunyikan mesej amaran
+                if(kandKetua && mesejKetua) { kandKetua.style.display = 'block'; mesejKetua.style.display = 'none'; }
+                if(kandSediaAda && mesejSediaAda) { kandSediaAda.style.display = 'block'; mesejSediaAda.style.display = 'none'; }
+            } else {
+                // Syarat belum dipenuhi: Sembunyikan butang tambah, paparkan mesej amaran
+                if(kandKetua && mesejKetua) { kandKetua.style.display = 'none'; mesejKetua.style.display = 'block'; }
+                if(kandSediaAda && mesejSediaAda) { kandSediaAda.style.display = 'none'; mesejSediaAda.style.display = 'block'; }
+            }
+        }
     </script>
 </body>
 </html>
