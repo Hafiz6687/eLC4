@@ -100,8 +100,10 @@
             flex-direction: column;
             overflow-y: auto;
         }
-        .top-header {
+.top-header {
             padding: 16px 32px;
+            min-height: 70px; /* <--- TAMBAH BARIS INI */
+            box-sizing: border-box; /* <--- TAMBAH BARIS INI */
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             font-size: 1.1em;
@@ -132,10 +134,12 @@
         }
         .btn-print:hover { opacity: 0.8; }
 
-        .page-tabs-container {
+.page-tabs-container {
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 0 32px;
+            min-height: 65px; /* <--- TAMBAH BARIS INI */
+            box-sizing: border-box; /* <--- TAMBAH BARIS INI */
             display: flex;
             justify-content: space-between;
             align-items: center;
