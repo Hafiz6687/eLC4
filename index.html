@@ -1095,8 +1095,21 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
 
 <!-- KAD 3: TUNTUTAN KETUA PENGADU (Hanya Muncul Jika Berkumpulan) -->
-                <div class="card full-width" id="kad3_ketua" style="order: 3; display: none;">
-                    <div class="card-header">Maklumat Tuntutan Ketua Pengadu</div>
+                <div class="card full-width" id="kad3_ketua" style="order: 3; display: none; overflow: visible;">
+                    <div class="card-header">
+                        Maklumat Tuntutan Ketua Pengadu
+                        
+                        <!-- Butang Dropdown Action (G1) -->
+                        <div class="action-dropdown-container" style="margin-left: auto; position: relative;">
+                            <button type="button" style="background: white; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; font-weight: bold; color: var(--primary-blue); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="document.getElementById('dropdownG1').classList.toggle('show')">
+                                ⋮ Tindakan
+                            </button>
+                            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 5px; font-weight: normal;">
+                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Ketua sedang dijana...');">📄 G1 Ketua</a>
+                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Borang sedang dijana...');">📄 G1 Borang</a>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Kandungan Ketua (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
                     <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
@@ -1298,13 +1311,12 @@ Portal rasmi : jtksm.mohr.gov.my
             kemaskiniDropdownPendaftaran();
             semakWakilLengkap();
 
-            // Fungsi baharu untuk menutup Dropdown menu sekiranya klik di luar kawasan
+// Fungsi Universal: Menutup SEMUA Dropdown menu sekiranya klik di luar kawasan
             window.addEventListener('click', function(e) {
-                const actionMenu = document.getElementById('actionMenu');
-                if (actionMenu && actionMenu.classList.contains('show')) {
-                    if (!e.target.closest('.action-dropdown-container')) {
-                        actionMenu.classList.remove('show');
-                    }
+                if (!e.target.closest('.action-dropdown-container')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
                 }
             });
 
