@@ -1099,12 +1099,13 @@ Portal rasmi : jtksm.mohr.gov.my
                     <div class="card-header">
                         Maklumat Tuntutan Ketua Pengadu
                         
-                        <!-- Butang Dropdown Action (G1) -->
+                       <!-- Butang Dropdown Action (G1) -->
                         <div class="action-dropdown-container" style="margin-left: auto; position: relative;">
-                            <button type="button" style="background: white; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 12px; font-weight: bold; color: var(--primary-blue); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);" onclick="document.getElementById('dropdownG1').classList.toggle('show')">
-                                ⋮ Tindakan
+                            <!-- Guna class="icon-btn" untuk bentuk bulat biru -->
+                            <button type="button" class="icon-btn" style="width: 36px; height: 36px; font-size: 20px; padding-bottom: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan">
+                                ⋮
                             </button>
-                            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 5px; font-weight: normal;">
+                            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
                                 <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Ketua sedang dijana...');">📄 G1 Ketua</a>
                                 <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); alert('📄 Dokumen G1 Borang sedang dijana...');">📄 G1 Borang</a>
                             </div>
