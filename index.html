@@ -2997,10 +2997,68 @@ function tukarPeranan() {
         }
 // Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
         function bukaPreviewPDF(jenisBorang) {
-            console.log("Sistem memproses Preview untuk: " + jenisBorang);
-            
-            // Alert sementara untuk menguji butang
-            alert("Skrin Preview untuk dokumen [" + jenisBorang + "] sedang dibuka! \n\n(Nota: Alert ini akan digantikan dengan fungsi cetakan sebenar nanti).");
+            if (jenisBorang === 'G1 Ketua') {
+                console.log("Menjana maklumat pengadu untuk G1 Ketua...");
+
+                // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU
+                const namaKetua = document.getElementById('nama') ? document.getElementById('nama').value : document.querySelector('input[placeholder="Nama penuh"]')?.value || '-';
+                
+                const noKpKetua = document.getElementById('noKp') ? document.getElementById('noKp').value : document.querySelector('input[placeholder*="880101"]')?.value || '-';
+                
+                const jantinaKetua = document.querySelector('input[name="jantina"]:checked') ? document.querySelector('input[name="jantina"]:checked').value : '-';
+                
+                const telKetua = document.getElementById('telBimbit') ? document.getElementById('telBimbit').value : document.querySelector('input[placeholder*="012-3456789"]')?.value || '-';
+
+                // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 MELINTANG (LANDSCAPE)
+                const htmlG1 = `
+                    <style>
+                        /* Arahan khas untuk paksa PDF cetak secara Melintang (Landscape) */
+                        @page {
+                            size: A4 landscape; 
+                            margin: 15mm;
+                        }
+                    </style>
+                    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: black; padding: 20px; width: 100%; margin: auto;">
+                        <h2 style="text-align: center; text-decoration: underline;">BORANG G1 (KETUA PENGADU)</h2>
+                        <br>
+                        <h3 style="background-color: #f0f0f0; padding: 8px; border-left: 5px solid var(--primary-blue);">A. MAKLUMAT KETUA PENGADU</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1.1em;">
+                            <tr>
+                                <td style="width: 25%; font-weight: bold; padding: 8px 0;">Nama Penuh</td>
+                                <td>: <span style="text-transform: uppercase;">${namaKetua}</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; padding: 8px 0;">No. Kad Pengenalan</td>
+                                <td>: ${noKpKetua}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; padding: 8px 0;">Jantina</td>
+                                <td>: ${jantinaKetua}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; padding: 8px 0;">No. Telefon bimbit</td>
+                                <td>: ${telKetua}</td>
+                            </tr>
+                        </table>
+                        <br><br>
+                        <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">
+                            (Dokumen ini dijana secara automatik oleh sistem e-Labour Court)
+                        </p>
+                    </div>
+                `;
+
+                // 3. MASUKKAN KE DALAM 'PRINT AREA' DAN PAPARKAN PREVIEW CETAKAN
+                const kawasanCetak = document.getElementById('printArea');
+                if (kawasanCetak) {
+                    kawasanCetak.innerHTML = htmlG1;
+                    window.print(); 
+                } else {
+                    alert("⚠️ Ralat: Ruangan 'printArea' tidak dijumpai.");
+                }
+            } 
+            else if (jenisBorang === 'G1 Borang') {
+                alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
+            }
         }
         function sediaUntukCetak() { document.getElementById('printArea').innerHTML = janaHTMLCetak(); window.print(); }
 
