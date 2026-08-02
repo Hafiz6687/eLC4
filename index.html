@@ -423,7 +423,14 @@
         @media (min-width: 951px) {
             .mobile-label { display: none; }
         }
-
+/* Animasi butang muncul elegan */
+        @keyframes slideInShort {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .anim-slide-in {
+            animation: slideInShort 0.3s ease-out forwards;
+        }
         /* KELAS KHUSUS UNTUK CETAKAN ASING (Custom Print Media Queries) */
         @media print {
             .kertas-a4 { margin: 0; padding: 0; box-shadow: none; width: 100%; min-height: auto; page-break-after: always; }
@@ -1132,8 +1139,8 @@ Portal rasmi : jtksm.mohr.gov.my
                         </table>
                     </div>
 
-                    <!-- Butang Seterusnya (Sentiasa Kekal Di Bawah) -->
-                    <div class="card-body" style="padding-top: 0;">
+<!-- Butang Seterusnya (Akan muncul bersama jadual tuntutan) -->
+                    <div class="card-body" id="ruanganButangSeterusnyaTab1" style="padding-top: 0; display: none;">
                         <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
                             <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab2')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
                         </div>
@@ -1192,22 +1199,21 @@ Portal rasmi : jtksm.mohr.gov.my
                         
                         <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 0;">
                             <label style="text-align: left; font-size: 1em; margin-bottom: 15px;">Seksyen Tuntutan <span>*</span></label>
-                            
                             <div id="seksyenPekerja" class="input-wrapper" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
                                 <div style="display: flex; gap: 15px; align-items: center; grid-column: span 3;">
-                                    <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(1)"> Seksyen 69(1)</label>
+                                    <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(1)" onchange="semakSeksyenTuntutan()"> Seksyen 69(1)</label>
                                     <div style="display: flex; gap: 15px; margin-left: 10px;">
                                         <label><input type="checkbox" name="subSeksyen" value="(a)"> (a)</label>
                                         <label><input type="checkbox" name="subSeksyen" value="(b)"> (b)</label>
                                         <label><input type="checkbox" name="subSeksyen" value="(c)"> (c)</label>
                                     </div>
                                 </div>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(i)"> Seksyen 69(2)(i)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(ii)"> Seksyen 69(2)(ii)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(iii)"> Seksyen 69(2)(iii)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(3)"> Seksyen 69(3)</label>
-                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69F"> Seksyen 69F</label>
-                            </div>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(i)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(i)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(ii)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(ii)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(2)(iii)" onchange="semakSeksyenTuntutan()"> Seksyen 69(2)(iii)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69(3)" onchange="semakSeksyenTuntutan()"> Seksyen 69(3)</label>
+                                <label style="font-weight: 600;"><input type="radio" name="seksyen" value="69F" onchange="semakSeksyenTuntutan()"> Seksyen 69F</label>
+                            </div>              
 
                             <div id="seksyenMajikan" class="input-wrapper" style="display: none; padding: 15px; background-color: #eff6ff; border: 1px dashed var(--primary-blue); border-radius: 8px;">
                                 <label style="font-weight: 600; color: var(--primary-blue); display: flex; align-items: center; gap: 10px;">
@@ -1218,11 +1224,12 @@ Portal rasmi : jtksm.mohr.gov.my
 
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
                             <button type="button" class="btn-terapung" style="background-color: #cbd5e1; color: #1e293b; border: none; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 25px;" onclick="pergiKeTabBorang('tab1')">
                                 <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali
                             </button>
-                            <button class="btn-save btn-seterusnya btn-terapung" style="padding: 10px 25px; display: flex; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab3')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
+                            <!-- Butang Seterusnya ini disembunyikan secara lalai dan ditambah animasi -->
+                            <button id="btnSeterusnyaTab2" class="btn-save btn-seterusnya btn-terapung anim-slide-in" style="padding: 10px 25px; display: none; align-items: center; gap: 8px;" onclick="pergiKeTabBorang('tab3')">Seterusnya <span style="font-size: 1.2em; line-height: 1;">→</span></button>
                         </div>
                     </div>
                 </div>
@@ -2536,10 +2543,12 @@ function tukarPeranan() {
                     if(radioMaj) radioMaj.checked = false;
                 }
                 
-                if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
+               if(ruanganGajiMinima) ruanganGajiMinima.style.display = "flex";
                 if(ruanganHeaderSyarikat) ruanganHeaderSyarikat.style.display = "none";
             }
-            kemaskiniDropdownPendaftaran(); janaKenyataanAwal(); semakWakilLengkap(); 
+            
+            // Gantikan baris asal dengan baris yang dah ditambah semakSeksyenTuntutan() ini:
+            kemaskiniDropdownPendaftaran(); janaKenyataanAwal(); semakWakilLengkap(); semakSeksyenTuntutan(); 
         }
 
         function kawalJenisDaftarPengadu() {
@@ -3081,7 +3090,7 @@ function tukarPeranan() {
             semakKelayakanTuntutan(); // Semak status butang setiap kali tukar jenis aduan
         }
 
-        // Fungsi 2: Membuka kunci butang "+ Tambah" jika syarat dipenuhi (TANPA Teks Amaran)
+// Fungsi 2: Membuka kunci butang "+ Tambah" jika syarat dipenuhi (TANPA Teks Amaran)
         function semakKelayakanTuntutan() {
             const sektor = document.getElementById('sektorDefendan') ? document.getElementById('sektorDefendan').value : '';
             const jenisPerniagaan = document.getElementById('jenisPerniagaan') ? document.getElementById('jenisPerniagaan').value.trim() : '';
@@ -3090,18 +3099,36 @@ function tukarPeranan() {
 
             const kandKetua = document.getElementById('kandunganTuntutanKetua');
             const kandSediaAda = document.getElementById('kandunganTuntutanSediaAda');
+            const butangSeterusnya = document.getElementById('ruanganButangSeterusnyaTab1'); // <-- ID Baharu
 
             if (isLayak) {
                 // Munculkan bahagian dalaman (Jadual & Butang)
                 if(kandKetua) kandKetua.style.display = 'block';
                 if(kandSediaAda) kandSediaAda.style.display = 'block';
+                if(butangSeterusnya) butangSeterusnya.style.display = 'block'; // <-- Munculkan butang seterusnya
             } else {
                 // Sembunyikan bahagian dalaman (Jadual & Butang ghaib)
                 if(kandKetua) kandKetua.style.display = 'none';
                 if(kandSediaAda) kandSediaAda.style.display = 'none';
+                if(butangSeterusnya) butangSeterusnya.style.display = 'none'; // <-- Sembunyikan butang seterusnya
             }
         }
-        
+        // Fungsi menyemak jika Seksyen Tuntutan telah dipilih untuk memunculkan butang Seterusnya (Tab 2)
+        function semakSeksyenTuntutan() {
+            const seksyenTerpilih = document.querySelector('input[name="seksyen"]:checked');
+            const btnTab2 = document.getElementById('btnSeterusnyaTab2');
+            const isMajikan = document.getElementById('majikan')?.checked;
+            
+            if (btnTab2) {
+                // Jika pengguna ialah Majikan, seksyen akan dipilih secara automatik, jadi butang sentiasa muncul
+                // Jika Pekerja, pastikan mereka klik salah satu seksyen baru butang muncul
+                if (isMajikan || seksyenTerpilih) {
+                    btnTab2.style.display = 'flex';
+                } else {
+                    btnTab2.style.display = 'none';
+                }
+            }
+        }
     </script>
 </body>
 </html>
