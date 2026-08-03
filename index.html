@@ -3013,7 +3013,7 @@ function bukaPreviewPDF(jenisBorang) {
         const jawatan = document.getElementById('jawatanPengadu') && document.getElementById('jawatanPengadu').value ? document.getElementById('jawatanPengadu').value : 'Jurujual';
         const gaji = document.getElementById('gajiPokokPengadu') && document.getElementById('gajiPokokPengadu').value ? document.getElementById('gajiPokokPengadu').value : '2,050.00';
 
-        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (LANDSCAPE)
+        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (LANDSCAPE + GABUNG KOLUM + TIADA GARIS MELINTANG)
         const htmlG1 = `
             <style>
                 /* Setup saiz kertas cetakan ke Landscape */
@@ -3021,8 +3021,8 @@ function bukaPreviewPDF(jenisBorang) {
                 
                 /* CSS Khas untuk paparan kertas G1 di skrin */
                 .g1-kertas {
-                    width: 297mm; /* TUKAR KE LANDSCAPE (Lebar) */
-                    min-height: 210mm; /* TUKAR KE LANDSCAPE (Tinggi) */
+                    width: 297mm;
+                    min-height: 210mm;
                     background-color: #ffffff;
                     border: 1px solid #000000; 
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -3066,8 +3066,14 @@ function bukaPreviewPDF(jenisBorang) {
                     vertical-align: top;
                 }
                 .g1-table th { text-align: center; font-weight: bold; vertical-align: middle; }
+                
+                /* Class utiliti untuk membuang garisan melintang di dalam jadual tuntutan */
+                .no-border-bottom { border-bottom: none !important; }
+                .no-border-top { border-top: none !important; }
+                .no-border-y { border-top: none !important; border-bottom: none !important; }
+
                 .nested-table { width: 100%; border-collapse: collapse; }
-                .nested-table td { border: none; padding: 1.5mm; font-size: 10px; }
+                .nested-table td { border: none !important; padding: 1.5mm; font-size: 10px; }
                 .sign-area { text-align: center; margin-top: 15mm; }
                 .sign-line { border-top: 1px solid #000000; width: 80%; margin: 0 auto 2mm auto; }
                 .g1-notes { font-size: 11px; margin-top: 5mm; }
@@ -3076,6 +3082,10 @@ function bukaPreviewPDF(jenisBorang) {
                 @media print {
                     .g1-kertas { width: 100%; min-height: auto; margin: 0; padding: 0; border: none; box-shadow: none; }
                     .g1-table th, .g1-table td { border: 1px solid #000000 !important; }
+                    /* Pastikan utiliti tiada border melintang kekal semasa cetakan (print) */
+                    .g1-table td.no-border-bottom { border-bottom: none !important; }
+                    .g1-table td.no-border-top { border-top: none !important; }
+                    .g1-table td.no-border-y { border-top: none !important; border-bottom: none !important; }
                     * { color: #000000 !important; }
                 }
             </style>
@@ -3099,13 +3109,14 @@ function bukaPreviewPDF(jenisBorang) {
                         <tr>
                             <th rowspan="2" style="width: 4%;">BIL</th>
                             <th rowspan="2" style="width: 35%;">BUTIRAN PENGADU</th>
-                            <th colspan="3" style="width: 34%;">BUTIRAN TUNTUTAN</th>
+                            <!-- Colspan ditukar dari 3 kepada 2 -->
+                            <th colspan="2" style="width: 34%;">BUTIRAN TUNTUTAN</th>
                             <th rowspan="2" style="width: 10%;">JUMLAH BESAR<br>(RM)</th>
                             <th rowspan="2" style="width: 17%;">TANDATANGAN PENGADU</th>
                         </tr>
                         <tr>
-                            <th style="width: 16%;">PERKARA</th>
-                            <th style="width: 8%;">TEMPOH</th>
+                            <!-- Tajuk telah digabungkan -->
+                            <th style="width: 24%;">PERKARA / TEMPOH (Keterangan Tuntutan)</th>
                             <th style="width: 10%;">AMAUN (RM)</th>
                         </tr>
                     </thead>
@@ -3124,9 +3135,9 @@ function bukaPreviewPDF(jenisBorang) {
                                     <tr><td>Kadar Gaji</td><td>: RM${gaji} sebulan</td></tr>
                                 </table>
                             </td>
-                            <td>Faedah Penamatan</td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: right;">21,280.82</td>
+                            <!-- Utiliti 'no-border-bottom' ditambah untuk hilangkan garis -->
+                            <td class="no-border-bottom">Faedah Penamatan</td>
+                            <td class="no-border-bottom" style="text-align: right;">21,280.82</td>
                             <td rowspan="3"></td>
                             <td rowspan="3" style="position: relative;">
                                 <div style="font-size: 10px; text-align: justify; margin-bottom: 25mm;">Saya dengan ini mengaku dan bersumpah bahawa segala maklumat yang diberikan ini adalah benar belaka.</div>
@@ -3137,14 +3148,14 @@ function bukaPreviewPDF(jenisBorang) {
                             </td>
                         </tr>
                         <tr>
-                            <td>Gaji Ganti Notis</td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: right;">2,628.01</td>
+                            <!-- Utiliti 'no-border-y' membuang garis atas dan bawah -->
+                            <td class="no-border-y">Gaji Ganti Notis</td>
+                            <td class="no-border-y" style="text-align: right;">2,628.01</td>
                         </tr>
                         <tr>
-                            <td>Bayaran Baki Cuti Tahunan</td>
-                            <td style="text-align: center;"></td>
-                            <td style="text-align: right;">826.92</td>
+                            <!-- Utiliti 'no-border-top' membuang garis atas -->
+                            <td class="no-border-top">Bayaran Baki Cuti Tahunan</td>
+                            <td class="no-border-top" style="text-align: right;">826.92</td>
                         </tr>
                     </tbody>
                 </table>
