@@ -2996,23 +2996,33 @@ function tukarPeranan() {
         }
 // Suis pintar untuk mengesan jenis dokumen yang sedang di-preview
         let modCetakSemasa = 'Borang Utama'; 
+
 // Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
 function bukaPreviewPDF(jenisBorang) {
     if (jenisBorang === 'G1 Ketua') {
         console.log("Menjana maklumat pengadu untuk G1 Ketua...");
 
-        // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU
-        const namaKetua = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '-';
-        const noKpKetua = document.getElementById('noPendPengadu') ? document.getElementById('noPendPengadu').value : '-';
-        const telKetua = document.getElementById('hpPengadu') ? document.getElementById('hpPengadu').value : '-';
+        // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU (Dinamik)
+        const namaKetua = document.getElementById('namaPengadu') && document.getElementById('namaPengadu').value ? document.getElementById('namaPengadu').value : 'SITI RAFIDAH BINTI SARIJO';
+        const noKpKetua = document.getElementById('noPendPengadu') && document.getElementById('noPendPengadu').value ? document.getElementById('noPendPengadu').value : '920301-01-5778';
+        const telKetua = document.getElementById('hpPengadu') && document.getElementById('hpPengadu').value ? document.getElementById('hpPengadu').value : '016-6866785';
+        
+        // Tarikh, Jawatan dan Gaji (Jika kosong, guna data contoh)
+        let tarikhMulaRaw = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : '';
+        const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '1/9/2013';
+        const jawatan = document.getElementById('jawatanPengadu') && document.getElementById('jawatanPengadu').value ? document.getElementById('jawatanPengadu').value : 'Jurujual';
+        const gaji = document.getElementById('gajiPokokPengadu') && document.getElementById('gajiPokokPengadu').value ? document.getElementById('gajiPokokPengadu').value : '2,050.00';
 
-        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (PURE CSS)
+        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (LANDSCAPE)
         const htmlG1 = `
             <style>
-                /* CSS Khas untuk G1 sahaja */
+                /* Setup saiz kertas cetakan ke Landscape */
+                @page { size: A4 landscape; margin: 15mm; }
+                
+                /* CSS Khas untuk paparan kertas G1 di skrin */
                 .g1-kertas {
-                    width: 210mm;
-                    min-height: 297mm;
+                    width: 297mm; /* TUKAR KE LANDSCAPE (Lebar) */
+                    min-height: 210mm; /* TUKAR KE LANDSCAPE (Tinggi) */
                     background-color: #ffffff;
                     border: 1px solid #000000; 
                     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -3060,7 +3070,7 @@ function bukaPreviewPDF(jenisBorang) {
                 .nested-table td { border: none; padding: 1.5mm; font-size: 10px; }
                 .sign-area { text-align: center; margin-top: 15mm; }
                 .sign-line { border-top: 1px solid #000000; width: 80%; margin: 0 auto 2mm auto; }
-                .g1-notes { font-size: 11px; margin-top: 10mm; }
+                .g1-notes { font-size: 11px; margin-top: 5mm; }
                 .g1-notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm 5mm; margin-top: 4mm; }
                 
                 @media print {
@@ -3108,10 +3118,10 @@ function bukaPreviewPDF(jenisBorang) {
                                     <tr><td>No. Kad Pengenalan</td><td>: ${noKpKetua}</td></tr>
                                     <tr><td>Alamat</td><td>: </td></tr>
                                     <tr><td>No. Telefon</td><td>: ${telKetua}</td></tr>
-                                    <tr><td>Tarikh Mula Kerja</td><td>: 1/9/2013</td></tr>
+                                    <tr><td>Tarikh Mula Kerja</td><td>: ${tarikhMula}</td></tr>
                                     <tr><td>Tarikh Akhir Kerja</td><td>: 6/30/2026</td></tr>
-                                    <tr><td>Jawatan Terakhir</td><td>: Jurujual</td></tr>
-                                    <tr><td>Kadar Gaji</td><td>: RM2,050.00 sebulan</td></tr>
+                                    <tr><td>Jawatan Terakhir</td><td>: <span style="text-transform: capitalize;">${jawatan}</span></td></tr>
+                                    <tr><td>Kadar Gaji</td><td>: RM${gaji} sebulan</td></tr>
                                 </table>
                             </td>
                             <td>Faedah Penamatan</td>
