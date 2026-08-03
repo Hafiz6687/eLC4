@@ -1314,11 +1314,13 @@ Portal rasmi : jtksm.mohr.gov.my
         ];
 
         let memoriTuntutan = []; 
-        let memoriTuntutanKetua = []; // Array baharu untuk menyimpan tuntutan ketua pengadu
+        let memoriTuntutanKetua = []; 
         let memoriSenaraiKes = [];
-        let indexKesSemasa = -1; // Simpan indeks kes yang sedang dibuka untuk dikemaskini
+        let indexKesSemasa = -1; 
         let isAkuanPrinted = false;
         let isKenyataanPrinted = false;
+        
+        let isSelesaiDaftar = false; // <--- KOD BARU: Penanda kes selesai daftar
 
         document.addEventListener('DOMContentLoaded', function() {
             kemaskiniDropdownPendaftaran();
@@ -2812,7 +2814,31 @@ function tukarPeranan() {
             const btnEdit = document.getElementById('btnEditBorangKes');
             if (btnEdit) { btnEdit.style.display = isReadonly ? 'inline-block' : 'none'; }
         }
+// --- FUNGSI KHAS UNTUK MENGOSONGKAN BORANG ---
+        function resetBorangPendaftaran() {
+            memoriTuntutan = [];
+            memoriTuntutanKetua = [];
+            renderJadualTuntutan();
+            
+            const bekasBorang = document.getElementById('viewPendaftaranKes');
+            if (bekasBorang) {
+                const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
+                inputs.forEach(input => input.value = '');
+                
+                const selects = bekasBorang.querySelectorAll('select');
+                selects.forEach(select => select.selectedIndex = 0);
+                
+                const checkboxes = bekasBorang.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                
+                const aduanIndividu = document.getElementById('aduanIndividu');
+                if(aduanIndividu) aduanIndividu.checked = true;
+            }
 
+            tukarPeranan(); 
+            kawalJenisDaftarPengadu();
+            kawalJenisDaftarDefendan();
+        }
 function tukarView(jenisView) {
             const navSenarai = document.getElementById('navSenarai');
             const navDaftar = document.getElementById('navDaftar');
@@ -2842,8 +2868,12 @@ function tukarView(jenisView) {
                 btnCetakHeader.style.display = 'flex';
                 setStatusBorang(false);
                 
-                // --- KOD DITAMBAH DI SINI ---
-                // Pastikan setiap kali menu Pendaftaran Kes diklik, ia bermula di Tab 1
+                // <--- KOD BARU: Hanya kosongkan borang jika pengguna baru lepas mendaftar kes
+                if (isSelesaiDaftar === true) {
+                    resetBorangPendaftaran();
+                    isSelesaiDaftar = false; // Matikan semula penanda selepas borang dikosongkan
+                }
+                
                 pergiKeTabBorang('tab1');
             }
         }
@@ -2907,7 +2937,7 @@ function daftarKesSistem() {
             // 2. SEMAKAN: Cari jika no. kes ini asalnya adalah Draf
             let indeksSediaAda = memoriSenaraiKes.findIndex(kes => kes.noKes.startsWith(noKesBersih));
 
-            if (indeksSediaAda !== -1) {
+if (indeksSediaAda !== -1) {
                 // Jika jumpa, GANTI / UPDATE rekod draf tersebut dengan rekod rasmi (Tag kuning Draf akan hilang)
                 memoriSenaraiKes[indeksSediaAda] = rekodRasmi;
             } else {
@@ -2916,6 +2946,9 @@ function daftarKesSistem() {
             }
 
             alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem."); 
+            
+            isSelesaiDaftar = true; // <--- KOD BARU: Hidupkan penanda
+            
             tukarView('senarai');
         }
 
