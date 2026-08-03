@@ -2813,7 +2813,7 @@ function tukarPeranan() {
             if (btnEdit) { btnEdit.style.display = isReadonly ? 'inline-block' : 'none'; }
         }
 
-        function tukarView(jenisView) {
+function tukarView(jenisView) {
             const navSenarai = document.getElementById('navSenarai');
             const navDaftar = document.getElementById('navDaftar');
             const viewSenarai = document.getElementById('viewSenaraiTugas');
@@ -2841,6 +2841,10 @@ function tukarPeranan() {
                 tajukHalaman.innerHTML = 'Pendaftaran Kes Buruh';
                 btnCetakHeader.style.display = 'flex';
                 setStatusBorang(false);
+                
+                // --- KOD DITAMBAH DI SINI ---
+                // Pastikan setiap kali menu Pendaftaran Kes diklik, ia bermula di Tab 1
+                pergiKeTabBorang('tab1');
             }
         }
 
