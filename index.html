@@ -2997,64 +2997,184 @@ function tukarPeranan() {
 // Suis pintar untuk mengesan jenis dokumen yang sedang di-preview
         let modCetakSemasa = 'Borang Utama'; 
 // Fungsi untuk membuka paparan Preview PDF berdasarkan jenis borang (G1 Ketua / G1 Borang)
-        function bukaPreviewPDF(jenisBorang) {
-            if (jenisBorang === 'G1 Ketua') {
-                console.log("Menjana maklumat pengadu untuk G1 Ketua...");
+function bukaPreviewPDF(jenisBorang) {
+    if (jenisBorang === 'G1 Ketua') {
+        console.log("Menjana maklumat pengadu untuk G1 Ketua...");
 
-                // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU (MENGGUNAKAN ID SEBENAR SISTEM TUAN)
-                const namaKetua = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '-';
-                const noKpKetua = document.getElementById('noPendPengadu') ? document.getElementById('noPendPengadu').value : '-';
-                
-                const jantinaNode = document.querySelector('input[name="jantinaPengadu"]:checked');
-                const jantinaKetua = jantinaNode ? jantinaNode.value : '-';
-                
-                const telKetua = document.getElementById('hpPengadu') ? document.getElementById('hpPengadu').value : '-';
+        // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU
+        const namaKetua = document.getElementById('namaPengadu') ? document.getElementById('namaPengadu').value : '-';
+        const noKpKetua = document.getElementById('noPendPengadu') ? document.getElementById('noPendPengadu').value : '-';
+        const telKetua = document.getElementById('hpPengadu') ? document.getElementById('hpPengadu').value : '-';
 
-                // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1
-const htmlG1 = `
-    <style>
-        @page { size: A4 landscape; margin: 15mm; }
-    </style>
-    <!-- Tambah background-color, max-width, min-height & box-shadow -->
-    <div style="background-color: white; font-family: Arial, sans-serif; line-height: 1.6; color: black; padding: 40px; width: 100%; max-width: 29.7cm; min-height: 21cm; margin: auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5); box-sizing: border-box;">
-        <h2 style="text-align: center; text-decoration: underline;">BORANG G1 (KETUA PENGADU)</h2>
-                        <br>
-                        <h3 style="background-color: #f0f0f0; padding: 8px; border-left: 5px solid var(--primary-blue);">A. MAKLUMAT KETUA PENGADU</h3>
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1.1em;">
-                            <tr><td style="width: 25%; font-weight: bold; padding: 8px 0;">Nama Penuh</td><td>: <span style="text-transform: uppercase;">${namaKetua}</span></td></tr>
-                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Kad Pengenalan / Pasport</td><td>: ${noKpKetua}</td></tr>
-                            <tr><td style="font-weight: bold; padding: 8px 0;">Jantina</td><td>: ${jantinaKetua}</td></tr>
-                            <tr><td style="font-weight: bold; padding: 8px 0;">No. Telefon Bimbit</td><td>: ${telKetua}</td></tr>
-                        </table>
-                        <br><br>
-                        <p style="text-align: center; font-style: italic; font-size: 0.9em; color: gray;">
-                            (Dokumen ini dijana secara automatik oleh sistem e-Labour Court)
-                        </p>
+        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (PURE CSS)
+        const htmlG1 = `
+            <style>
+                /* CSS Khas untuk G1 sahaja */
+                .g1-kertas {
+                    width: 210mm;
+                    min-height: 297mm;
+                    background-color: #ffffff;
+                    border: 1px solid #000000; 
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                    padding: 15mm;
+                    margin: 0 auto;
+                    font-family: Arial, Helvetica, sans-serif;
+                    color: #000000;
+                    box-sizing: border-box;
+                    line-height: 1.4;
+                }
+                .g1-header {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 8mm;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                .g1-title {
+                    font-size: 14px;
+                    font-weight: bold;
+                    text-align: center;
+                    text-transform: uppercase;
+                    text-decoration: underline;
+                    margin-bottom: 8mm;
+                }
+                .g1-desc {
+                    font-size: 12px;
+                    text-align: justify;
+                    margin-bottom: 6mm;
+                }
+                .g1-desc p { margin-bottom: 4mm; }
+                .g1-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 8mm;
+                }
+                .g1-table th, .g1-table td {
+                    border: 1px solid #000000;
+                    padding: 2mm;
+                    font-size: 11px;
+                    vertical-align: top;
+                }
+                .g1-table th { text-align: center; font-weight: bold; vertical-align: middle; }
+                .nested-table { width: 100%; border-collapse: collapse; }
+                .nested-table td { border: none; padding: 1.5mm; font-size: 10px; }
+                .sign-area { text-align: center; margin-top: 15mm; }
+                .sign-line { border-top: 1px solid #000000; width: 80%; margin: 0 auto 2mm auto; }
+                .g1-notes { font-size: 11px; margin-top: 10mm; }
+                .g1-notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm 5mm; margin-top: 4mm; }
+                
+                @media print {
+                    .g1-kertas { width: 100%; min-height: auto; margin: 0; padding: 0; border: none; box-shadow: none; }
+                    .g1-table th, .g1-table td { border: 1px solid #000000 !important; }
+                    * { color: #000000 !important; }
+                }
+            </style>
+
+            <div class="g1-kertas">
+                <header class="g1-header">
+                    <div style="flex: 1;"></div>
+                    <div style="flex: 2; text-align: center;">PEJABAT TENAGA KERJA KLUANG</div>
+                    <div style="flex: 1; text-align: right;">BORANG G1</div>
+                </header>
+
+                <div class="g1-title">SENARAI TUNTUTAN BERSAMA DAN PERSETUJUAN PELANTIKAN KETUA</div>
+
+                <div class="g1-desc">
+                    <p>Saya yang menandatangani di bawah ini dengan ini bersetuju dilantik mewakili 1 yang lain sebagai wakil untuk memfailkan dan menguruskan tuntutan terhadap Pihak Kena Tuntut MR HAPPY SDN. BHD. 201101018067 (946203-W) yang beralamat di NO. 24, JALAN ROTAN CUCUR</p>
+                    <p>Tuntutan dan butir-butir saya / kami adalah seperti berikut :</p>
+                </div>
+
+                <table class="g1-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 4%;">BIL</th>
+                            <th rowspan="2" style="width: 35%;">BUTIRAN PENGADU</th>
+                            <th colspan="3" style="width: 34%;">BUTIRAN TUNTUTAN</th>
+                            <th rowspan="2" style="width: 10%;">JUMLAH BESAR<br>(RM)</th>
+                            <th rowspan="2" style="width: 17%;">TANDATANGAN PENGADU</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 16%;">PERKARA</th>
+                            <th style="width: 8%;">TEMPOH</th>
+                            <th style="width: 10%;">AMAUN (RM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="3" style="text-align: center;">1</td>
+                            <td rowspan="3" style="padding: 0;">
+                                <table class="nested-table">
+                                    <tr><td style="width: 45%;">Nama (Huruf Besar)</td><td>: <span style="text-transform: uppercase;">${namaKetua}</span></td></tr>
+                                    <tr><td>No. Kad Pengenalan</td><td>: ${noKpKetua}</td></tr>
+                                    <tr><td>Alamat</td><td>: </td></tr>
+                                    <tr><td>No. Telefon</td><td>: ${telKetua}</td></tr>
+                                    <tr><td>Tarikh Mula Kerja</td><td>: 1/9/2013</td></tr>
+                                    <tr><td>Tarikh Akhir Kerja</td><td>: 6/30/2026</td></tr>
+                                    <tr><td>Jawatan Terakhir</td><td>: Jurujual</td></tr>
+                                    <tr><td>Kadar Gaji</td><td>: RM2,050.00 sebulan</td></tr>
+                                </table>
+                            </td>
+                            <td>Faedah Penamatan</td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: right;">21,280.82</td>
+                            <td rowspan="3"></td>
+                            <td rowspan="3" style="position: relative;">
+                                <div style="font-size: 10px; text-align: justify; margin-bottom: 25mm;">Saya dengan ini mengaku dan bersumpah bahawa segala maklumat yang diberikan ini adalah benar belaka.</div>
+                                <div class="sign-area">
+                                    <div class="sign-line"></div>
+                                    <div style="font-size: 11px;">Tandatangan</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gaji Ganti Notis</td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: right;">2,628.01</td>
+                        </tr>
+                        <tr>
+                            <td>Bayaran Baki Cuti Tahunan</td>
+                            <td style="text-align: center;"></td>
+                            <td style="text-align: right;">826.92</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="g1-notes">
+                    <strong>Nota:<br>Jenis-Jenis Tuntutan</strong>
+                    <div class="g1-notes-grid">
+                        <div>a. Baki Gaji/Baki Gaji Minimum</div>
+                        <div>b. Gaji Ganti Notis</div>
+                        <div>c. Kerja Lebih Masa</div>
+                        <div>d. Faedah Penamatan</div>
+                        <div style="grid-column: span 2;">e. Cuti (*Tahunan/Sakit/Bersalin/Paterniti/Kelepasan Am/Cuti Rehat)</div>
+                        <div>f. Lain-lain (Sila nyatakan)</div>
                     </div>
-                `;
+                </div>
+            </div>
+        `;
 
-                // 3. SETKAN SUIS MOD CETAK 
-                modCetakSemasa = jenisBorang;
-                
-                // 4. MASUKKAN HTML KE DALAM ID 'previewContent' & 'printArea'
-                const kawasanPreview = document.getElementById('previewContent');
-                if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
+        // 3. SETKAN SUIS MOD CETAK 
+        modCetakSemasa = jenisBorang;
+        
+        // 4. MASUKKAN HTML KE DALAM ID 'previewContent' & 'printArea'
+        const kawasanPreview = document.getElementById('previewContent');
+        if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
 
-                const kawasanCetak = document.getElementById('printArea');
-                if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
+        const kawasanCetak = document.getElementById('printArea');
+        if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
 
-                // 5. BUKA SKRIN PREVIEW MENGGUNAKAN ID MODAL TUAN YANG SEBENAR
-                document.getElementById('modalPreview').style.display = 'flex';
-                
-                // 6. SEMBUNYIKAN MENU CETAK LAIN DALAM DROPDOWN AGAR TIDAK KELIRU
-                document.getElementById('menuCetakAkuan').style.display = 'none';
-                document.getElementById('menuCetakKenyataan').style.display = 'none';
-                document.getElementById('menuDaftar').style.display = 'none';
-            } 
-            else if (jenisBorang === 'G1 Borang') {
-                alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
-            }
-        }
+        // 5. BUKA SKRIN PREVIEW MENGGUNAKAN ID MODAL
+        document.getElementById('modalPreview').style.display = 'flex';
+        
+        // 6. SEMBUNYIKAN MENU CETAK LAIN DALAM DROPDOWN
+        document.getElementById('menuCetakAkuan').style.display = 'none';
+        document.getElementById('menuCetakKenyataan').style.display = 'none';
+        document.getElementById('menuDaftar').style.display = 'none';
+    } 
+    else if (jenisBorang === 'G1 Borang') {
+        alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
+    }
+}
 
 // Kemaskini fungsi ini supaya ia jadi 'bijak'
         function sediaUntukCetak() { 
