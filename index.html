@@ -659,9 +659,9 @@ Portal rasmi : jtksm.mohr.gov.my
                 </div>
             </div>
 
-            <!-- BAHAGIAN 4: Penetapan Tarikh Sebutan Kes -->
-            <div class="card full-width">
-                <div class="card-header">Penetapan Tarikh Sebutan Kes</div>
+           <!-- BAHAGIAN 4: Penetapan Tarikh Sebutan Kes -->
+<div class="card full-width" id="kad_sebutan_kes">
+    <div class="card-header">Penetapan Tarikh Sebutan Kes</div>
                 <div class="card-body">
                     <!-- Grid Responsive Custom (Baris Label dan Baris Input) -->
                     <div class="sebutan-grid-labels">
@@ -873,6 +873,13 @@ Portal rasmi : jtksm.mohr.gov.my
     <div class="input-wrapper">
         <input type="date" id="tarikhMulaKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
         <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Boleh key-in manually</p>
+    </div>
+</div>
+                                <div class="form-group" style="align-items: center; margin-bottom: 15px;">
+    <label style="margin-top: 0;">Tarikh Akhir Kerja</label>
+    <div class="input-wrapper">
+        <input type="date" id="tarikhAkhirKerja" style="width: 100%; max-width: 300px; min-width: 160px; box-sizing: border-box;">
+        <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*(Tarikh Ditamatkan)</p>
     </div>
 </div>
 
@@ -1092,49 +1099,51 @@ Portal rasmi : jtksm.mohr.gov.my
     </div>
 </div>
                                 
-                            </div> <!-- TAMAT KANDUNGAN MAKLUMAT SYARIKAT -->
+</div> <!-- TAMAT KANDUNGAN MAKLUMAT SYARIKAT -->
                         </div> <!-- TAMAT WRAPPER MAKLUMAT SYARIKAT -->
                     </div>
                 </div>
 
 <!-- KAD 3: TUNTUTAN KETUA PENGADU (Hanya Muncul Jika Berkumpulan) -->
-                <div class="card full-width" id="kad3_ketua" style="order: 3; display: none; overflow: visible;">
-                    <div class="card-header">
-                        Maklumat Tuntutan Ketua Pengadu
-                        
-                       <!-- Butang Dropdown Action (G1) -->
-                        <div class="action-dropdown-container" style="margin-left: auto; position: relative;">
-                            <!-- Guna class="icon-btn" untuk bentuk bulat biru -->
-                            <button type="button" class="icon-btn" style="width: 36px; height: 36px; font-size: 20px; padding-bottom: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan">
-                                ⋮
-                            </button>
-                         <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
-                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Ketua');">📄 G1 Ketua</a>
-                                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Borang');">📄 G1 Borang</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Kandungan Ketua (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
-                    <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                            <p class="note" style="margin: 0; color: var(--primary-blue);">* Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu</p>
-                            <button class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap;" onclick="bukaModalTuntutan('ketua')">+ Tambah Tuntutan Ketua</button>
-                        </div>
-                        
-                        <table id="jadualTuntutanKetua">
-                            <thead>
-                                <tr>
-                                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
-                                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
+<div class="card full-width" id="kad3_ketua" style="order: 3; display: none;"> <!-- TAG INI PERLU ADA DI SINI -->
+    <div class="card-header">
+        Maklumat Tuntutan Ketua Pengadu
+        
+        <!-- Butang Dropdown Action (G1) -->
+        <div class="action-dropdown-container" style="margin-left: auto; position: relative; display: flex; align-items: center;">
+            
+            <!-- Butang Segi Empat Tepat Kelabu Gelap -->
+            <button type="button" style="width: 46px; height: 30px; background-color: #334155; color: white; border: none; border-radius: 6px; font-size: 24px; font-weight: 900; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 0; padding-bottom: 6px; transition: all 0.2s ease;" onclick="document.getElementById('dropdownG1').classList.toggle('show')" title="Tindakan" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.2)';">
+                ⋯
+            </button>
+            
+            <div id="dropdownG1" class="dropdown-menu" style="top: 100%; right: 0; min-width: 160px; margin-top: 10px; font-weight: normal;">
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Ketua');">📄 G1 Ketua</a>
+                <a href="#" onclick="document.getElementById('dropdownG1').classList.remove('show'); bukaPreviewPDF('G1 Borang');">📄 G1 Borang</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kandungan Ketua (Sembunyi sehingga Sektor & Jenis Perniagaan diisi) -->
+    <div class="card-body" id="kandunganTuntutanKetua" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -5px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <p class="note" style="margin: 0; color: var(--primary-blue);">* Sila isi sekurang-kurangnya SATU tuntutan untuk Ketua Pengadu</p>
+            <button class="btn-add btn-terapung" style="margin: 0; background-color: #0284c7; white-space: nowrap;" onclick="bukaModalTuntutan('ketua')">+ Tambah Tuntutan Ketua</button>
+        </div>
+        
+        <table id="jadualTuntutanKetua">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Bil.</th><th style="width: 25%;">Jenis Tuntutan</th><th style="width: 35%;">Keterangan Tuntutan</th>
+                    <th style="width: 15%;">Jumlah (RM)</th><th style="width: 10%;">Kemaskini</th><th style="width: 10%;">Hapus</th>
+                </tr>
+            </thead>
+            <tbody><tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr></tbody>
+        </table>
+    </div>
+</div> <!-- TAMAT KAD 3 KETUA -->
 
-                <!-- KAD 4: TUNTUTAN SEDIA ADA / KESELURUHAN -->
+<!-- KAD 4: TUNTUTAN SEDIA ADA / KESELURUHAN -->
                 <div class="card full-width" id="kad4_biasa" style="order: 4;">
                     <div class="card-header" id="tajukTuntutanSediaAda">Maklumat Tuntutan</div>
                     
@@ -1274,7 +1283,7 @@ Portal rasmi : jtksm.mohr.gov.my
                             <button type="button" class="btn-terapung" style="background-color: #cbd5e1; color: #1e293b; border: none; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 25px;" onclick="pergiKeTabBorang('tab2')">
                                 <span style="font-size: 1.2em; line-height: 1;">←</span> Kembali
                             </button>
-                            <button class="btn-save btn-simpan btn-terapung" style="background-color: var(--primary-blue); padding: 10px 20px;" onclick="alert('Maklumat draf telah disimpan.')">💾 Simpan</button>
+                            <button class="btn-save btn-simpan btn-terapung" style="background-color: var(--primary-blue); padding: 10px 20px;" onclick="simpanDrafSistem()">💾 Simpan Draf</button>
                         </div>
 
                     </div>
@@ -1414,27 +1423,51 @@ Portal rasmi : jtksm.mohr.gov.my
             const isBerkumpulan = kes.jenisAduan === 'Berkumpulan';
             
             // Maklumat Kes Utama
-            document.getElementById('mk_header_kes').innerText = `Maklumat Kes (${kes.noKes})`;
+            document.getElementById('mk_header_kes').innerHTML = `Maklumat Kes (${kes.noKes})`;
             document.getElementById('mk_tarikh_daftar').innerText = kes.tarikh;
             document.getElementById('mk_tarikh_sah').innerText = kes.tarikh; // Mock data
             document.getElementById('mk_tarikh_tugas').innerText = kes.tarikh; // Mock data
             
-            // --- Extract Mock Data (Simulasi data borang yang telah didaftarkan) ---
+// --- EKSTRAK MAKLUMAT PENGADU DARI BORANG ---
             const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
-            const p_id = "880101-01-1234"; // Mock Data Pengadu
-            const p_alamat = "24, JALAN SARIA 7/3<br>TAMAN TITIWANGSA<br>86000 Kluang<br>Johor";
-            const p_alamat_kerja = "LOT 4765, JALAN BATU PAHAT<br>86000 Kluang<br>Johor";
-            const p_tel = "07-7721646";
-            const p_hp = "012-3456789";
-            const p_emel = "pengadu@email.com";
-            const p_bil_pengadu = "5 Orang";
+            const p_id = document.getElementById('noPendPengadu').value.trim() || "-";
+            
+            const p_a1 = document.getElementById('alamatPengadu1').value.trim();
+            const p_a2 = document.getElementById('alamatPengadu2').value.trim();
+            const p_a3 = document.getElementById('alamatPengadu3').value.trim();
+            const p_pos = document.getElementById('poskodPengadu').value.trim();
+            const p_bdr = document.getElementById('bandarPengadu').value.trim();
+            const p_ngr = document.getElementById('negeriPengadu').value.trim();
+            let p_alamatArr = [p_a1, p_a2, p_a3].filter(Boolean);
+            let p_posBdr = [p_pos, p_bdr].filter(Boolean).join(' ');
+            if(p_posBdr) p_alamatArr.push(p_posBdr);
+            if(p_ngr) p_alamatArr.push(p_ngr);
+            const p_alamat = p_alamatArr.length > 0 ? p_alamatArr.join('<br>') : "-";
 
+            const p_tel = document.getElementById('telPengadu').value.trim() || "-";
+            const p_hp = document.getElementById('hpPengadu').value.trim() || "-";
+            const p_emel = document.getElementById('emelPengadu').value.trim() || "-";
+            const p_bil_pengadu = document.getElementById('bilanganPengadu').value ? document.getElementById('bilanganPengadu').value + " Orang" : "-";
+
+            // --- EKSTRAK MAKLUMAT DEFENDAN DARI BORANG ---
             const d_nama = kes.namaDefendan;
-            const d_id = "JM0123456-X"; // Mock Data Defendan
-            const d_alamat = "LOT 4765, JALAN BATU PAHAT<br>86000 Kluang<br>Johor";
-            const d_tel = "07-7711223";
-            const d_hp = "017-9876543";
-            const d_emel = "admin@syarikat.com";
+            const d_id = document.getElementById('noPendDefendan').value.trim() || "-";
+            
+            const d_a1 = document.getElementById('alamatDefendan1').value.trim();
+            const d_a2 = document.getElementById('alamatDefendan2').value.trim();
+            const d_a3 = document.getElementById('alamatDefendan3').value.trim();
+            const d_pos = document.getElementById('poskodDefendan').value.trim();
+            const d_bdr = document.getElementById('bandarDefendan').value.trim();
+            const d_ngr = document.getElementById('negeriDefendan').value.trim();
+            let d_alamatArr = [d_a1, d_a2, d_a3].filter(Boolean);
+            let d_posBdr = [d_pos, d_bdr].filter(Boolean).join(' ');
+            if(d_posBdr) d_alamatArr.push(d_posBdr);
+            if(d_ngr) d_alamatArr.push(d_ngr);
+            const d_alamat = d_alamatArr.length > 0 ? d_alamatArr.join('<br>') : "-";
+
+            const d_tel = document.getElementById('telDefendan').value.trim() || "-";
+            const d_hp = document.getElementById('hpDefendan').value.trim() || "-";
+            const d_emel = document.getElementById('emelDefendan').value.trim() || "-";
 
             // Semak jika No ID Defendan menyerupai MyKad (12 digit dengan sengkang atau tanpa sengkang)
             const regexMyKad = /^\d{6}-?\d{2}-?\d{4}$/;
@@ -1645,10 +1678,22 @@ Portal rasmi : jtksm.mohr.gov.my
                 </tr>
             `;
 
-            // Reset Input Sebutan
+           // Reset Input Sebutan
             document.getElementById('mk_tarikh_sebutan').value = '';
             document.getElementById('mk_masa_sebutan').value = '';
             semakButangSebutan();
+
+            // LOGIK BAHARU: Sorok Bahagian Sebutan jika kes adalah DRAF
+            const isDraf = kes.noKes.includes('DRAF');
+            const kadSebutan = document.getElementById('kad_sebutan_kes');
+            
+            if (kadSebutan) {
+                if (isDraf) {
+                    kadSebutan.style.display = 'none'; // Sembunyikan terus
+                } else {
+                    kadSebutan.style.display = 'flex'; // Paparkan seperti biasa (style lalai '.card')
+                }
+            }
 
             // Setup Butang Kemaskini (Akan bawa kembali ke form)
             document.getElementById('btnEditRekodKes').onclick = function() {
@@ -1784,30 +1829,55 @@ Portal rasmi : jtksm.mohr.gov.my
             }
         }
 
-        function kemaskiniDropdownPendaftaran() {
-            const dropPengadu = document.getElementById('jenisDaftarPengadu');   
-            const dropDefendan = document.getElementById('jenisDaftarDefendan'); 
-            const isMajikan = document.getElementById('majikan')?.checked;
-            
-            const valPengadu = dropPengadu.value;
-            const valDefendan = dropDefendan.value;
-            
-            dropPengadu.innerHTML = `<option value="MyKad" selected>MyKad</option><option value="Pasport">Pasport</option>`;
-            
-            let optionsDef = '<option value="">-Sila Pilih-</option>';
-            optionsDef += '<option value="SSM (Sdn. Bhd./Bhd./Enterprise)">SSM (Sdn. Bhd./Bhd./Enterprise)</option>';
-            if (!isMajikan) { optionsDef += '<option value="SSM (Enterprise)">SSM (Enterprise)</option>'; }
-            optionsDef += '<option value="MyKad">MyKad</option><option value="Lain-lain">Lain-lain</option>';
-            
-            dropDefendan.innerHTML = optionsDef;
-            
-            if(Array.from(dropPengadu.options).some(o => o.value === valPengadu)) dropPengadu.value = valPengadu;
-            if(Array.from(dropDefendan.options).some(o => o.value === valDefendan)) { dropDefendan.value = valDefendan; } 
-            else { dropDefendan.value = ""; }
-            
-            kawalJenisDaftarPengadu();
-            kawalJenisDaftarDefendan();
-        }
+function kemaskiniDropdownPendaftaran() {
+    const dropPengadu = document.getElementById('jenisDaftarPengadu');
+    const dropDefendan = document.getElementById('jenisDaftarDefendan');
+    const isMajikan = document.getElementById('majikan')?.checked;
+    const isBerkumpulan = document.getElementById('aduanBerkumpulan')?.checked;
+    const isIndividu = document.getElementById('aduanIndividu')?.checked;
+
+    const valPengadu = dropPengadu.value;
+    const valDefendan = dropDefendan.value;
+
+    dropPengadu.innerHTML = `<option value="MyKad" selected>MyKad</option><option value="Pasport">Pasport</option>`;
+
+    let optionsDef = '<option value="">-Sila Pilih-</option>';
+
+    // LOGIK BARU
+    if (isBerkumpulan && !isMajikan) {
+        optionsDef += '<option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>';
+    } else if (isIndividu && !isMajikan) {
+        // PERUBAHAN DI SINI: Tukar kepada SSM (Sdn. Bhd./Bhd.) untuk Aduan Individu
+        optionsDef += '<option value="SSM (Sdn. Bhd./Bhd.)">SSM (Sdn. Bhd./Bhd.)</option>';
+    } else {
+        // Kekal untuk Majikan
+        optionsDef += '<option value="SSM (Sdn. Bhd./Bhd./Enterprise)">SSM (Sdn. Bhd./Bhd./Enterprise)</option>';
+    }
+
+    if (!isMajikan) { optionsDef += '<option value="SSM (Enterprise)">SSM (Enterprise)</option>'; }
+    optionsDef += '<option value="MyKad">MyKad</option><option value="Lain-lain">Lain-lain</option>';
+
+    dropDefendan.innerHTML = optionsDef;
+
+    if(Array.from(dropPengadu.options).some(o => o.value === valPengadu)) dropPengadu.value = valPengadu;
+
+    // Logik Pengekalan Nilai (Value Retention) Supaya Pilihan Tidak Reset Jika Bertukar Status
+    if (valDefendan === 'SSM (Sdn. Bhd./Bhd./Enterprise)' && !isMajikan) { 
+        dropDefendan.value = 'SSM (Sdn. Bhd./Bhd.)'; 
+    } 
+    else if (valDefendan === 'SSM (Sdn. Bhd./Bhd.)' && isMajikan) { 
+        dropDefendan.value = 'SSM (Sdn. Bhd./Bhd./Enterprise)'; 
+    } 
+    else if(Array.from(dropDefendan.options).some(o => o.value === valDefendan)) { 
+        dropDefendan.value = valDefendan; 
+    } 
+    else { 
+        dropDefendan.value = ""; 
+    }
+
+    kawalJenisDaftarPengadu();
+    kawalJenisDaftarDefendan();
+}
 
         function simpanNamaProfil(el) { localStorage.setItem('eLC_namaProfil', el.innerHTML); }
 
@@ -2051,7 +2121,7 @@ function janaKenyataanAwal() {
                     let bilPengadu = parseInt(document.getElementById('bilanganPengadu').value) || 1;
                     let wakil = bilPengadu > 1 ? bilPengadu - 1 : 0;
                     let teksDefendanKumpulan = defNama;
-                    if (jenisDef === 'SSM (Sdn. Bhd./Bhd./Enterprise)' || jenisDef === 'Lain-lain' || jenisDef === 'SSM (Enterprise)') {
+                    if (jenisDef === 'SSM (Sdn. Bhd./Bhd./Enterprise)' || jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain' || jenisDef === 'SSM (Enterprise)') {
                         if (defNo) teksDefendanKumpulan += ` (No. Pendaftaran: ${defNo})`;
                     } else if (jenisDef === 'MyKad') {
                         if (defNo) teksDefendanKumpulan += ` (No. MyKad: ${defNo})`;
@@ -2060,7 +2130,7 @@ function janaKenyataanAwal() {
                 }
 
                 let ayatDefendan = "";
-                if (jenisDef === 'SSM (Sdn. Bhd./Bhd./Enterprise)' || jenisDef === 'Lain-lain') {
+                if (jenisDef === 'SSM (Sdn. Bhd./Bhd./Enterprise)' || jenisDef === 'SSM (Sdn. Bhd./Bhd.)' || jenisDef === 'Lain-lain') {
                     if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. Pendaftaran: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
                 } else if (jenisDef === 'MyKad') {
                     if (defNo) { ayatDefendan = `Saya bekerja dengan defendan ${defNama} (No. MyKad: ${defNo})`; } else { ayatDefendan = `Saya bekerja dengan defendan ${defNama}`; }
@@ -2390,13 +2460,19 @@ function hapusTuntutan(index, jenisJadual = 'biasa') {
             } 
         }
 function renderJadualTuntutan() {
-            // Render Jadual Biasa / Keseluruhan
+            // 1. Render Jadual Biasa / Keseluruhan (Individu, Majikan, Keseluruhan Berkumpulan)
             const tbody = document.querySelector("#jadualTuntutan tbody");
             if (tbody) {
                 tbody.innerHTML = ""; 
-                if (memoriTuntutan.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; } 
-                else {
+                if (memoriTuntutan.length === 0) { 
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; 
+                } else {
+                    let jumlahKeseluruhan = 0; // Variable untuk kira jumlah total
+
                     memoriTuntutan.forEach((item, index) => {
+                        const jumlahNum = parseFloat(item.jumlah);
+                        jumlahKeseluruhan += isNaN(jumlahNum) ? 0 : jumlahNum; // Tambah ke jumlah keseluruhan
+
                         const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -2406,16 +2482,32 @@ function renderJadualTuntutan() {
                         `;
                         tbody.appendChild(tr);
                     });
+
+                    // Tambah Baris Jumlah Keseluruhan di bawah jadual biasa
+                    const trTotal = document.createElement('tr');
+                    trTotal.style.backgroundColor = '#f1f5f9';
+                    trTotal.style.fontWeight = 'bold';
+                    trTotal.innerHTML = `
+                        <td colspan="3" style="text-align:right; padding-right: 15px; color: var(--text-main);">JUMLAH KESELURUHAN</td>
+                        <td colspan="3" style="color: var(--primary-blue);">RM ${jumlahKeseluruhan.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    `;
+                    tbody.appendChild(trTotal);
                 }
             }
 
-            // Render Jadual Ketua (Hanya jika wujud di skrin)
+            // 2. Render Jadual Ketua (Hanya muncul jika aduan berkumpulan)
             const tbodyKetua = document.querySelector("#jadualTuntutanKetua tbody");
             if (tbodyKetua) {
                 tbodyKetua.innerHTML = ""; 
-                if (memoriTuntutanKetua.length === 0) { tbodyKetua.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; } 
-                else {
+                if (memoriTuntutanKetua.length === 0) { 
+                    tbodyKetua.innerHTML = `<tr><td colspan="6" class="empty-row">Tiada maklumat tuntutan direkodkan.</td></tr>`; 
+                } else {
+                    let jumlahKeseluruhanKetua = 0; // Variable untuk kira jumlah total ketua
+
                     memoriTuntutanKetua.forEach((item, index) => {
+                        const jumlahNum = parseFloat(item.jumlah);
+                        jumlahKeseluruhanKetua += isNaN(jumlahNum) ? 0 : jumlahNum; // Tambah ke jumlah keseluruhan ketua
+
                         const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -2425,6 +2517,16 @@ function renderJadualTuntutan() {
                         `;
                         tbodyKetua.appendChild(tr);
                     });
+
+                    // Tambah Baris Jumlah Keseluruhan di bawah jadual ketua
+                    const trTotalKetua = document.createElement('tr');
+                    trTotalKetua.style.backgroundColor = '#e0f2fe'; // Latar belakang biru lembut sedikit berbeza
+                    trTotalKetua.style.fontWeight = 'bold';
+                    trTotalKetua.innerHTML = `
+                        <td colspan="3" style="text-align:right; padding-right: 15px; color: var(--text-main);">JUMLAH KESELURUHAN KETUA</td>
+                        <td colspan="3" style="color: #0284c7;">RM ${jumlahKeseluruhanKetua.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    `;
+                    tbodyKetua.appendChild(trTotalKetua);
                 }
             }
         }
@@ -2693,7 +2795,8 @@ function tukarPeranan() {
             if (aduanBerkumpulan) { ruanganBilangan.style.display = 'grid'; labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; } 
             else { ruanganBilangan.style.display = 'none'; labelNama.innerHTML = 'Nama <span>*</span>'; }
             
-            kawalJenisAduanTuntutan(); // <--- TAMBAH BARIS INI
+            kawalJenisAduanTuntutan(); 
+            kemaskiniDropdownPendaftaran(); // <--- HANYA TAMBAH BARIS INI
         }
 
         function setStatusBorang(isReadonly) {
@@ -2761,8 +2864,11 @@ function tukarPeranan() {
             });
         }
 
-        function daftarKesSistem() {
-            const noKes = document.getElementById('noKes').value;
+function daftarKesSistem() {
+            // 1. Ambil no. kes dan pastikan ia tiada sebarang tag HTML
+            let noKesAsal = document.getElementById('noKes').value;
+            let noKesBersih = noKesAsal.split('<br>')[0].trim();
+
             const isMajikan = document.getElementById('majikan').checked;
             
             let namaPengaduRaw = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
@@ -2785,15 +2891,37 @@ function tukarPeranan() {
             const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
             const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
 
-            memoriSenaraiKes.unshift({ noKes: noKes, namaPengadu: namaPengaduFinal, namaDefendan: namaDefendanFinal, jenisAduan: jenisAduan, tarikh: tarikhHariIni });
-            alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem."); tukarView('senarai');
+            // Bina objek data yang baharu/rasmi (tiada tag DRAF pada No. Kes)
+            const rekodRasmi = { 
+                noKes: noKesBersih, 
+                namaPengadu: namaPengaduFinal, 
+                namaDefendan: namaDefendanFinal, 
+                jenisAduan: jenisAduan, 
+                tarikh: tarikhHariIni 
+            };
+
+            // 2. SEMAKAN: Cari jika no. kes ini asalnya adalah Draf
+            let indeksSediaAda = memoriSenaraiKes.findIndex(kes => kes.noKes.startsWith(noKesBersih));
+
+            if (indeksSediaAda !== -1) {
+                // Jika jumpa, GANTI / UPDATE rekod draf tersebut dengan rekod rasmi (Tag kuning Draf akan hilang)
+                memoriSenaraiKes[indeksSediaAda] = rekodRasmi;
+            } else {
+                // Jika tiada dalam senarai (daftar terus tanpa draf), tambah sebagai rekod baharu
+                memoriSenaraiKes.unshift(rekodRasmi);
+            }
+
+            alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem."); 
+            tukarView('senarai');
         }
 
         function hapusKesDidaftar(index) { if (confirm("Adakah anda pasti mahu memadam kes ini dari senarai tugasan?")) { memoriSenaraiKes.splice(index, 1); renderSenaraiTugas(); } }
 
         function bukaKesDidaftar(index) {
             const kes = memoriSenaraiKes[index];
-            document.getElementById('noKes').value = kes.noKes;
+            // Buang tag HTML Draf sebelum diletakkan dalam kotak Input
+let noKesBersih = kes.noKes.split('<br>')[0].trim();
+document.getElementById('noKes').value = noKesBersih;
             
             const isMajikan = kes.jenisAduan === 'Majikan';
             document.getElementById('majikan').checked = isMajikan;
@@ -3006,90 +3134,124 @@ function bukaPreviewPDF(jenisBorang) {
     if (jenisBorang === 'G1 Ketua') {
         console.log("Menjana maklumat pengadu untuk G1 Ketua...");
 
-        // 1. AMBIL DATA DARI BORANG MAKLUMAT PENGADU (Dinamik)
-        const namaKetua = document.getElementById('namaPengadu') && document.getElementById('namaPengadu').value ? document.getElementById('namaPengadu').value : 'SITI RAFIDAH BINTI SARIJO';
-        const noKpKetua = document.getElementById('noPendPengadu') && document.getElementById('noPendPengadu').value ? document.getElementById('noPendPengadu').value : '920301-01-5778';
-        const telKetua = document.getElementById('hpPengadu') && document.getElementById('hpPengadu').value ? document.getElementById('hpPengadu').value : '016-6866785';
+        // 1. EKSTRAK MAKLUMAT PENGADU (KETUA)
+        const namaKetua = document.getElementById('namaPengadu')?.value || '';
+        const noKpKetua = document.getElementById('noPendPengadu')?.value || '';
+        const telKetua = document.getElementById('hpPengadu')?.value || document.getElementById('telPengadu')?.value || '';
         
-        // Tarikh, Jawatan dan Gaji (Jika kosong, guna data contoh)
-        let tarikhMulaRaw = document.getElementById('tarikhMulaKerja') ? document.getElementById('tarikhMulaKerja').value : '';
-        const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '1/9/2013';
-        const jawatan = document.getElementById('jawatanPengadu') && document.getElementById('jawatanPengadu').value ? document.getElementById('jawatanPengadu').value : 'Jurujual';
-        const gaji = document.getElementById('gajiPokokPengadu') && document.getElementById('gajiPokokPengadu').value ? document.getElementById('gajiPokokPengadu').value : '2,050.00';
+        // Ekstrak Alamat Pengadu
+        const alamatKetua = [
+            document.getElementById('alamatPengadu1')?.value,
+            document.getElementById('alamatPengadu2')?.value,
+            document.getElementById('alamatPengadu3')?.value,
+            [document.getElementById('poskodPengadu')?.value, document.getElementById('bandarPengadu')?.value].filter(Boolean).join(' '),
+            document.getElementById('negeriPengadu')?.value
+        ].filter(Boolean).join(', ') || '';
 
-        // 2. BINA REKA LETAK (LAYOUT) DOKUMEN G1 BARU (LANDSCAPE + GABUNG KOLUM + TIADA GARIS MELINTANG)
+        let tarikhMulaRaw = document.getElementById('tarikhMulaKerja')?.value;
+        const tarikhMula = tarikhMulaRaw ? new Date(tarikhMulaRaw).toLocaleDateString('ms-MY') : '';
+
+        let tarikhAkhirRaw = document.getElementById('tarikhAkhirKerja')?.value;
+        const tarikhAkhir = tarikhAkhirRaw ? new Date(tarikhAkhirRaw).toLocaleDateString('ms-MY') : '';
+
+        const jawatan = document.getElementById('jawatanPengadu')?.value || '';
+        const gajiRaw = document.getElementById('gajiPokokPengadu')?.value;
+        const gaji = gajiRaw ? Number(gajiRaw.replace(/,/g, '')).toLocaleString('en-MY', { minimumFractionDigits: 2 }) : '';
+
+        // 2. EKSTRAK BILANGAN PENGADU DIWAKILI (Bilangan - 1)
+        const bilPengaduRaw = parseInt(document.getElementById('bilanganPengadu')?.value) || 1;
+        const bilDiwakili = bilPengaduRaw > 1 ? bilPengaduRaw - 1 : 0;
+
+        // 3. EKSTRAK MAKLUMAT PIHAK KENA TUNTUT (DEFENDAN)
+        const c_nama = document.getElementById('namaDefendan')?.value?.toUpperCase() || '';
+        const c_jenisPend = document.getElementById('jenisDaftarDefendan')?.value;
+        const c_noPend = document.getElementById('noPendDefendan')?.value?.toUpperCase() || '';
+        const c_namaPemilik = document.getElementById('namaPemilikDefendan')?.value?.toUpperCase() || '';
+        const c_kpPemilik = document.getElementById('kpPemilikDefendan')?.value || '';
+
+        let teksPihakKenaTuntut = c_nama;
+        if (c_jenisPend === 'MyKad') {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+        } else if (c_jenisPend === 'SSM (Enterprise)') {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+            if (c_namaPemilik && c_kpPemilik) teksPihakKenaTuntut += ` yang dimiliki ${c_namaPemilik} ${c_kpPemilik}`;
+            else if (c_namaPemilik) teksPihakKenaTuntut += ` yang dimiliki ${c_namaPemilik}`;
+        } else {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+        }
+
+        // Ekstrak Alamat Defendan
+        const alamatDefendan = [
+            document.getElementById('alamatDefendan1')?.value,
+            document.getElementById('alamatDefendan2')?.value,
+            document.getElementById('alamatDefendan3')?.value,
+            [document.getElementById('poskodDefendan')?.value, document.getElementById('bandarDefendan')?.value].filter(Boolean).join(' '),
+            document.getElementById('negeriDefendan')?.value
+        ].filter(Boolean).join(', ').toUpperCase() || '';
+
+        // 4. BINA JADUAL TUNTUTAN DARI MEMORI & KIRA JUMLAH BESAR
+        let htmlTuntutanRows = '';
+        let jumlahKeseluruhanKetua = 0;
+
+        if (memoriTuntutanKetua && memoriTuntutanKetua.length > 0) {
+            memoriTuntutanKetua.forEach((item, index) => {
+                const jumlahNum = parseFloat(item.jumlah);
+                jumlahKeseluruhanKetua += isNaN(jumlahNum) ? 0 : jumlahNum;
+                const jumlahCantik = Number(item.jumlah).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                
+                let ket = item.keterangan;
+                if(!ket.startsWith('(')) ket = `(${ket}`;
+                if(!ket.endsWith(')')) ket = `${ket})`;
+
+                htmlTuntutanRows += `
+                    <tr>
+                        <td style="width: 70%; padding: 1.5pt 2mm; border: none; border-right: 1px solid #000000; vertical-align: top;">
+                            ${item.jenis}<br><em>${ket}</em>
+                        </td>
+                        <td style="width: 30%; padding: 1.5pt 2mm; text-align: right; border: none; vertical-align: top;">
+                            ${jumlahCantik}
+                        </td>
+                    </tr>
+                `;
+            });
+            // Baris ghaib untuk menolak sempadan (border) menegak supaya lurus ke bawah
+            htmlTuntutanRows += `
+                <tr>
+                    <td style="border: none; border-right: 1px solid #000000; height: 100%;"></td>
+                    <td style="border: none; height: 100%;"></td>
+                </tr>
+            `;
+        } else {
+            htmlTuntutanRows = `<tr><td colspan="2" style="padding: 4mm 2mm; text-align: center; border: none;">Tiada Tuntutan Direkodkan</td></tr>`;
+        }
+
+        const jumlahBesarKetua = Number(jumlahKeseluruhanKetua).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // 5. BINA REKA LETAK HTML
         const htmlG1 = `
             <style>
-                /* Setup saiz kertas cetakan ke Landscape */
                 @page { size: A4 landscape; margin: 15mm; }
-                
-                /* CSS Khas untuk paparan kertas G1 di skrin */
                 .g1-kertas {
-                    width: 297mm;
-                    min-height: 210mm;
-                    background-color: #ffffff;
-                    border: 1px solid #000000; 
-                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-                    padding: 15mm;
-                    margin: 0 auto;
-                    font-family: Arial, Helvetica, sans-serif;
-                    color: #000000;
-                    box-sizing: border-box;
-                    line-height: 1.4;
+                    width: 297mm; min-height: 210mm; background-color: #ffffff;
+                    border: 1px solid #000000; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                    padding: 15mm; margin: 0 auto; font-family: Arial, Helvetica, sans-serif;
+                    color: #000000; box-sizing: border-box; line-height: 1.4;
                 }
-                .g1-header {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 8mm;
-                    font-size: 12px;
-                    font-weight: bold;
-                }
-                .g1-title {
-                    font-size: 14px;
-                    font-weight: bold;
-                    text-align: center;
-                    text-transform: uppercase;
-                    text-decoration: underline;
-                    margin-bottom: 8mm;
-                }
-                .g1-desc {
-                    font-size: 12px;
-                    text-align: justify;
-                    margin-bottom: 6mm;
-                }
-                .g1-desc p { margin-bottom: 4mm; }
-                .g1-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 8mm;
-                }
-                .g1-table th, .g1-table td {
-                    border: 1px solid #000000;
-                    padding: 2mm;
-                    font-size: 11px;
-                    vertical-align: top;
-                }
-                .g1-table th { text-align: center; font-weight: bold; vertical-align: middle; }
-                
-                /* Class utiliti untuk membuang garisan melintang di dalam jadual tuntutan */
-                .no-border-bottom { border-bottom: none !important; }
-                .no-border-top { border-top: none !important; }
-                .no-border-y { border-top: none !important; border-bottom: none !important; }
-
+                .g1-header { display: flex; justify-content: space-between; margin-bottom: 8mm; font-size: 12px; font-weight: bold; }
+                .g1-title { font-size: 14px; font-weight: bold; text-align: center; text-transform: uppercase; text-decoration: underline; margin-bottom: 8mm; }
+                .g1-desc { font-size: 12px; text-align: justify; margin-bottom: 2mm; } 
+                .g1-table { width: 100%; border-collapse: collapse; margin-bottom: 8mm; }
+                .g1-table th, .g1-table td { border: 1px solid #000000; font-size: 11px; vertical-align: top; }
+                .g1-table th { text-align: center; font-weight: bold; vertical-align: middle; padding: 3pt 2mm; }
                 .nested-table { width: 100%; border-collapse: collapse; }
-                .nested-table td { border: none !important; padding: 1.5mm; font-size: 10px; }
+                .nested-table td { border: none !important; padding: 1.5mm; font-size: 11px; }
                 .sign-area { text-align: center; margin-top: 15mm; }
                 .sign-line { border-top: 1px solid #000000; width: 80%; margin: 0 auto 2mm auto; }
-                .g1-notes { font-size: 11px; margin-top: 5mm; }
-                .g1-notes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm 5mm; margin-top: 4mm; }
-                
+                .g1-notes { font-size: 11px; margin-top: 5mm; line-height: 1.2; } 
+                .g1-notes-grid { display: grid; grid-template-columns: 28% 48% 24%; gap: 2mm 0; margin-top: 2mm; }
                 @media print {
                     .g1-kertas { width: 100%; min-height: auto; margin: 0; padding: 0; border: none; box-shadow: none; }
                     .g1-table th, .g1-table td { border: 1px solid #000000 !important; }
-                    /* Pastikan utiliti tiada border melintang kekal semasa cetakan (print) */
-                    .g1-table td.no-border-bottom { border-bottom: none !important; }
-                    .g1-table td.no-border-top { border-top: none !important; }
-                    .g1-table td.no-border-y { border-top: none !important; border-bottom: none !important; }
                     * { color: #000000 !important; }
                 }
             </style>
@@ -3104,8 +3266,8 @@ function bukaPreviewPDF(jenisBorang) {
                 <div class="g1-title">SENARAI TUNTUTAN BERSAMA DAN PERSETUJUAN PELANTIKAN KETUA</div>
 
                 <div class="g1-desc">
-                    <p>Saya yang menandatangani di bawah ini dengan ini bersetuju dilantik mewakili 1 yang lain sebagai wakil untuk memfailkan dan menguruskan tuntutan terhadap Pihak Kena Tuntut MR HAPPY SDN. BHD. 201101018067 (946203-W) yang beralamat di NO. 24, JALAN ROTAN CUCUR</p>
-                    <p>Tuntutan dan butir-butir saya / kami adalah seperti berikut :</p>
+                    <p style="margin-bottom: 4mm;">Saya yang menandatangani di bawah ini dengan ini bersetuju dilantik mewakili <strong>${bilDiwakili} yang lain</strong> sebagai wakil untuk memfailkan dan menguruskan tuntutan terhadap Defendan <strong>${teksPihakKenaTuntut}</strong> yang beralamat di <strong>${alamatDefendan}</strong>.</p>
+                    <p style="margin-bottom: 0;">Tuntutan dan butir-butir saya / kami adalah seperti berikut :</p>
                 </div>
 
                 <table class="g1-table">
@@ -3113,37 +3275,42 @@ function bukaPreviewPDF(jenisBorang) {
                         <tr>
                             <th rowspan="2" style="width: 4%;">BIL</th>
                             <th rowspan="2" style="width: 35%;">BUTIRAN PENGADU</th>
-                            <!-- Colspan ditukar dari 3 kepada 2 -->
                             <th colspan="2" style="width: 34%;">BUTIRAN TUNTUTAN</th>
                             <th rowspan="2" style="width: 10%;">JUMLAH BESAR<br>(RM)</th>
                             <th rowspan="2" style="width: 17%;">TANDATANGAN PENGADU</th>
                         </tr>
                         <tr>
-                            <!-- Tajuk telah digabungkan -->
-                            <th style="width: 24%;">PERKARA / TEMPOH (Keterangan Tuntutan)</th>
+                            <th style="width: 24%;">PERKARA / TEMPOH<br><span style="font-weight: normal; font-style: italic;">(Keterangan Tuntutan)</span></th>
                             <th style="width: 10%;">AMAUN (RM)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td rowspan="3" style="text-align: center;">1</td>
-                            <td rowspan="3" style="padding: 0;">
+                            <td style="text-align: center; padding: 2mm;">1</td>
+                            <td style="padding: 0;">
                                 <table class="nested-table">
-                                    <tr><td style="width: 45%;">Nama (Huruf Besar)</td><td>: <span style="text-transform: uppercase;">${namaKetua}</span></td></tr>
-                                    <tr><td>No. Kad Pengenalan</td><td>: ${noKpKetua}</td></tr>
-                                    <tr><td>Alamat</td><td>: </td></tr>
-                                    <tr><td>No. Telefon</td><td>: ${telKetua}</td></tr>
-                                    <tr><td>Tarikh Mula Kerja</td><td>: ${tarikhMula}</td></tr>
-                                    <tr><td>Tarikh Akhir Kerja</td><td>: 6/30/2026</td></tr>
-                                    <tr><td>Jawatan Terakhir</td><td>: <span style="text-transform: capitalize;">${jawatan}</span></td></tr>
-                                    <tr><td>Kadar Gaji</td><td>: RM${gaji} sebulan</td></tr>
+                                    <tr><td style="width: 40%; font-weight: bold;">Nama (Huruf Besar)</td><td style="width: 2%;">:</td><td style="text-transform: uppercase;">${namaKetua}</td></tr>
+                                    <tr><td style="font-weight: bold;">No. Kad Pengenalan</td><td>:</td><td>${noKpKetua}</td></tr>
+                                    <!-- Jarak padding-bottom: 12mm ditambah di sini untuk Alamat -->
+                                    <tr><td style="font-weight: bold; vertical-align: top; padding-bottom: 12mm;">Alamat</td><td style="vertical-align: top; padding-bottom: 12mm;">:</td><td style="text-transform: capitalize; padding-bottom: 12mm;">${alamatKetua}</td></tr>
+                                    <tr><td style="font-weight: bold;">No. Telefon</td><td>:</td><td>${telKetua}</td></tr>
+                                    <tr><td style="font-weight: bold;">Tarikh Mula Kerja</td><td>:</td><td>${tarikhMula}</td></tr>
+                                    <tr><td style="font-weight: bold;">Tarikh Akhir Kerja</td><td>:</td><td>${tarikhAkhir}</td></tr>
+                                    <tr><td style="font-weight: bold;">Jawatan Terakhir</td><td>:</td><td style="text-transform: capitalize;">${jawatan}</td></tr>
+                                    <tr><td style="font-weight: bold;">Kadar Gaji</td><td>:</td><td>RM${gaji} sebulan</td></tr>
                                 </table>
                             </td>
-                            <!-- Utiliti 'no-border-bottom' ditambah untuk hilangkan garis -->
-                            <td class="no-border-bottom">Faedah Penamatan</td>
-                            <td class="no-border-bottom" style="text-align: right;">21,280.82</td>
-                            <td rowspan="3"></td>
-                            <td rowspan="3" style="position: relative;">
+                            
+                            <td colspan="2" style="padding: 0; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse; height: 100%;">
+                                    ${htmlTuntutanRows}
+                                </table>
+                            </td>
+                            
+                            <td style="text-align: center; vertical-align: middle; font-weight: bold; padding: 2mm;">
+                                ${jumlahBesarKetua}
+                            </td>
+                            <td style="position: relative; padding: 2mm;">
                                 <div style="font-size: 10px; text-align: justify; margin-bottom: 25mm;">Saya dengan ini mengaku dan bersumpah bahawa segala maklumat yang diberikan ini adalah benar belaka.</div>
                                 <div class="sign-area">
                                     <div class="sign-line"></div>
@@ -3151,54 +3318,202 @@ function bukaPreviewPDF(jenisBorang) {
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <!-- Utiliti 'no-border-y' membuang garis atas dan bawah -->
-                            <td class="no-border-y">Gaji Ganti Notis</td>
-                            <td class="no-border-y" style="text-align: right;">2,628.01</td>
-                        </tr>
-                        <tr>
-                            <!-- Utiliti 'no-border-top' membuang garis atas -->
-                            <td class="no-border-top">Bayaran Baki Cuti Tahunan</td>
-                            <td class="no-border-top" style="text-align: right;">826.92</td>
-                        </tr>
                     </tbody>
                 </table>
 
                 <div class="g1-notes">
-                    <strong>Nota:<br>Jenis-Jenis Tuntutan</strong>
+                    <strong>Nota:</strong><br>
+                    <strong>Jenis-Jenis Tuntutan</strong>
                     <div class="g1-notes-grid">
                         <div>a. Baki Gaji/Baki Gaji Minimum</div>
                         <div>b. Gaji Ganti Notis</div>
                         <div>c. Kerja Lebih Masa</div>
                         <div>d. Faedah Penamatan</div>
-                        <div style="grid-column: span 2;">e. Cuti (*Tahunan/Sakit/Bersalin/Paterniti/Kelepasan Am/Cuti Rehat)</div>
+                        <div>e. Cuti (*Tahunan/Sakit/Bersalin/Paterniti/Kelepasan Am/Cuti Rehat)</div>
                         <div>f. Lain-lain (Sila nyatakan)</div>
                     </div>
                 </div>
             </div>
         `;
 
-        // 3. SETKAN SUIS MOD CETAK 
+        // 6. SETKAN SUIS MOD CETAK 
         modCetakSemasa = jenisBorang;
         
-        // 4. MASUKKAN HTML KE DALAM ID 'previewContent' & 'printArea'
+        // 7. MASUKKAN HTML KE DALAM ID
         const kawasanPreview = document.getElementById('previewContent');
         if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
 
         const kawasanCetak = document.getElementById('printArea');
         if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
 
-        // 5. BUKA SKRIN PREVIEW MENGGUNAKAN ID MODAL
+        // 8. BUKA SKRIN PREVIEW
         document.getElementById('modalPreview').style.display = 'flex';
         
-        // 6. KAWALAN MENU CETAK DALAM DROPDOWN
+        // 9. KAWALAN MENU CETAK DALAM DROPDOWN
         document.getElementById('menuCetakAkuan').style.display = 'none';
         document.getElementById('menuCetakKenyataan').style.display = 'none';
         document.getElementById('menuDaftar').style.display = 'none';
-        document.getElementById('menuCetakG1').style.display = 'flex'; // <--- TAMPILKAN CETAK G1
-    } 
-    else if (jenisBorang === 'G1 Borang') {
-        alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
+        document.getElementById('menuCetakG1').style.display = 'flex';
+
+    } else if (jenisBorang === 'G1 Borang') {
+        
+        console.log("Menjana maklumat borang kosong untuk G1 Borang...");
+
+        // 1. EKSTRAK MAKLUMAT KETUA PENGADU UNTUK TEKS LANTIKAN
+        const namaKetua = document.getElementById('namaPengadu')?.value?.toUpperCase() || '';
+        const noKpKetua = document.getElementById('noPendPengadu')?.value || '';
+
+        // 2. EKSTRAK MAKLUMAT PIHAK KENA TUNTUT (DEFENDAN)
+        const c_nama = document.getElementById('namaDefendan')?.value?.toUpperCase() || '';
+        const c_jenisPend = document.getElementById('jenisDaftarDefendan')?.value;
+        const c_noPend = document.getElementById('noPendDefendan')?.value?.toUpperCase() || '';
+        const c_namaPemilik = document.getElementById('namaPemilikDefendan')?.value?.toUpperCase() || '';
+        const c_kpPemilik = document.getElementById('kpPemilikDefendan')?.value || '';
+
+        let teksPihakKenaTuntut = c_nama;
+        if (c_jenisPend === 'MyKad') {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+        } else if (c_jenisPend === 'SSM (Enterprise)') {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+            if (c_namaPemilik && c_kpPemilik) teksPihakKenaTuntut += ` yang dimiliki ${c_namaPemilik} ${c_kpPemilik}`;
+            else if (c_namaPemilik) teksPihakKenaTuntut += ` yang dimiliki ${c_namaPemilik}`;
+        } else {
+            if (c_noPend) teksPihakKenaTuntut += ` ${c_noPend}`;
+        }
+
+        // Ekstrak Alamat Defendan
+        const alamatDefendan = [
+            document.getElementById('alamatDefendan1')?.value,
+            document.getElementById('alamatDefendan2')?.value,
+            document.getElementById('alamatDefendan3')?.value,
+            [document.getElementById('poskodDefendan')?.value, document.getElementById('bandarDefendan')?.value].filter(Boolean).join(' '),
+            document.getElementById('negeriDefendan')?.value
+        ].filter(Boolean).join(', ').toUpperCase() || '';
+
+        // 3. BINA REKA LETAK HTML
+        const htmlG1 = `
+            <style>
+                @page { size: A4 landscape; margin: 15mm; }
+                .g1-kertas {
+                    width: 297mm; min-height: 210mm; background-color: #ffffff;
+                    border: 1px solid #000000; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                    padding: 15mm; margin: 0 auto; font-family: Arial, Helvetica, sans-serif;
+                    color: #000000; box-sizing: border-box; line-height: 1.4;
+                }
+                .g1-header { display: flex; justify-content: space-between; margin-bottom: 8mm; font-size: 12px; font-weight: bold; }
+                .g1-title { font-size: 14px; font-weight: bold; text-align: center; text-transform: uppercase; text-decoration: underline; margin-bottom: 8mm; }
+                .g1-desc { font-size: 12px; text-align: justify; margin-bottom: 2mm; } 
+                .g1-table { width: 100%; border-collapse: collapse; margin-bottom: 8mm; }
+                .g1-table th, .g1-table td { border: 1px solid #000000; font-size: 11px; vertical-align: top; }
+                .g1-table th { text-align: center; font-weight: bold; vertical-align: middle; padding: 3pt 2mm; }
+                .nested-table { width: 100%; border-collapse: collapse; }
+                .nested-table td { border: none !important; padding: 2mm 1.5mm; font-size: 11px; } 
+                .sign-area { text-align: center; margin-top: 15mm; }
+                .sign-line { border-top: 1px solid #000000; width: 80%; margin: 0 auto 2mm auto; }
+                .g1-notes { font-size: 11px; margin-top: 5mm; line-height: 1.2; } 
+                .g1-notes-grid { display: grid; grid-template-columns: 28% 48% 24%; gap: 2mm 0; margin-top: 2mm; }
+                @media print {
+                    .g1-kertas { width: 100%; min-height: auto; margin: 0; padding: 0; border: none; box-shadow: none; }
+                    .g1-table th, .g1-table td { border: 1px solid #000000 !important; }
+                    * { color: #000000 !important; }
+                }
+            </style>
+
+            <div class="g1-kertas">
+                <header class="g1-header">
+                    <div style="flex: 1;"></div>
+                    <div style="flex: 2; text-align: center;">PEJABAT TENAGA KERJA KLUANG</div>
+                    <div style="flex: 1; text-align: right;">BORANG G1</div>
+                </header>
+
+                <div class="g1-title">SENARAI TUNTUTAN BERSAMA DAN PERSETUJUAN PELANTIKAN KETUA</div>
+
+                <div class="g1-desc">
+                    <p style="margin-bottom: 4mm;">Saya yang menandatangani di bawah ini dengan ini melantik <strong>${namaKetua}</strong> (No. MyKad: <strong>${noKpKetua}</strong>) sebagai wakil saya untuk memfailkan dan menguruskan tuntutan saya terhadap Defendan <strong>${teksPihakKenaTuntut}</strong> yang beralamat di <strong>${alamatDefendan}</strong>.</p>
+                    <p style="margin-bottom: 0;">Tuntutan dan butir-butir saya / kami adalah seperti berikut :</p>
+                </div>
+
+                <table class="g1-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 4%;">BIL</th>
+                            <th rowspan="2" style="width: 35%;">BUTIRAN PENGADU</th>
+                            <th colspan="2" style="width: 34%;">BUTIRAN TUNTUTAN</th>
+                            <th rowspan="2" style="width: 10%;">JUMLAH BESAR<br>(RM)</th>
+                            <th rowspan="2" style="width: 17%;">TANDATANGAN PENGADU</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 24%;">PERKARA / TEMPOH<br><span style="font-weight: normal; font-style: italic;">(Keterangan Tuntutan)</span></th>
+                            <th style="width: 10%;">AMAUN (RM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center; padding: 2mm; height: 75mm;"></td>
+                            <td style="padding: 0; vertical-align: top;">
+                                <table class="nested-table">
+                                    <tr><td style="width: 40%; font-weight: bold;">Nama (Huruf Besar)</td><td style="width: 2%;">:</td><td></td></tr>
+                                    <tr><td style="font-weight: bold;">No. Kad Pengenalan</td><td>:</td><td></td></tr>
+                                    <!-- Jarak padding-bottom: 12mm ditambah di sini untuk Alamat -->
+                                    <tr><td style="font-weight: bold; vertical-align: top; padding-bottom: 12mm;">Alamat</td><td style="vertical-align: top; padding-bottom: 12mm;">:</td><td style="padding-bottom: 12mm;"></td></tr>
+                                    <tr><td style="font-weight: bold;">No. Telefon</td><td>:</td><td></td></tr>
+                                    <tr><td style="font-weight: bold;">Tarikh Mula Kerja</td><td>:</td><td></td></tr>
+                                    <tr><td style="font-weight: bold;">Tarikh Akhir Kerja</td><td>:</td><td></td></tr>
+                                    <tr><td style="font-weight: bold;">Jawatan Terakhir</td><td>:</td><td></td></tr>
+                                    <tr><td style="font-weight: bold;">Kadar Gaji</td><td>:</td><td></td></tr>
+                                </table>
+                            </td>
+                            
+                            <!-- 2 Lajur Kosong untuk bahagian tuntutan -->
+                            <td style="border-right: 1px solid #000000; vertical-align: top; padding: 2mm;"></td>
+                            <td style="vertical-align: top; padding: 2mm;"></td>
+                            
+                            <td style="text-align: center; vertical-align: middle; font-weight: bold; padding: 2mm;">
+                            </td>
+                            <td style="position: relative; padding: 2mm; vertical-align: top;">
+                                <div style="font-size: 10px; text-align: justify; margin-bottom: 25mm;">Saya dengan ini mengaku dan bersumpah bahawa segala maklumat yang diberikan ini adalah benar belaka.</div>
+                                <div class="sign-area">
+                                    <div class="sign-line"></div>
+                                    <div style="font-size: 11px;">Tandatangan</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="g1-notes">
+                    <strong>Nota:</strong><br>
+                    <strong>Jenis-Jenis Tuntutan</strong>
+                    <div class="g1-notes-grid">
+                        <div>a. Baki Gaji/Baki Gaji Minimum</div>
+                        <div>b. Gaji Ganti Notis</div>
+                        <div>c. Kerja Lebih Masa</div>
+                        <div>d. Faedah Penamatan</div>
+                        <div>e. Cuti (*Tahunan/Sakit/Bersalin/Paterniti/Kelepasan Am/Cuti Rehat)</div>
+                        <div>f. Lain-lain (Sila nyatakan)</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 4. SETKAN SUIS MOD CETAK 
+        modCetakSemasa = jenisBorang;
+        
+        // 5. MASUKKAN HTML KE DALAM ID
+        const kawasanPreview = document.getElementById('previewContent');
+        if (kawasanPreview) kawasanPreview.innerHTML = htmlG1;
+
+        const kawasanCetak = document.getElementById('printArea');
+        if (kawasanCetak) kawasanCetak.innerHTML = htmlG1;
+
+        // 6. BUKA SKRIN PREVIEW
+        document.getElementById('modalPreview').style.display = 'flex';
+        
+        // 7. KAWALAN MENU CETAK DALAM DROPDOWN
+        document.getElementById('menuCetakAkuan').style.display = 'none';
+        document.getElementById('menuCetakKenyataan').style.display = 'none';
+        document.getElementById('menuDaftar').style.display = 'none';
+        document.getElementById('menuCetakG1').style.display = 'flex';
     }
 }
 
@@ -3278,25 +3593,110 @@ function bukaPreview() {
             document.getElementById('actionMenu').classList.remove('show');
             daftarKesSistem(); // Jalankan pendaftaran dan terus ke senarai kes (Alert "Tahniah" ada dalam fungsi ini)
         }
+// --- FUNGSI SIMPAN DRAF ---
+function simpanDrafSistem() {
+    // 1. Ambil no. kes dan pastikan ia tiada tag HTML (buang tag jika ada)
+    let noKesAsal = document.getElementById('noKes').value;
+    let noKesBersih = noKesAsal.split('<br>')[0].trim();
 
-        // --- FUNGSI batalPemfailan TELAH DITAMBAH DI SINI ---
+    const isMajikan = document.getElementById('majikan').checked;
+    
+    let namaPengaduRaw = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
+    let namaDefendanRaw = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
+    let namaPengaduFinal, namaDefendanFinal;
+
+    if (isMajikan) {
+        namaPengaduFinal = namaDefendanRaw;
+        const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+        if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaPengaduFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
+        namaDefendanFinal = namaPengaduRaw;
+    } else {
+        namaPengaduFinal = namaPengaduRaw;
+        namaDefendanFinal = namaDefendanRaw;
+        const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+        if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaDefendanFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
+    }
+
+    const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+    const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
+    const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
+
+    // 2. Bina No. Kes beserta Label Draf HTML
+    const tagDraf = "<br><span style='background-color: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700;'>DRAF</span>";
+    const noKesDenganTag = noKesBersih + tagDraf;
+
+    // 3. SEMAKAN: Cari jika noKesBersih sudah wujud dalam senarai (Elak Duplicate)
+    let indeksSediaAda = memoriSenaraiKes.findIndex(kes => kes.noKes.startsWith(noKesBersih));
+
+    if (indeksSediaAda !== -1) {
+        // Jika sudah ada, UPDATE/KEMASKINI data
+        memoriSenaraiKes[indeksSediaAda] = {
+            noKes: noKesDenganTag,
+            namaPengadu: namaPengaduFinal,
+            namaDefendan: namaDefendanFinal,
+            jenisAduan: jenisAduan,
+            tarikh: tarikhHariIni
+        };
+    } else {
+        // Jika tiada, TAMBAH sebagai rekod baharu
+        memoriSenaraiKes.unshift({ 
+            noKes: noKesDenganTag, 
+            namaPengadu: namaPengaduFinal, 
+            namaDefendan: namaDefendanFinal, 
+            jenisAduan: jenisAduan, 
+            tarikh: tarikhHariIni 
+        });
+    }
+    
+    alert("Maklumat draf telah berjaya disimpan. Anda boleh menyambung pendaftaran ini kemudian."); 
+    
+    tukarView('senarai');
+    pergiKeTabBorang('tab1'); 
+}
+// --- FUNGSI batalPemfailan TELAH DIKEMASKINI ---
         function batalPemfailan() {
             if (confirm("Adakah anda pasti mahu membatalkan pemfailan kes ini? Semua maklumat akan ditetapkan semula.")) {
                 
-                // Kosongkan memori sementara
+                // 1. Kosongkan memori jadual tuntutan
                 memoriTuntutan = [];
                 memoriTuntutanKetua = [];
                 renderJadualTuntutan();
                 
-                // Tutup preview sekiranya sedang dibuka
+                // 2. Kosongkan semua ruangan Input, Textarea, dan Select di dalam borang pendaftaran
+                const bekasBorang = document.getElementById('viewPendaftaranKes');
+                if (bekasBorang) {
+                    // Kosongkan semua input teks, tarikh, nombor, masa dan textarea
+                    const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
+                    inputs.forEach(input => input.value = '');
+                    
+                    // Reset semua dropdown (select) kembali ke pilihan pertama (-Sila Pilih-)
+                    const selects = bekasBorang.querySelectorAll('select');
+                    selects.forEach(select => select.selectedIndex = 0);
+                    
+                    // Buang tanda (tick) pada checkbox
+                    const checkboxes = bekasBorang.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach(cb => {
+                        // Jangan untick checkbox "Majikan adalah pengadu" jika anda mahu ia kekal default, 
+                        // tetapi untuk reset bersih, kita untick semua.
+                        cb.checked = false; 
+                    });
+                }
+
+                // 3. Kembalikan borang kepada keadaan lalai (default) melalui fungsi sedia ada
+                tukarPeranan(); // Memastikan susun atur pengadu/defendan kembali normal
+                kawalJenisDaftarPengadu();
+                kawalJenisDaftarDefendan();
+                
+                // 4. Tutup preview sekiranya sedang dibuka
                 document.getElementById('modalPreview').style.display = 'none';
                 const actionMenu = document.getElementById('actionMenu');
                 if(actionMenu) actionMenu.classList.remove('show');
                 
                 alert("Pemfailan kes telah berjaya dibatalkan.");
                 
-                // Kembali ke senarai utama
+                // 5. Kembali ke senarai utama dan pastikan Tab Borang kembali ke Tab 1
                 tukarView('senarai');
+                pergiKeTabBorang('tab1');
             }
         }
 // ==========================================
@@ -3323,6 +3723,17 @@ function bukaPreview() {
             }
             
             semakKelayakanTuntutan(); // Semak status butang setiap kali tukar jenis aduan
+        }
+
+        function toggleAduan() {
+            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+            const ruanganBilangan = document.getElementById('ruanganBilanganPengadu');
+            const labelNama = document.getElementById('labelNamaPengadu');
+            if (aduanBerkumpulan) { ruanganBilangan.style.display = 'grid'; labelNama.innerHTML = 'Ketua Pengadu <span>*</span>'; }
+            else { ruanganBilangan.style.display = 'none'; labelNama.innerHTML = 'Nama <span>*</span>'; }
+
+            kawalJenisAduanTuntutan();
+            kemaskiniDropdownPendaftaran(); // <--- TAMBAH BARIS INI
         }
 
 // Fungsi 2: Membuka kunci butang "+ Tambah" jika syarat dipenuhi (TANPA Teks Amaran)
