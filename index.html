@@ -490,7 +490,7 @@
             </div>
         </div>
 
-        <!-- Action Dropdown Container -->
+<!-- Action Dropdown Container -->
         <div class="action-dropdown-container" style="position: absolute; top: 25px; right: 35px; z-index: 2010;">
             <button class="icon-btn" onclick="document.getElementById('actionMenu').classList.toggle('show')" title="Tindakan">
                 ⋮
@@ -499,6 +499,10 @@
                 <a href="#" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
                 <a href="#" id="menuCetakAkuan" onclick="cetakKhusus('akuan')">🖨️ Cetak Akuan Pemfailan</a>
                 <a href="#" id="menuCetakKenyataan" onclick="cetakKhusus('kenyataan')">🖨️ Cetak Kenyataan Tuntutan</a>
+                
+                <!-- TAMBAH BUTANG CETAK G1 DI SINI -->
+                <a href="#" id="menuCetakG1" onclick="document.getElementById('actionMenu').classList.remove('show'); window.print();" style="display: none;">🖨️ Cetak G1</a>
+                
                 <a href="#" id="menuDaftar" onclick="daftarDariPreview()" style="display: none;">🚀 Daftar</a>
                 <a href="#" onclick="document.getElementById('modalPreview').style.display='none'; batalPemfailan();" style="color: var(--danger);">🗑️ Batal Pemfailan</a>
             </div>
@@ -3187,10 +3191,11 @@ function bukaPreviewPDF(jenisBorang) {
         // 5. BUKA SKRIN PREVIEW MENGGUNAKAN ID MODAL
         document.getElementById('modalPreview').style.display = 'flex';
         
-        // 6. SEMBUNYIKAN MENU CETAK LAIN DALAM DROPDOWN
+        // 6. KAWALAN MENU CETAK DALAM DROPDOWN
         document.getElementById('menuCetakAkuan').style.display = 'none';
         document.getElementById('menuCetakKenyataan').style.display = 'none';
         document.getElementById('menuDaftar').style.display = 'none';
+        document.getElementById('menuCetakG1').style.display = 'flex'; // <--- TAMPILKAN CETAK G1
     } 
     else if (jenisBorang === 'G1 Borang') {
         alert("Fungsi reka letak untuk G1 Borang akan dibina kemudian.");
@@ -3223,6 +3228,7 @@ function bukaPreview() {
             // Susun atur menu dropdown
             document.getElementById('menuCetakAkuan').style.display = 'flex';
             document.getElementById('menuCetakKenyataan').style.display = 'flex';
+            document.getElementById('menuCetakG1').style.display = 'none'; // <--- SEMBUNYIKAN CETAK G1
             document.getElementById('menuDaftar').style.display = 'none';
 
             document.getElementById('modalPreview').style.display = 'flex';
