@@ -495,8 +495,8 @@
             <button class="icon-btn" onclick="document.getElementById('actionMenu').classList.toggle('show')" title="Tindakan">
                 ⋮
             </button>
-            <div id="actionMenu" class="dropdown-menu">
-                <a href="#" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
+<div id="actionMenu" class="dropdown-menu">
+                <a href="#" id="menuKemaskini" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
                 <a href="#" id="menuCetakAkuan" onclick="cetakKhusus('akuan')">🖨️ Cetak Akuan Pemfailan</a>
                 <a href="#" id="menuCetakKenyataan" onclick="cetakKhusus('kenyataan')">🖨️ Cetak Kenyataan Tuntutan</a>
                 
@@ -504,7 +504,7 @@
                 <a href="#" id="menuCetakG1" onclick="document.getElementById('actionMenu').classList.remove('show'); window.print();" style="display: none;">🖨️ Cetak G1</a>
                 
                 <a href="#" id="menuDaftar" onclick="daftarDariPreview()" style="display: none;">🚀 Daftar</a>
-                <a href="#" onclick="document.getElementById('modalPreview').style.display='none'; batalPemfailan();" style="color: var(--danger);">🗑️ Batal Pemfailan</a>
+                <a href="#" id="menuBatal" onclick="document.getElementById('modalPreview').style.display='none'; batalPemfailan();" style="color: var(--danger);">🗑️ Batal Pemfailan</a>
             </div>
         </div>
     </div> <!-- END OF MODAL PREVIEW -->
@@ -618,7 +618,16 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-
+<!-- BAHAGIAN BARU: Kenyataan Pengadu -->
+<div class="card full-width">
+    <div class="card-header">Kenyataan Pengadu & Kronologi Kes</div>
+    <div class="card-body">
+        <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
+            <!-- Teks kenyataan akan dijana oleh JS di sini -->
+            -
+        </div>
+    </div>
+</div>
             <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (3 Grid) -->
             <div class="card full-width">
                 <div class="card-header">Maklumat Pengadu</div>
@@ -667,7 +676,7 @@ Portal rasmi : jtksm.mohr.gov.my
                     <div class="sebutan-grid-labels">
                         <div class="info-label" style="margin:0;">Tarikh Sebutan</div>
                         <div class="info-label" style="margin:0;">Masa Sebutan</div>
-                        <div class="info-label" style="margin:0;">Tempat Sebutan <span style="font-size: 0.85em; font-weight: normal; font-style: italic;">(Pegawai Pendengar: <span id="mk_tempat_pegawai">Mohamad Hafiz bin Abu Bakar</span>)</span></div>
+                        <div class="info-label" style="margin:0;">Tempat Sebutan</div>
                         <div></div> <!-- Spacer untuk butang -->
                     </div>
                     
@@ -681,7 +690,7 @@ Portal rasmi : jtksm.mohr.gov.my
                             <input type="time" id="mk_masa_sebutan" onchange="semakButangSebutan()" style="margin:0;">
                         </div>
                         <div>
-                            <label class="mobile-label">Tempat Sebutan <span style="font-weight:normal; font-style:italic;">(Mohamad Hafiz bin Abu Bakar)</span></label>
+                            <label class="mobile-label">Tempat Sebutan</label>
                             <input type="text" id="mk_tempat_sebutan" value="Pejabat Tenaga Kerja Kluang" style="margin:0;">
                         </div>
                         <div>
@@ -711,7 +720,8 @@ Portal rasmi : jtksm.mohr.gov.my
                     <!-- Dibungkus dan disembunyikan (display:none) secara lalai -->
                     <div id="ruanganNoKes" style="display: none; align-items: center; gap: 8px;">
                         <label style="font-weight: 700; color: var(--text-muted); font-size: 0.95em; margin: 0;">No. Kes:</label>
-                        <input type="text" id="noKes" value="KBR/10103/2026/0112" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
+                        <!-- Cari baris ini dan ubah nilai (value) di dalamnya -->
+<input type="text" id="noKes" value="KBR/10103/2026/0001" style="font-weight: 700; color: var(--primary-blue); font-size: 1.05em; background-color: transparent; border: none; border-radius: 0; width: 220px; text-align: center; padding: 4px; outline: none; margin: 0;">
                         <div class="tooltip-container">
                             <span style="font-size: 1.2em; color: var(--primary-blue);">ℹ️</span>
                             <div class="tooltip-text">
@@ -1403,8 +1413,8 @@ Portal rasmi : jtksm.mohr.gov.my
                 };
             }
 
-            memoriSenaraiKes.push({
-                noKes: "KBR/10103/2026/0112",
+                memoriSenaraiKes.push({
+                noKes: "KBR/10103/2026/0001", // <--- UBAH DI SINI
                 namaPengadu: "Mohamad Hafiz Bin Abu Bakar",
                 namaDefendan: "Abc Teknologi Enterprise<br><span style='font-size: 0.85em; font-weight: normal;'>Pemilik: Ali Bin Abu Chik</span>",
                 jenisAduan: "Individu",
@@ -1413,7 +1423,7 @@ Portal rasmi : jtksm.mohr.gov.my
             renderSenaraiTugas();
         });
 
-        function bukaMaklumatKes(index) {
+function bukaMaklumatKes(index) {
             indexKesSemasa = index;
             const kes = memoriSenaraiKes[index];
             const isMajikan = kes.jenisAduan === 'Majikan';
@@ -1424,44 +1434,57 @@ Portal rasmi : jtksm.mohr.gov.my
             document.getElementById('mk_tarikh_sah').innerText = kes.tarikh; 
             document.getElementById('mk_tarikh_tugas').innerText = kes.tarikh; 
             
+            // =====================================================================
+            // PEMBETULAN KRITIKAL: Tarik data dari MEMORI, bukan dari Borang Kosong
+            // =====================================================================
+            let dataSistem = {};
+            if (kes.dataBorang && kes.dataBorang.inputs) {
+                dataSistem = kes.dataBorang.inputs;
+            } else {
+                // Fallback jika kes Dummy (tiada dataBorang)
+                document.querySelectorAll('#viewPendaftaranKes input, #viewPendaftaranKes select, #viewPendaftaranKes textarea').forEach(el => {
+                    if (el.id) dataSistem[el.id] = el.value;
+                });
+            }
+
             const p_nama = kes.namaPengadu.replace(/<br>.*$/g, '');
-            const p_id = document.getElementById('noPendPengadu').value.trim() || "-";
+            const p_id = dataSistem['noPendPengadu'] || "-";
             
-            const p_a1 = document.getElementById('alamatPengadu1').value.trim();
-            const p_a2 = document.getElementById('alamatPengadu2').value.trim();
-            const p_a3 = document.getElementById('alamatPengadu3').value.trim();
-            const p_pos = document.getElementById('poskodPengadu').value.trim();
-            const p_bdr = document.getElementById('bandarPengadu').value.trim();
-            const p_ngr = document.getElementById('negeriPengadu').value.trim();
+            const p_a1 = dataSistem['alamatPengadu1'] || "";
+            const p_a2 = dataSistem['alamatPengadu2'] || "";
+            const p_a3 = dataSistem['alamatPengadu3'] || "";
+            const p_pos = dataSistem['poskodPengadu'] || "";
+            const p_bdr = dataSistem['bandarPengadu'] || "";
+            const p_ngr = dataSistem['negeriPengadu'] || "";
             let p_alamatArr = [p_a1, p_a2, p_a3].filter(Boolean);
             let p_posBdr = [p_pos, p_bdr].filter(Boolean).join(' ');
             if(p_posBdr) p_alamatArr.push(p_posBdr);
             if(p_ngr) p_alamatArr.push(p_ngr);
             const p_alamat = p_alamatArr.length > 0 ? p_alamatArr.join('<br>') : "-";
 
-            const p_tel = document.getElementById('telPengadu').value.trim() || "-";
-            const p_hp = document.getElementById('hpPengadu').value.trim() || "-";
-            const p_emel = document.getElementById('emelPengadu').value.trim() || "-";
-            const p_bil_pengadu = document.getElementById('bilanganPengadu').value ? document.getElementById('bilanganPengadu').value + " Orang" : "-";
+            const p_tel = dataSistem['telPengadu'] || "-";
+            const p_hp = dataSistem['hpPengadu'] || "-";
+            const p_emel = dataSistem['emelPengadu'] || "-";
+            const p_bil_pengadu = dataSistem['bilanganPengadu'] ? dataSistem['bilanganPengadu'] + " Orang" : "-";
 
             const d_nama = kes.namaDefendan;
-            const d_id = document.getElementById('noPendDefendan').value.trim() || "-";
+            const d_id = dataSistem['noPendDefendan'] || "-";
             
-            const d_a1 = document.getElementById('alamatDefendan1').value.trim();
-            const d_a2 = document.getElementById('alamatDefendan2').value.trim();
-            const d_a3 = document.getElementById('alamatDefendan3').value.trim();
-            const d_pos = document.getElementById('poskodDefendan').value.trim();
-            const d_bdr = document.getElementById('bandarDefendan').value.trim();
-            const d_ngr = document.getElementById('negeriDefendan').value.trim();
+            const d_a1 = dataSistem['alamatDefendan1'] || "";
+            const d_a2 = dataSistem['alamatDefendan2'] || "";
+            const d_a3 = dataSistem['alamatDefendan3'] || "";
+            const d_pos = dataSistem['poskodDefendan'] || "";
+            const d_bdr = dataSistem['bandarDefendan'] || "";
+            const d_ngr = dataSistem['negeriDefendan'] || "";
             let d_alamatArr = [d_a1, d_a2, d_a3].filter(Boolean);
             let d_posBdr = [d_pos, d_bdr].filter(Boolean).join(' ');
             if(d_posBdr) d_alamatArr.push(d_posBdr);
             if(d_ngr) d_alamatArr.push(d_ngr);
             const d_alamat = d_alamatArr.length > 0 ? d_alamatArr.join('<br>') : "-";
 
-            const d_tel = document.getElementById('telDefendan').value.trim() || "-";
-            const d_hp = document.getElementById('hpDefendan').value.trim() || "-";
-            const d_emel = document.getElementById('emelDefendan').value.trim() || "-";
+            const d_tel = dataSistem['telDefendan'] || "-";
+            const d_hp = dataSistem['hpDefendan'] || "-";
+            const d_emel = dataSistem['emelDefendan'] || "-";
 
             const regexMyKad = /^\d{6}-?\d{2}-?\d{4}$/;
             const d_isMyKad = regexMyKad.test(d_id);
@@ -1469,31 +1492,35 @@ Portal rasmi : jtksm.mohr.gov.my
             const p_isMyKad = /^\d{6}-?\d{2}-?\d{4}$/.test(p_id);
             const lbl_p_id = p_isMyKad ? 'No. MyKad' : 'No. Passport';
 
+            // Tarik Kenyataan dari Memori
+            let kenyataanPenuh = "-";
+            if (kes.dataBorang && kes.dataBorang.inputs) {
+                const kenyataanAwal = kes.dataBorang.inputs['kenyataanAwal'] || "";
+                const kronologiKes = kes.dataBorang.inputs['kronologiKes'] || "";
+                if (kenyataanAwal || kronologiKes) {
+                    kenyataanPenuh = (kenyataanAwal + "\n\n" + kronologiKes).trim();
+                }
+            }
+            document.getElementById('mk_kenyataan_pengadu').innerText = kenyataanPenuh || "-";
+
             let tempatKerjaPaparan = '';
-            const alamatBerbeza = document.getElementById('alamatBerbeza').checked;
+            const alamatBerbeza = dataSistem['alamatBerbeza'] === true || dataSistem['alamatBerbeza'] === "true";
             
             if (!alamatBerbeza) {
-                const syarikatNama = document.getElementById('namaDefendan').value.trim();
-                const a1 = document.getElementById('alamatDefendan1').value.trim();
-                const a2 = document.getElementById('alamatDefendan2').value.trim();
-                const a3 = document.getElementById('alamatDefendan3').value.trim();
-                const pos = document.getElementById('poskodDefendan').value.trim();
-                const bdr = document.getElementById('bandarDefendan').value.trim();
-                const ngr = document.getElementById('negeriDefendan').value.trim();
-                
-                let alamatArr = [syarikatNama, a1, a2, a3].filter(Boolean);
-                let posBdr = [pos, bdr].filter(Boolean).join(' ');
+                const syarikatNama = dataSistem['namaDefendan'] || d_nama.replace(/<br>.*$/g, '');
+                let alamatArr = [syarikatNama, d_a1, d_a2, d_a3].filter(Boolean);
+                let posBdr = [d_pos, d_bdr].filter(Boolean).join(' ');
                 if(posBdr) alamatArr.push(posBdr);
-                if(ngr) alamatArr.push(ngr);
+                if(d_ngr) alamatArr.push(d_ngr);
                 tempatKerjaPaparan = alamatArr.join(',<br>') || '-'; 
             } else {
-                const namaTK = document.getElementById('namaTempatKerja').value.trim();
-                const a1 = document.getElementById('alamatKerja1').value.trim();
-                const a2 = document.getElementById('alamatKerja2').value.trim();
-                const a3 = document.getElementById('alamatKerja3').value.trim();
-                const pos = document.getElementById('poskodKerja').value.trim();
-                const bdr = document.getElementById('bandarKerja').value.trim();
-                const ngr = document.getElementById('negeriKerja').value.trim();
+                const namaTK = dataSistem['namaTempatKerja'] || "";
+                const a1 = dataSistem['alamatKerja1'] || "";
+                const a2 = dataSistem['alamatKerja2'] || "";
+                const a3 = dataSistem['alamatKerja3'] || "";
+                const pos = dataSistem['poskodKerja'] || "";
+                const bdr = dataSistem['bandarKerja'] || "";
+                const ngr = dataSistem['negeriKerja'] || "";
                 
                 let alamatArr = [namaTK, a1, a2, a3].filter(Boolean);
                 let posBdr = [pos, bdr].filter(Boolean).join(' ');
@@ -1621,10 +1648,15 @@ Portal rasmi : jtksm.mohr.gov.my
             const tbodyTuntutan = document.getElementById('mk_body_tuntutan');
             tbodyTuntutan.innerHTML = '';
             
-            let senaraiTuntutanSemasa = memoriTuntutan.length > 0 ? memoriTuntutan : [
-                {jenis: "Baki Gaji", keterangan: "(MEI 2026)", jumlah: "2645.00"},
-                {jenis: "Baki Gaji", keterangan: "(JUN 2026)", jumlah: "1600.00"}
-            ];
+            let senaraiTuntutanSemasa = [];
+            if (kes.dataBorang && kes.dataBorang.tuntutanBiasa && kes.dataBorang.tuntutanBiasa.length > 0) {
+                senaraiTuntutanSemasa = kes.dataBorang.tuntutanBiasa;
+            } else if (!kes.dataBorang) {
+                senaraiTuntutanSemasa = [
+                    {jenis: "Baki Gaji", keterangan: "(MEI 2026)", jumlah: "2645.00"},
+                    {jenis: "Baki Gaji", keterangan: "(JUN 2026)", jumlah: "1600.00"}
+                ];
+            }
 
             let jumlahKeseluruhan = 0;
             senaraiTuntutanSemasa.forEach((item, idx) => {
@@ -1663,6 +1695,15 @@ Portal rasmi : jtksm.mohr.gov.my
                 }
             }
 
+            const btnKemaskiniPendaftaran = document.getElementById('btnEditRekodKes');
+            if (btnKemaskiniPendaftaran) {
+                if (isDraf) {
+                    btnKemaskiniPendaftaran.style.display = 'inline-block'; 
+                } else {
+                    btnKemaskiniPendaftaran.style.display = 'none'; 
+                }
+            }
+
             document.getElementById('btnEditRekodKes').onclick = function() {
                 bukaKesDidaftar(indexKesSemasa);
             };
@@ -1689,18 +1730,184 @@ Portal rasmi : jtksm.mohr.gov.my
             }
         }
 
-        function tindakanSebutan() {
+function tindakanSebutan() {
             const tarikh = document.getElementById('mk_tarikh_sebutan').value;
             const masa = document.getElementById('mk_masa_sebutan').value;
             if (tarikh && masa) {
                 alert('Dokumen Notis Sebutan sedia untuk dijana.');
             } else {
-                if(confirm("Adakah anda pasti mahu menarik balik kes ini?")) {
-                    alert("Kes telah ditarik balik.");
-                    tukarView('senarai');
-                }
+                // Panggil fungsi baharu untuk menjana Preview Akuan Penarikan Balik
+                bukaPreviewTarikBalik();
             }
         }
+
+// FUNGSI BAHARU: Menjana dan Memaparkan Akuan Penarikan Balik Kes
+        function bukaPreviewTarikBalik() {
+            const kes = memoriSenaraiKes[indexKesSemasa];
+            if (!kes) return;
+
+            // Dapatkan maklumat asas
+            let noKes = kes.noKes.split('<br>')[0].trim();
+            let namaP = "", kpP = "", alamatP = "", namaD = "";
+            let perengganPengenalan = "";
+            let namaTandatangan = "";
+            let kpTandatangan = "";
+
+            // Ekstrak maklumat dari data yang disimpan (jika ada)
+            if (kes.dataBorang && kes.dataBorang.inputs) {
+                const inputs = kes.dataBorang.inputs;
+                const isMajikan = inputs['majikan'] === true || inputs['majikan'] === "true";
+                
+                if (isMajikan) {
+                    let namaWakil = inputs['namaWakilMajikan'] || '[NAMA WAKIL]';
+                    let kpWakil = inputs['noMyKadWakil'] || '_________________________';
+                    let namaSyarikat = inputs['namaDefendan'] || '[NAMA SYARIKAT]';
+                    let noPendSyarikat = inputs['noPendDefendan'] || '_________________________';
+                    
+                    let almt = [inputs['alamatDefendan1'], inputs['alamatDefendan2'], inputs['alamatDefendan3'], (inputs['poskodDefendan'] || '') + " " + (inputs['bandarDefendan'] || ''), inputs['negeriDefendan']].filter(a => a && a.trim() !== "").join(', ');
+                    alamatP = almt || '____________________________________________________';
+                    
+                    namaD = inputs['namaPengadu'] || '[NAMA PEKERJA]';
+
+                    perengganPengenalan = `Bahawasanya saya, <strong>${namaWakil.toUpperCase()}</strong> (No. MyKad: <strong>${kpWakil}</strong>) mewakili majikan <strong>${namaSyarikat.toUpperCase()}</strong> (No. Pendaftaran: <strong>${noPendSyarikat}</strong>) yang beralamat di <strong>${alamatP.toUpperCase()}</strong>, merupakan pihak Pengadu yang telah memfailkan aduan atau tuntutan terhadap <strong>${namaD.toUpperCase()}</strong> (selepas ini dirujuk sebagai "Defendan").`;
+                    
+                    namaTandatangan = namaWakil.toUpperCase();
+                    kpTandatangan = kpWakil;
+                } else {
+                    namaP = inputs['namaPengadu'] || '[NAMA PENGADU]';
+                    kpP = inputs['noPendPengadu'] || '_________________________';
+                    
+                    let jenisId = inputs['jenisDaftarPengadu'] === 'Pasport' ? 'No. Pasport' : 'No. MyKad';
+                    
+                    let almt = [inputs['alamatPengadu1'], inputs['alamatPengadu2'], inputs['alamatPengadu3'], (inputs['poskodPengadu'] || '') + " " + (inputs['bandarPengadu'] || ''), inputs['negeriPengadu']].filter(a => a && a.trim() !== "").join(', ');
+                    alamatP = almt || '____________________________________________________';
+                    
+                    namaD = inputs['namaDefendan'] || '[NAMA DEFENDAN]';
+
+                    perengganPengenalan = `Bahawasanya saya, <strong>${namaP.toUpperCase()}</strong> (${jenisId}: <strong>${kpP}</strong>) yang beralamat di <strong>${alamatP.toUpperCase()}</strong>, merupakan pihak Pengadu yang telah memfailkan aduan atau tuntutan terhadap <strong>${namaD.toUpperCase()}</strong> (selepas ini dirujuk sebagai "Defendan").`;
+                    
+                    namaTandatangan = namaP.toUpperCase();
+                    kpTandatangan = kpP;
+                }
+            } else {
+                namaP = kes.namaPengadu.replace(/<br>.*$/g, '').toUpperCase();
+                kpP = "_________________________";
+                alamatP = "____________________________________________________";
+                namaD = kes.namaDefendan.replace(/<br>.*$/g, '').toUpperCase();
+                perengganPengenalan = `Bahawasanya saya, <strong>${namaP}</strong> (No. Kad Pengenalan / Pasport / Pendaftaran: <strong>${kpP}</strong>) yang beralamat di <strong>${alamatP}</strong>, merupakan pihak Pengadu yang telah memfailkan aduan atau tuntutan terhadap <strong>${namaD}</strong> (selepas ini dirujuk sebagai "Defendan").`;
+                namaTandatangan = namaP;
+                kpTandatangan = kpP;
+            }
+
+            // --- KOD AUTO EXTRACT BAHARU ---
+            // 1. Tarikh Hari Ini
+            const t = new Date();
+            const bulanMY = ["Januari", "Februari", "Mac", "April", "Mei", "Jun", "Julai", "Ogos", "September", "Oktober", "November", "Disember"];
+            const tarikhHariIniFormat = `${t.getDate()} ${bulanMY[t.getMonth()]} ${t.getFullYear()}`;
+            
+            // 2. Tempat Lalai
+            const tempatDaftar = "Pejabat Tenaga Kerja Kluang";
+
+            // 3. Nama Pegawai (Tarik dari profil sidebar)
+            let namaPegawaiRaw = document.getElementById('namaProfilEdit') ? document.getElementById('namaProfilEdit').innerText.replace(/\n/g, ' ').trim() : 'PEGAWAI PENDENGAR';
+            const namaPegawai = namaPegawaiRaw.toUpperCase();
+            
+            // 4. Jawatan Pegawai
+            const jawatanPegawai = "Pegawai Tenaga Kerja";
+            // ---------------------------------
+
+            // Stuktur HTML Rasmi Akuan Penarikan Balik Kes
+            const htmlTarikBalik = `
+                <style>
+                    @media print {
+                        .kertas-tb { margin: 0 !important; padding: 0 !important; box-shadow: none !important; width: 100% !important; min-height: auto !important; }
+                        body { background: white; }
+                        body > *:not(#printArea) { display: none !important; }
+                        #printArea { display: block !important; }
+                    }
+                    .kertas-tb {
+                        background: white; width: 21cm; min-height: 29.7cm; padding: 2.5cm;
+                        margin: 0 auto 30px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+                        font-family: Arial, sans-serif; color: black; font-size: 11.5pt; line-height: 1.6;
+                        box-sizing: border-box; text-align: justify;
+                    }
+                    .tb-title { text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 25px; text-decoration: underline; }
+                    .tb-ref { text-align: right; font-weight: bold; margin-bottom: 30px; }
+                    .tb-list { margin-top: 10px; margin-bottom: 10px; padding-left: 25px; }
+                    .tb-list li { margin-bottom: 12px; }
+                    .tb-list-alpha { list-style-type: lower-alpha; padding-left: 25px; margin-top: 8px; }
+                    .tb-sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; page-break-inside: avoid; }
+                </style>
+                <div class="kertas-tb">
+                    <div class="tb-ref">No. Kes: ${noKes}</div>
+                    <div class="tb-title">AKUAN PENARIKAN BALIK KES</div>
+                    
+                    <p>${perengganPengenalan}</p>
+                    
+                    <p>Saya dengan ini dengan sesungguhnya dan sebenarnya berikrar dan menyatakan seperti berikut:</p>
+                    
+                    <ol class="tb-list">
+                        <li>Saya menarik balik keseluruhan aduan, tuntutan dan prosiding terhadap Defendan berhubung kes yang didaftarkan di bawah nombor kes <strong>${noKes}</strong>.</li>
+                        <li>Bahawa keputusan untuk menarik balik kes ini dibuat secara sukarela, tanpa sebarang paksaan, ugutan, tekanan atau pengaruh daripada mana-mana pihak.</li>
+                        <li>Saya memahami kesan serta implikasi undang-undang akibat penarikan balik kes ini.</li>
+                        <li>Saya tidak lagi mempunyai sebarang tuntutan terhadap Defendan berhubung perkara yang menjadi asas kepada kes tersebut, melainkan hak yang diperuntukkan secara nyata oleh undang-undang.</li>
+                        <li>Saya memohon supaya pihak Jabatan Tenaga Kerja / Mahkamah merekodkan penarikan balik kes ini.</li>
+                    </ol>
+                    
+                    <p style="margin-top: 25px;">Saya membuat akuan ini dengan kepercayaan bahawa segala kandungan akuan ini adalah benar mengikut pengetahuan dan pemahaman saya.</p>
+                    
+                    <div class="tb-sign-grid">
+                        <div>
+                            <strong>Ditandatangani oleh (Pengadu):</strong><br><br><br><br>
+                            ...................................................................<br>
+                            Nama: <strong>${namaTandatangan}</strong><br>
+                            No. KP / Pasport: ${kpTandatangan}<br>
+                            Tarikh: <strong>${tarikhHariIniFormat}</strong><br>
+                            Tempat: <strong>${tempatDaftar}</strong>
+                        </div>
+                        <div>
+                            <strong>Dihadapan (Saksi / Pegawai):</strong><br><br><br><br>
+                            ...................................................................<br>
+                            Nama: <strong>${namaPegawai}</strong><br>
+                            Jawatan: <strong>${jawatanPegawai}</strong><br>
+                            Tarikh: <strong>${tarikhHariIniFormat}</strong><br>
+                            <br>
+                            Cop Rasmi (jika berkenaan):
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Masukkan HTML ke dalam ruang Preview dan kawasan Cetakan
+            document.getElementById('previewContent').innerHTML = htmlTarikBalik;
+            document.getElementById('printArea').innerHTML = htmlTarikBalik;
+            
+            // Konfigurasi butang Action Dropdown di penjuru atas kanan
+            document.getElementById('menuCetakAkuan').style.display = 'none';
+            document.getElementById('menuCetakKenyataan').style.display = 'none';
+            document.getElementById('menuDaftar').style.display = 'none';
+            
+            // Manipulasi butang G1 yang sedia ada untuk menjadi butang Cetak Akuan
+            const menuCetakG1 = document.getElementById('menuCetakG1');
+            menuCetakG1.style.display = 'flex';
+            menuCetakG1.innerHTML = '🖨️ Cetak Akuan Penarikan';
+            menuCetakG1.onclick = function() {
+                document.getElementById('actionMenu').classList.remove('show');
+                window.print();
+                
+                // Menghilangkan butang selepas ditekan
+                setTimeout(() => {
+                    menuCetakG1.style.display = 'none';
+                }, 500);
+            };
+
+            // Tambahkan alert di sini sebelum modal dipaparkan
+            alert("Dokumen Akuan Penarikan Balik Kes sedia untuk dijana dan dicetak.");
+
+            // Tampilkan Modal Preview
+            document.getElementById('modalPreview').style.display = 'flex';
+        }
+
 
         function toggleWakilMajikan() {
             const kandungan = document.getElementById('kandunganWakilMajikan');
@@ -2779,24 +2986,32 @@ function resetBorangPendaftaran() {
                 if(aduanIndividu) aduanIndividu.checked = true;
             }
 
-            // --- KOD TAMBAHAN UNTUK TUTUP SEMULA KOTAK-KOTAK YANG TERBUKA ---
-            document.getElementById('kandunganMaklumatPerkhidmatan').style.display = 'none';
-            document.getElementById('labelTogolPerkhidmatan').innerHTML = '▼ Buka';
-            document.getElementById('labelTogolPerkhidmatan').style.backgroundColor = '#f1f5f9';
-            document.getElementById('labelTogolPerkhidmatan').style.color = 'var(--text-muted)';
-            
-            document.getElementById('ruanganJenisPerniagaan').style.display = 'none';
-            document.getElementById('ruanganSektorLain').style.display = 'none';
-            
-            document.getElementById('ruanganElaunWrapper').style.display = 'none';
-            document.getElementById('btnTambahElaun').style.display = 'none';
-            document.getElementById('senaraiElaun').innerHTML = '';
-            // ----------------------------------------------------------------
+// --- KOD TAMBAHAN UNTUK TUTUP SEMULA KOTAK-KOTAK YANG TERBUKA ---
+        document.getElementById('kandunganMaklumatPerkhidmatan').style.display = 'none';
+        document.getElementById('labelTogolPerkhidmatan').innerHTML = '▼ Buka';
+        document.getElementById('labelTogolPerkhidmatan').style.backgroundColor = '#f1f5f9';
+        document.getElementById('labelTogolPerkhidmatan').style.color = 'var(--text-muted)';
+        
+        document.getElementById('ruanganJenisPerniagaan').style.display = 'none';
+        document.getElementById('ruanganSektorLain').style.display = 'none';
+        
+        document.getElementById('ruanganElaunWrapper').style.display = 'none';
+        document.getElementById('btnTambahElaun').style.display = 'none';
+        document.getElementById('senaraiElaun').innerHTML = '';
+        // ----------------------------------------------------------------
 
-            tukarPeranan(); 
-            kawalJenisDaftarPengadu();
-            kawalJenisDaftarDefendan();
-        }
+        // --- TAMBAH KOD INI UNTUK SUNTIK NO KES AUTO-INCREMENT ---
+        document.getElementById('noKes').value = janaNoKesBaru();
+        // ---------------------------------------------------------
+
+        tukarPeranan(); 
+        kawalJenisDaftarPengadu();
+        kawalJenisDaftarDefendan();
+        
+        // --- TAMBAH BARIS INI ---
+        kawalJenisAduanTuntutan(); // Paksa sistem semak dan sembunyikan semula jadual tuntutan
+        // ------------------------
+    }
 
 function tukarView(jenisView, dariBukaKes = false) {
     const navSenarai = document.getElementById('navSenarai');
@@ -2806,6 +3021,30 @@ function tukarView(jenisView, dariBukaKes = false) {
     const viewMaklumat = document.getElementById('viewMaklumatKes');
     const tajukHalaman = document.getElementById('tajukHalamanAtas');
     const btnCetakHeader = document.getElementById('butangCetakHeader');
+
+    // --- LOGIK PINTAR UNTUK MENGELAKKAN DATA HILANG & MEMUDAHKAN KES B, C... ---
+    if (jenisView === 'daftar' && !dariBukaKes) {
+        if (!isSelesaiDaftar) {
+            // Semak jika ada data pengadu atau defendan yang sedang diisi
+            let adaData = document.getElementById('namaPengadu').value.trim() !== '' || document.getElementById('namaDefendan').value.trim() !== '';
+            
+            if (adaData) {
+                // Beri amaran berbeza mengikut mod (Edit Draf vs Pendaftaran Baharu)
+                let msg = isEditMode ? 
+                    "Anda sedang mengemaskini draf kes sedia ada.\n\nAdakah anda pasti mahu membatalkan kemaskini dan MENGOSONGKAN borang untuk mendaftar kes baharu?" : 
+                    "Borang pendaftaran masih mengandungi maklumat yang belum disimpan.\n\nAdakah anda pasti mahu MENGOSONGKANNYA untuk mendaftar kes baharu?";
+                
+                if (!confirm(msg)) {
+                    return; // Jika Cancel, batal navigasi dan kekal di borang semasa (Kes A)
+                }
+            }
+        }
+        // Jika pengguna tekan OK (atau borang memang kosong / sudah selesai daftar Kes A), 
+        // kosongkan sepenuhnya untuk Kes B (Tuntutan akan auto tersembunyi).
+        resetBorangPendaftaran();
+        isSelesaiDaftar = false;
+    }
+    // -------------------------------------------------------------------------
 
     navSenarai.classList.remove('active');
     navDaftar.classList.remove('active');
@@ -2826,13 +3065,6 @@ function tukarView(jenisView, dariBukaKes = false) {
         tajukHalaman.innerHTML = 'Pendaftaran Kes Buruh';
         btnCetakHeader.style.display = 'flex';
         setStatusBorang(false);
-        
-        // LOGIK BARU: Kosongkan borang jika pendaftaran selesai, 
-        // ATAU jika pengguna klik dari sidebar ketika masih dalam Mode Edit yang terbengkalai
-        if (isSelesaiDaftar === true || (!dariBukaKes && isEditMode === true)) {
-            resetBorangPendaftaran();
-            isSelesaiDaftar = false; 
-        }
         
         pergiKeTabBorang('tab1');
     }
@@ -2858,7 +3090,7 @@ function tukarView(jenisView, dariBukaKes = false) {
             });
         }
 
-        function daftarKesSistem() {
+function daftarKesSistem() {
             let noKesAsal = document.getElementById('noKes').value;
             let noKesBersih = noKesAsal.split('<br>')[0].trim();
 
@@ -2890,13 +3122,18 @@ function tukarView(jenisView, dariBukaKes = false) {
             const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
             const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
 
+            // --- TAMBAH KOD INI UNTUK TANGKAP SEMUA DATA BORANG PENDAFTARAN ---
+            const dataPenuh = kumpulDataBorang(); 
+
             const rekodRasmi = { 
                 noKes: noKesBersih, 
                 namaPengadu: namaPengaduFinal, 
                 namaDefendan: namaDefendanFinal, 
                 jenisAduan: jenisAduan, 
-                tarikh: tarikhHariIni 
+                tarikh: tarikhHariIni,
+                dataBorang: dataPenuh // <-- MASUKKAN DATA PENUH KE DALAM REKOD
             };
+            // ------------------------------------------------------------------
 
             let indeksSediaAda = (noKesBersih !== "") ? memoriSenaraiKes.findIndex(kes => kes.noKes.split('<br>')[0].trim() === noKesBersih) : -1;
 
@@ -2916,82 +3153,120 @@ function tukarView(jenisView, dariBukaKes = false) {
                 memoriSenaraiKes.unshift(rekodRasmi);
             }
 
-alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem."); 
+            alert("Tahniah! Kes berjaya didaftarkan ke dalam sistem."); 
+                
+            isSelesaiDaftar = true; 
+            indexKesSemasa = -1; 
+            isEditMode = false;  
+            
+            tukarView('senarai');
+        }
+// FUNGSI BARU UNTUK KUMPUL SEMUA DATA BORANG
+function kumpulDataBorang() {
+    let formData = {};
+    const inputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
+    inputs.forEach(el => {
+        if (!el.id && !el.name) return; 
+
+        if (el.type === 'radio') {
+            // MESTI guna name untuk radio button supaya nilai disimpan dengan betul
+            if (el.checked) formData[el.name] = el.value;
+        } else if (el.type === 'checkbox') {
+            let key = el.id || el.name;
+            formData[key] = el.checked;
+        } else {
+            let key = el.id || el.name;
+            formData[key] = el.value;
+        }
+    });
     
-    isSelesaiDaftar = true; 
-    indexKesSemasa = -1; // <--- TAMBAH BARIS INI JUGA (jika belum ada)
-    isEditMode = false;  // <--- TAMBAH BARIS INI DI SINI
-    
-    tukarView('senarai');
+    // Simpan status edit kenyataan supaya teks manual tidak ditindih
+    formData['isKenyataanEdited'] = isKenyataanEdited;
+
+    let senaraiElaunDinamik = [];
+    document.querySelectorAll('#senaraiElaun > div').forEach(div => {
+        let jenis = div.querySelector('.input-elaun-jenis')?.value || '';
+        let jumlah = div.querySelector('.input-elaun-jumlah')?.value || '';
+        if(jenis || jumlah) senaraiElaunDinamik.push({jenis, jumlah});
+    });
+
+    return {
+        inputs: formData,
+        elaun: senaraiElaunDinamik,
+        tuntutanBiasa: JSON.parse(JSON.stringify(memoriTuntutan)),
+        tuntutanKetua: JSON.parse(JSON.stringify(memoriTuntutanKetua))
+    };
 }
+function simpanDrafSistem() {
+    let noKesAsal = document.getElementById('noKes').value;
+    let noKesBersih = noKesAsal.split('<br>')[0].trim();
 
-        // --- KOD FUNGSI SIMPAN DRAF YANG DIBETULKAN ---
-        function simpanDrafSistem() {
-            let noKesAsal = document.getElementById('noKes').value;
-            let noKesBersih = noKesAsal.split('<br>')[0].trim();
+    if (noKesBersih === "") {
+        alert("Sila pastikan No. Kes telah diisi dengan betul sebelum menyimpan draf.");
+        document.getElementById('noKes').focus();
+        return; 
+    }
 
-            if (noKesBersih === "") {
-                alert("Sila pastikan No. Kes telah diisi dengan betul sebelum menyimpan draf.");
-                document.getElementById('noKes').focus();
-                return; 
-            }
+    const isMajikan = document.getElementById('majikan').checked;
+    
+    let namaPengaduRaw = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
+    let namaDefendanRaw = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
+    let namaPengaduFinal, namaDefendanFinal;
 
-            const isMajikan = document.getElementById('majikan').checked;
-            
-            let namaPengaduRaw = document.getElementById('namaPengadu').value || '(Nama tidak diisi)';
-            let namaDefendanRaw = document.getElementById('namaDefendan').value || '(Nama tidak diisi)';
-            let namaPengaduFinal, namaDefendanFinal;
+    if (isMajikan) {
+        namaPengaduFinal = namaDefendanRaw;
+        const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+        if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaPengaduFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
+        namaDefendanFinal = namaPengaduRaw;
+    } else {
+        namaPengaduFinal = namaPengaduRaw;
+        namaDefendanFinal = namaDefendanRaw;
+        const jenisDef = document.getElementById('jenisDaftarDefendan').value;
+        if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaDefendanFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
+    }
 
-            if (isMajikan) {
-                namaPengaduFinal = namaDefendanRaw;
-                const jenisDef = document.getElementById('jenisDaftarDefendan').value;
-                if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaPengaduFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
-                namaDefendanFinal = namaPengaduRaw;
-            } else {
-                namaPengaduFinal = namaPengaduRaw;
-                namaDefendanFinal = namaDefendanRaw;
-                const jenisDef = document.getElementById('jenisDaftarDefendan').value;
-                if(jenisDef === 'SSM (Enterprise)') { const pemilik = document.getElementById('namaPemilikDefendan').value || ''; if(pemilik) namaDefendanFinal += `<br><span style="font-size: 0.85em; font-weight: normal;">Pemilik: ${pemilik}</span>`; }
-            }
+    const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
+    const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
+    const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
 
-            const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
-            const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
-            const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
+    const tagDraf = "<br><span style='background-color: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700;'>DRAF</span>";
+    const noKesDenganTag = noKesBersih + tagDraf;
 
-            const tagDraf = "<br><span style='background-color: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700;'>DRAF</span>";
-            const noKesDenganTag = noKesBersih + tagDraf;
+    // TANGKAP SEMUA DATA DI SINI
+    const dataPenuh = kumpulDataBorang(); 
 
-            const rekodDraf = { 
-                noKes: noKesDenganTag, 
-                namaPengadu: namaPengaduFinal, 
-                namaDefendan: namaDefendanFinal, 
-                jenisAduan: jenisAduan, 
-                tarikh: tarikhHariIni 
-            };
+    const rekodDraf = { 
+        noKes: noKesDenganTag, 
+        namaPengadu: namaPengaduFinal, 
+        namaDefendan: namaDefendanFinal, 
+        jenisAduan: jenisAduan, 
+        tarikh: tarikhHariIni,
+        dataBorang: dataPenuh // <-- MASUKKAN DATA KE DALAM REKOD
+    };
 
-            let indeksSediaAda = memoriSenaraiKes.findIndex(kes => kes.noKes.split('<br>')[0].trim() === noKesBersih);
+    let indeksSediaAda = memoriSenaraiKes.findIndex(kes => kes.noKes.split('<br>')[0].trim() === noKesBersih);
 
-            if (isEditMode) {
-                if (indeksSediaAda !== -1 && indeksSediaAda !== indexKesSemasa) {
-                    alert("AMARAN: No. Kes " + noKesBersih + " telah digunakan oleh kes lain. Sila masukkan nombor yang berbeza.");
-                    document.getElementById('noKes').focus();
-                    return;
-                }
-                memoriSenaraiKes[indexKesSemasa] = rekodDraf;
-            } else {
-                if (indeksSediaAda !== -1) {
-                    alert("AMARAN: No. Kes " + noKesBersih + " telah wujud! Sila masukkan No. Kes baharu supaya draf lama tidak tertindih.");
-                    document.getElementById('noKes').focus();
-                    return;
-                }
-                memoriSenaraiKes.unshift(rekodDraf);
-            }
-            
-alert("Maklumat draf telah berjaya disimpan. Anda boleh menyambung pendaftaran ini kemudian."); 
+    if (isEditMode) {
+        if (indeksSediaAda !== -1 && indeksSediaAda !== indexKesSemasa) {
+            alert("AMARAN: No. Kes " + noKesBersih + " telah digunakan oleh kes lain. Sila masukkan nombor yang berbeza.");
+            document.getElementById('noKes').focus();
+            return;
+        }
+        memoriSenaraiKes[indexKesSemasa] = rekodDraf;
+    } else {
+        if (indeksSediaAda !== -1) {
+            alert("AMARAN: No. Kes " + noKesBersih + " telah wujud! Sila masukkan No. Kes baharu supaya draf lama tidak tertindih.");
+            document.getElementById('noKes').focus();
+            return;
+        }
+        memoriSenaraiKes.unshift(rekodDraf);
+    }
+    
+    alert("Maklumat draf telah berjaya disimpan. Anda boleh menyambung pendaftaran ini kemudian."); 
     
     isSelesaiDaftar = true; 
     indexKesSemasa = -1;
-    isEditMode = false; // <--- TAMBAH BARIS INI DI SINI
+    isEditMode = false;
     
     tukarView('senarai');
     pergiKeTabBorang('tab1'); 
@@ -3001,31 +3276,128 @@ alert("Maklumat draf telah berjaya disimpan. Anda boleh menyambung pendaftaran i
 
 function bukaKesDidaftar(index) {
     isSelesaiDaftar = false;
-    isEditMode = true; // Penanda edit draf lama diaktifkan
+    isEditMode = true; 
     indexKesSemasa = index;
     
     const kes = memoriSenaraiKes[index];
-    let noKesBersih = kes.noKes.split('<br>')[0].trim();
-    document.getElementById('noKes').value = noKesBersih;
     
-    const isMajikan = kes.jenisAduan === 'Majikan';
-    document.getElementById('majikan').checked = isMajikan;
-    
-    let namaPengaduSenarai = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
-    let namaDefendanSenarai = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
-    if (namaPengaduSenarai.includes('<br>')) { namaPengaduSenarai = namaPengaduSenarai.split('<br>')[0]; }
-    if (namaDefendanSenarai.includes('<br>')) { namaDefendanSenarai = namaDefendanSenarai.split('<br>')[0]; }
+    if (kes.dataBorang) {
+        const formData = kes.dataBorang.inputs;
+        
+        // LANGKAH 1: Setup Butang Penentu Utama DAHULU supaya struktur UI terbina dengan betul
+        if(document.getElementById('majikan') && formData['majikan'] !== undefined) document.getElementById('majikan').checked = formData['majikan'];
+        if(document.getElementById('aduanIndividu') && formData['aduan'] === 'Individu') document.getElementById('aduanIndividu').checked = true;
+        if(document.getElementById('aduanBerkumpulan') && formData['aduan'] === 'Berkumpulan') document.getElementById('aduanBerkumpulan').checked = true;
+        
+        tukarPeranan(); // Akan bina options dropdown MyKad/SSM dll
+        
+        if(formData['jenisDaftarPengadu']) document.getElementById('jenisDaftarPengadu').value = formData['jenisDaftarPengadu'];
+        kawalJenisDaftarPengadu(); // Akan bina options dropdown Warganegara
+        
+        if(formData['jenisDaftarDefendan']) document.getElementById('jenisDaftarDefendan').value = formData['jenisDaftarDefendan'];
+        kawalJenisDaftarDefendan();
+        
+        // --- LOGIK KEKALKAN STATUS EDIT KENYATAAN MANUAL ---
+        isKenyataanEdited = formData['isKenyataanEdited'] === true || formData['isKenyataanEdited'] === "true";
+        const txtKenyataan = document.getElementById('kenyataanAwal');
+        const btnKenyataan = document.getElementById('btnEditKenyataan');
+        if (isKenyataanEdited) {
+            if (txtKenyataan) { txtKenyataan.removeAttribute('readonly'); txtKenyataan.style.backgroundColor = '#ffffff'; txtKenyataan.style.border = '1px solid var(--primary-blue)'; }
+            if (btnKenyataan) btnKenyataan.innerHTML = '🔒 Kunci Kenyataan';
+        } else {
+            if (txtKenyataan) { txtKenyataan.setAttribute('readonly', 'true'); txtKenyataan.style.backgroundColor = '#f8fafc'; txtKenyataan.style.border = '1px solid var(--border-color)'; }
+            if (btnKenyataan) btnKenyataan.innerHTML = '✏️ Edit Kenyataan';
+        }
+        // ---------------------------------------------------
 
-    if(isMajikan) { document.getElementById('namaDefendan').value = namaPengaduSenarai; document.getElementById('namaPengadu').value = namaDefendanSenarai; } 
-    else { document.getElementById('namaPengadu').value = namaPengaduSenarai; document.getElementById('namaDefendan').value = namaDefendanSenarai; }
+        // LANGKAH 2: Kosongkan borang (reset radio/checkbox) dan Suntik Semua Data
+        const allInputs = document.getElementById('viewPendaftaranKes').querySelectorAll('input, select, textarea');
+        allInputs.forEach(el => {
+            if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
+        });
+
+        for (const key in formData) {
+            const elById = document.getElementById(key);
+            if (elById) {
+                if (elById.type === 'checkbox') {
+                    elById.checked = formData[key] === true || formData[key] === "true";
+                } else if (elById.type === 'radio') {
+                    // Diuruskan guna 'name' di bawah
+                } else if (elById.tagName === 'SELECT') {
+                    // LOGIK PINTAR: Wujudkan option jika ia tak wujud (Untuk Negeri/Bandar)
+                    let optionExists = Array.from(elById.options).some(opt => opt.value === formData[key]);
+                    if (!optionExists && formData[key] !== "") {
+                        const newOption = document.createElement('option');
+                        newOption.value = formData[key];
+                        newOption.text = formData[key];
+                        elById.add(newOption);
+                    }
+                    elById.value = formData[key];
+                } else {
+                    elById.value = formData[key];
+                }
+            } else {
+                // Cari butang Radio berdasarkan 'name' dan 'value'
+                const elByName = document.querySelector(`input[name="${key}"][value="${formData[key]}"]`);
+                if (elByName) elByName.checked = true;
+            }
+        }
+        
+        // Suntik senarai Elaun dinamik
+        const bekasElaun = document.getElementById('senaraiElaun');
+        if (bekasElaun) bekasElaun.innerHTML = ''; // Kosongkan dahulu
+        if (kes.dataBorang.elaun && kes.dataBorang.elaun.length > 0) {
+            kes.dataBorang.elaun.forEach(elData => {
+                tambahMedanElaun();
+                let lastDiv = bekasElaun.lastElementChild;
+                if(lastDiv) {
+                    lastDiv.querySelector('.input-elaun-jenis').value = elData.jenis;
+                    lastDiv.querySelector('.input-elaun-jumlah').value = elData.jumlah;
+                }
+            });
+        }
+
+        // LANGKAH 3: Panggil fungsi kemaskini paparan Togol
+        toggleAduan();
+        semakWakilLengkap();
+        kawalWarganegara();
+        kawalSektor(); 
+        toggleMaklumatPerkhidmatan();
+        toggleElaun();
+        toggleWaktuKerja();
+        toggleHariKerja();
+        toggleAlamatKerja();
+        janaKenyataanAwal();
+        
+        // LANGKAH 4: Load semula Jadual Tuntutan Kewangan
+        memoriTuntutan = kes.dataBorang.tuntutanBiasa ? JSON.parse(JSON.stringify(kes.dataBorang.tuntutanBiasa)) : [];
+        memoriTuntutanKetua = kes.dataBorang.tuntutanKetua ? JSON.parse(JSON.stringify(kes.dataBorang.tuntutanKetua)) : [];
+        renderJadualTuntutan();
+        
+    } else {
+        // Fallback untuk rekod Kes Dummy (seperti KBR/10103/2026/0112)
+        let noKesBersih = kes.noKes.split('<br>')[0].trim();
+        document.getElementById('noKes').value = noKesBersih;
+        
+        const isMajikan = kes.jenisAduan === 'Majikan';
+        document.getElementById('majikan').checked = isMajikan;
+        
+        let namaPengaduSenarai = kes.namaPengadu !== '(Nama tidak diisi)' ? kes.namaPengadu : '';
+        let namaDefendanSenarai = kes.namaDefendan !== '(Nama tidak diisi)' ? kes.namaDefendan : '';
+        if (namaPengaduSenarai.includes('<br>')) { namaPengaduSenarai = namaPengaduSenarai.split('<br>')[0]; }
+        if (namaDefendanSenarai.includes('<br>')) { namaDefendanSenarai = namaDefendanSenarai.split('<br>')[0]; }
+
+        if(isMajikan) { document.getElementById('namaDefendan').value = namaPengaduSenarai; document.getElementById('namaPengadu').value = namaDefendanSenarai; } 
+        else { document.getElementById('namaPengadu').value = namaPengaduSenarai; document.getElementById('namaDefendan').value = namaDefendanSenarai; }
+        
+        if (kes.jenisAduan === 'Berkumpulan') { document.getElementById('aduanBerkumpulan').checked = true; } else { document.getElementById('aduanIndividu').checked = true; }
+        
+        toggleAduan(); tukarPeranan();
+    }
     
-    if (kes.jenisAduan === 'Berkumpulan') { document.getElementById('aduanBerkumpulan').checked = true; } else { document.getElementById('aduanIndividu').checked = true; }
-    toggleAduan(); tukarPeranan();
-    
-    // UBAH DI SINI: Hantar parameter 'true' supaya borang tidak di-reset semasa buka draf
     tukarView('daftar', true); 
     pergiKeTabBorang('tab1');
-    setStatusBorang(true);
+    setStatusBorang(true); // Tukar borang ke status kemaskini
 }
 
         function toTitleCase(str) { if (!str || str === '-') return '-'; return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase()); }
@@ -3661,9 +4033,21 @@ function bukaPreviewPDF(jenisBorang) {
             setTimeout(() => { window.print(); document.body.classList.remove('print-only-akuan', 'print-only-kenyataan'); semakStatusCetakLengkap(); }, 500);
         }
 
-        function semakStatusCetakLengkap() {
-            if (isAkuanPrinted && isKenyataanPrinted) { document.getElementById('menuDaftar').style.display = 'block'; }
-        }
+function semakStatusCetakLengkap() {
+    // 1. Sembunyikan menu cetakan jika ia telah berjaya dicetak
+    if (isAkuanPrinted) {
+        document.getElementById('menuCetakAkuan').style.display = 'none';
+    }
+    
+    if (isKenyataanPrinted) {
+        document.getElementById('menuCetakKenyataan').style.display = 'none';
+    }
+
+    // 2. Tunjukkan butang 'Daftar' jika kedua-dua borang telah dicetak
+    if (isAkuanPrinted && isKenyataanPrinted) {
+        document.getElementById('menuDaftar').style.display = 'flex'; 
+    }
+}
 
         function daftarDariPreview() {
             document.getElementById('modalPreview').style.display = 'none';
@@ -3691,7 +4075,7 @@ function bukaPreviewPDF(jenisBorang) {
             if (radioTerpilih) { btnSeterusnya.style.display = 'flex'; } else { btnSeterusnya.style.display = 'none'; }
         }
 
-        function kawalJenisAduanTuntutan() {
+function kawalJenisAduanTuntutan() {
             const aduanBerkumpulan = document.getElementById('aduanBerkumpulan').checked;
             const isMajikan = document.getElementById('majikan').checked;
             
@@ -3703,23 +4087,38 @@ function bukaPreviewPDF(jenisBorang) {
             
             const butangSeterusnya = document.getElementById('ruanganButangSeterusnyaTab1');
 
+            // --- LOGIK KELAYAKAN TUNTUTAN BAHARU ---
+            // Semak Sektor dan Jenis Perniagaan untuk tentukan jadual patut dipapar atau disembunyi
+            const sektor = document.getElementById('sektorDefendan').value;
+            const jp = document.getElementById('jenisPerniagaan').value.trim();
+            
+            if (sektor === '' || jp === '') {
+                // Jika masih kosong (terutama waktu di-reset), sembunyikan semua jadual tuntutan
+                if (kad3Ketua) kad3Ketua.style.display = 'none';
+                if (kandunganKetua) kandunganKetua.style.display = 'none';
+                if (kandunganBiasa) kandunganBiasa.style.display = 'none';
+                if (butangSeterusnya) butangSeterusnya.style.display = 'none';
+                return; // Berhenti di sini
+            }
+            // ---------------------------------------
+
             if (isMajikan) {
-                kad3Ketua.style.display = 'none';
-                tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan Majikan';
-                kandunganBiasa.style.display = 'block'; 
-                butangSeterusnya.style.display = 'block'; 
+                if (kad3Ketua) kad3Ketua.style.display = 'none';
+                if (tajukTuntutanSediaAda) tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan Majikan';
+                if (kandunganBiasa) kandunganBiasa.style.display = 'block'; 
+                if (butangSeterusnya) butangSeterusnya.style.display = 'block'; 
             } else {
                 if (aduanBerkumpulan) {
-                    kad3Ketua.style.display = 'flex';
-                    kandunganKetua.style.display = 'block'; 
-                    tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan (Yang sama untuk semua pengadu lain)';
-                    kandunganBiasa.style.display = 'block';
-                    butangSeterusnya.style.display = 'block';
+                    if (kad3Ketua) kad3Ketua.style.display = 'flex';
+                    if (kandunganKetua) kandunganKetua.style.display = 'block'; 
+                    if (tajukTuntutanSediaAda) tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan (Yang sama untuk semua pengadu lain)';
+                    if (kandunganBiasa) kandunganBiasa.style.display = 'block';
+                    if (butangSeterusnya) butangSeterusnya.style.display = 'block';
                 } else {
-                    kad3Ketua.style.display = 'none';
-                    tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan';
-                    kandunganBiasa.style.display = 'block'; 
-                    butangSeterusnya.style.display = 'block'; 
+                    if (kad3Ketua) kad3Ketua.style.display = 'none';
+                    if (tajukTuntutanSediaAda) tajukTuntutanSediaAda.innerText = 'Maklumat Tuntutan';
+                    if (kandunganBiasa) kandunganBiasa.style.display = 'block'; 
+                    if (butangSeterusnya) butangSeterusnya.style.display = 'block'; 
                 }
             }
         }
@@ -3727,7 +4126,30 @@ function bukaPreviewPDF(jenisBorang) {
         function semakKelayakanTuntutan() {
             kawalJenisAduanTuntutan();
         }
-
+// FUNGSI JANA NO KES BAHARU SECARA AUTOMATIK
+function janaNoKesBaru() {
+    let maxBil = 0;
+    
+    // Cari nombor bil. pendaftaran yang paling tinggi dalam memori
+    memoriSenaraiKes.forEach(kes => {
+        let no = kes.noKes.split('<br>')[0].trim(); // Buang tag DRAF jika ada
+        let parts = no.split('/');
+        
+        // Pastikan ia mematuhi format (Cth: KBR / 10103 / 2026 / 0001)
+        if (parts.length === 4) {
+            let bil = parseInt(parts[3], 10);
+            if (!isNaN(bil) && bil > maxBil) {
+                maxBil = bil;
+            }
+        }
+    });
+    
+    // Tambah 1 dan formatkan menjadi 4 digit (cth: 0002)
+    let bilSeterusnya = (maxBil + 1).toString().padStart(4, '0');
+    
+    // (Nota: Anda boleh tukar '2026' kepada new Date().getFullYear() untuk tahun semasa)
+    return `KBR/10103/2026/${bilSeterusnya}`;
+}
     </script>
 </body>
 </html>
