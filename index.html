@@ -1879,15 +1879,14 @@ function tindakanSebutan() {
                         <div>
                             <strong>Ditandatangani oleh (Pengadu):</strong><br><br><br><br>
                             ...................................................................<br>
-                            Nama: <strong>${namaTandatangan}</strong><br>
-                            No. KP / Pasport: ${kpTandatangan}<br>
+                            <strong>${namaTandatangan}</strong><br>
+                            <span id="labelIdTandatangan">No. KP / Pasport:</span> ${kpTandatangan}<br>
                             Tarikh: <strong>${tarikhHariIniFormat}</strong><br>
-                            Tempat: <strong>${tempatDaftar}</strong>
                         </div>
                         <div>
                             <strong>Dihadapan (Saksi / Pegawai):</strong><br><br><br><br>
                             ...................................................................<br>
-                            Nama: <strong>${namaPegawai}</strong><br>
+                            <strong>${namaPegawai}</strong><br>
                             Jawatan: <strong>${jawatanPegawai}</strong><br>
                             Tarikh: <strong>${tarikhHariIniFormat}</strong><br>
                             <br>
@@ -1901,6 +1900,17 @@ function tindakanSebutan() {
             document.getElementById('previewContent').innerHTML = htmlTarikBalik;
             document.getElementById('printArea').innerHTML = htmlTarikBalik;
             
+            // --- FUNGSI BARU: Auto-Tukar Label MyKad atau Passport ---
+            const labelPreview = document.querySelector('#previewContent #labelIdTandatangan');
+            const labelPrint = document.querySelector('#printArea #labelIdTandatangan');
+            
+            // Kita semak terus menggunakan data kpTandatangan sedia ada
+            const teksLabel = kpTandatangan.includes('-') ? 'No. MyKad:' : 'No. Passport:';
+
+            if (labelPreview) labelPreview.innerHTML = teksLabel;
+            if (labelPrint) labelPrint.innerHTML = teksLabel;
+            // ---------------------------------------------------------
+
             // Konfigurasi butang Action Dropdown di penjuru atas kanan
             document.getElementById('menuCetakAkuan').style.display = 'none';
             document.getElementById('menuCetakKenyataan').style.display = 'none';
