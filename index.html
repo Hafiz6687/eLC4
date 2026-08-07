@@ -3025,7 +3025,12 @@ function resetBorangPendaftaran() {
         document.getElementById('labelTogolPerkhidmatan').innerHTML = '▼ Buka';
         document.getElementById('labelTogolPerkhidmatan').style.backgroundColor = '#f1f5f9';
         document.getElementById('labelTogolPerkhidmatan').style.color = 'var(--text-muted)';
-        
+        // --- TAMBAHAN BARU: Tutup semula ruangan waktu & hari kerja ---
+        document.getElementById('ruanganWaktuTetap').style.display = 'none';
+        document.getElementById('ruanganWaktuTidakTetap').style.display = 'none';
+        document.getElementById('ruanganHariTetap').style.display = 'none';
+        document.getElementById('ruanganHariTidakTetap').style.display = 'none';
+        // ---------------------------------------------------------------
         document.getElementById('ruanganJenisPerniagaan').style.display = 'none';
         document.getElementById('ruanganSektorLain').style.display = 'none';
         
