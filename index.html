@@ -586,7 +586,7 @@ Portal rasmi : jtksm.mohr.gov.my
             </div>
         </div>
 
-        <!-- ========================================== -->
+<!-- ========================================== -->
         <!-- PAPARAN MAKLUMAT KES TERPERINCI            -->
         <!-- ========================================== -->
         <div id="viewMaklumatKes" style="display: none; padding: 32px; max-width: 1600px; margin: 0 auto; width: 100%; box-sizing: border-box;">
@@ -618,17 +618,8 @@ Portal rasmi : jtksm.mohr.gov.my
                     </div>
                 </div>
             </div>
-<!-- BAHAGIAN BARU: Kenyataan Pengadu -->
-<div class="card full-width">
-    <div class="card-header">Kenyataan Pengadu & Kronologi Kes</div>
-    <div class="card-body">
-        <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
-            <!-- Teks kenyataan akan dijana oleh JS di sini -->
-            -
-        </div>
-    </div>
-</div>
-            <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (3 Grid) -->
+
+            <!-- BAHAGIAN 2: Maklumat Pengadu & Tuntutan (KINI BERADA DI ATAS) -->
             <div class="card full-width">
                 <div class="card-header">Maklumat Pengadu</div>
                 <div class="card-body">
@@ -654,6 +645,22 @@ Portal rasmi : jtksm.mohr.gov.my
                                 <!-- JS Injection -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+<!-- BAHAGIAN BARU: Kenyataan Pengadu (DIALIH KE BAWAH MAKLUMAT PENGADU) -->
+            <div class="card full-width">
+                <!-- Tambah fungsi onclick dan span togol pada card-header -->
+                <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; justify-content: space-between; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    <div style="display: flex; align-items: center; gap: 12px;">Kenyataan Pengadu & Kronologi Kes</div>
+                    <span id="labelTogolKenyataanView" style="color: var(--primary-blue); font-size: 0.85em; font-weight: 600; background: #eff6ff; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1;">▲ Sembunyi</span>
+                </div>
+                <!-- Tambah ID pada card-body -->
+                <div class="card-body" id="kandunganKenyataanPengaduView">
+                    <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
+                        <!-- Teks kenyataan akan dijana oleh JS di sini -->
+                        -
                     </div>
                 </div>
             </div>
