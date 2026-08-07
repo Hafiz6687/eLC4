@@ -3210,11 +3210,16 @@ function daftarKesSistem() {
             const jenisAduan = isMajikan ? 'Majikan' : (aduanBerkumpulan ? 'Berkumpulan' : 'Individu');
             const tarikhHariIni = new Date().toLocaleDateString('ms-MY');
 
+            // --- KOD BARU: Tambah tag DAFTAR berwarna Biru ---
+            const tagDaftar = "<br><span style='background-color: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700;'>DAFTAR</span>";
+            const noKesDenganTagDaftar = noKesBersih + tagDaftar;
+            // --------------------------------------------------
+
             // --- TAMBAH KOD INI UNTUK TANGKAP SEMUA DATA BORANG PENDAFTARAN ---
             const dataPenuh = kumpulDataBorang(); 
 
             const rekodRasmi = { 
-                noKes: noKesBersih, 
+                noKes: noKesDenganTagDaftar, // <-- MASUKKAN TAG BIRU DI SINI
                 namaPengadu: namaPengaduFinal, 
                 namaDefendan: namaDefendanFinal, 
                 jenisAduan: jenisAduan, 
