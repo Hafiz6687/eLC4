@@ -651,13 +651,13 @@ Portal rasmi : jtksm.mohr.gov.my
 
 <!-- BAHAGIAN BARU: Kenyataan Pengadu (DIALIH KE BAWAH MAKLUMAT PENGADU) -->
             <div class="card full-width">
-                <!-- Tambah fungsi onclick dan span togol pada card-header -->
                 <div class="card-header" onclick="toggleKenyataanPengaduView()" style="cursor: pointer; justify-content: space-between; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                     <div style="display: flex; align-items: center; gap: 12px;">Kenyataan Pengadu & Kronologi Kes</div>
-                    <span id="labelTogolKenyataanView" style="color: var(--primary-blue); font-size: 0.85em; font-weight: 600; background: #eff6ff; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1;">▲ Sembunyi</span>
+                    <!-- LALAIKAN KEPADA "▼ Buka" -->
+                    <span id="labelTogolKenyataanView" style="color: var(--text-muted); font-size: 0.85em; font-weight: 600; background: #f1f5f9; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border-color); line-height: 1;">▼ Buka</span>
                 </div>
-                <!-- Tambah ID pada card-body -->
-                <div class="card-body" id="kandunganKenyataanPengaduView">
+                <!-- TAMBAH display: none; UNTUK AUTO-SEMBUNYI -->
+                <div class="card-body" id="kandunganKenyataanPengaduView" style="display: none;">
                     <div class="info-value" id="mk_kenyataan_pengadu" style="white-space: pre-wrap; text-align: justify; line-height: 1.6;">
                         <!-- Teks kenyataan akan dijana oleh JS di sini -->
                         -
@@ -1715,13 +1715,25 @@ function bukaMaklumatKes(index) {
                 bukaKesDidaftar(indexKesSemasa);
             };
 
+
+// --- TAMBAHAN BARU: Auto-Sembunyi Kenyataan Pengadu bila maklumat kes dibuka ---
+            const kandunganKenyataan = document.getElementById('kandunganKenyataanPengaduView');
+            const labelKenyataan = document.getElementById('labelTogolKenyataanView');
+            if (kandunganKenyataan && labelKenyataan) {
+                kandunganKenyataan.style.display = 'none';
+                labelKenyataan.innerHTML = '▼ Buka';
+                labelKenyataan.style.backgroundColor = '#f1f5f9';
+                labelKenyataan.style.color = 'var(--text-muted)';
+            }
+            // -------------------------------------------------------------------------------
+
             document.getElementById('viewSenaraiTugas').style.display = 'none';
             document.getElementById('viewPendaftaranKes').style.display = 'none';
             document.getElementById('viewMaklumatKes').style.display = 'block';
             
             document.getElementById('tajukHalamanAtas').innerHTML = 'Maklumat Kes Terperinci';
             document.getElementById('butangCetakHeader').style.display = 'none'; 
-        }
+        } // <--- HANYA ADA SATU SAHAJA PENUTUP INI
 
         function semakButangSebutan() {
             const tarikh = document.getElementById('mk_tarikh_sebutan').value;
