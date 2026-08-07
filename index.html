@@ -464,7 +464,8 @@
             </div>
             <div class="form-group" style="grid-template-columns: 1fr; margin-bottom: 12px;">
                 <label style="text-align: left;">Keterangan Tuntutan <span>*</span></label>
-                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarAyatPertama(this)"></textarea>
+                <!-- KITA TUKAR oninput KEPADA hurufBesarSetiapPerkataan(this) -->
+                <textarea id="keteranganTuntutan" rows="3" placeholder="Contoh: Tuntutan gaji tertunggak bagi bulan Ogos 2026" style="resize: vertical;" oninput="hurufBesarSetiapPerkataan(this)"></textarea>
             </div>
             <div class="form-group" style="grid-template-columns: 1fr;">
                 <label style="text-align: left;">Jumlah Tuntutan (RM) <span>*</span></label>
@@ -2238,7 +2239,24 @@ function kemaskiniDropdownPendaftaran() {
                 if (val !== newVal) { input.value = newVal; input.setSelectionRange(start, end); }
             }
         }
+    // --- FUNGSI BARU: Title Case untuk Keterangan Tuntutan ---
+        function hurufBesarSetiapPerkataan(input) {
+            let start = input.selectionStart;
+            let end = input.selectionEnd;
+            let val = input.value;
+            
+            // Tukar huruf pertama setiap perkataan menjadi Huruf Besar
+            let newVal = val.replace(/\b\w/g, function(char) {
+                return char.toUpperCase();
+            });
 
+            // Hanya kemaskini jika ada perubahan supaya cursor tidak melompat
+            if (val !== newVal) { 
+                input.value = newVal; 
+                input.setSelectionRange(start, end); 
+            }
+        }
+        // ---------------------------------------------------------
         function hurufBesarSelepasTitik(input) {
             let start = input.selectionStart;
             let end = input.selectionEnd;
