@@ -495,7 +495,9 @@
             <button class="icon-btn" onclick="document.getElementById('actionMenu').classList.toggle('show')" title="Tindakan">
                 ⋮
             </button>
-<div id="actionMenu" class="dropdown-menu">
+            
+            <!-- GANTIKAN KESELURUHAN BLOK ACTION MENU INI -->
+            <div id="actionMenu" class="dropdown-menu">
                 <a href="#" id="menuKemaskini" onclick="kemaskiniDariPreview()">✏️ Kemaskini</a>
                 <a href="#" id="menuCetakAkuan" onclick="cetakKhusus('akuan')">🖨️ Cetak Akuan Pemfailan</a>
                 <a href="#" id="menuCetakKenyataan" onclick="cetakKhusus('kenyataan')">🖨️ Cetak Kenyataan Tuntutan</a>
@@ -504,9 +506,14 @@
                 <a href="#" id="menuCetakG1" onclick="document.getElementById('actionMenu').classList.remove('show'); window.print();" style="display: none;">🖨️ Cetak G1</a>
                 
                 <a href="#" id="menuDaftar" onclick="daftarDariPreview()" style="display: none;">🚀 Daftar</a>
+
+                <!-- TAMBAHAN BARU: Butang Selesai (Sembunyi secara lalai) -->
+                <a href="#" id="menuSelesai" onclick="selesaiPemfailan()" style="display: none; color: #10b981; font-weight: bold;">✅ Selesai</a>
+                <!-- ---------------------------------------------------- -->
+
                 <a href="#" id="menuBatal" onclick="document.getElementById('modalPreview').style.display='none'; batalPemfailan();" style="color: var(--danger);">🗑️ Batal Pemfailan</a>
             </div>
-        </div>
+        </div> <!-- Penutup action-dropdown-container -->
     </div> <!-- END OF MODAL PREVIEW -->
 
     <!-- SIDEBAR -->
@@ -1920,13 +1927,24 @@ function tindakanSebutan() {
             const menuCetakG1 = document.getElementById('menuCetakG1');
             menuCetakG1.style.display = 'flex';
             menuCetakG1.innerHTML = '🖨️ Cetak Akuan Penarikan';
+            // Pastikan keadaan butang lalai apabila modal baru dibuka
+            document.getElementById('menuKemaskini').style.display = 'flex';
+            document.getElementById('menuBatal').style.display = 'flex';
+            document.getElementById('menuSelesai').style.display = 'none';
+
             menuCetakG1.onclick = function() {
                 document.getElementById('actionMenu').classList.remove('show');
                 window.print();
                 
-                // Menghilangkan butang selepas ditekan
+                // Menghilangkan butang cetak dan menukar menu selepas ditekan
                 setTimeout(() => {
                     menuCetakG1.style.display = 'none';
+                    
+                    // --- TAMBAHAN BARU: Hide Batal/Kemaskini, Show Selesai ---
+                    document.getElementById('menuKemaskini').style.display = 'none';
+                    document.getElementById('menuBatal').style.display = 'none';
+                    document.getElementById('menuSelesai').style.display = 'flex';
+                    // ---------------------------------------------------------
                 }, 500);
             };
 
@@ -4136,10 +4154,32 @@ function semakStatusCetakLengkap() {
     }
 }
 
-        function daftarDariPreview() {
+       function daftarDariPreview() {
             document.getElementById('modalPreview').style.display = 'none';
             daftarKesSistem();
         }
+
+        // --- FUNGSI BARU: Tandakan Kes Sebagai Selesai ---
+        function selesaiPemfailan() {
+            document.getElementById('modalPreview').style.display = 'none';
+            
+            // Masukkan tag SELESAI pada senarai
+            if (indexKesSemasa > -1) {
+                const kes = memoriSenaraiKes[indexKesSemasa];
+                let noKesBersih = kes.noKes.split('<br>')[0].trim();
+                
+                // Tag visual warna hijau
+                const tagSelesai = "<br><span style='background-color: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 700;'>SELESAI</span>";
+                kes.noKes = noKesBersih + tagSelesai;
+            }
+            
+            alert("Kes telah berjaya ditandakan sebagai SELESAI.");
+            
+            isSelesaiDaftar = true; 
+            resetBorangPendaftaran();
+            tukarView('senarai'); // Kembali ke senarai tugas
+        }
+        // -------------------------------------------------
 
         function batalPemfailan() {
             if(confirm("AWAS: Semua maklumat yang telah diisi akan dipadam sepenuhnya. Anda pasti mahu membatalkan pendaftaran ini?")) {
