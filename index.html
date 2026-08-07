@@ -4104,14 +4104,23 @@ function semakStatusCetakLengkap() {
             }
         }
 
-        function semakSeksyenTuntutan() {
+function semakSeksyenTuntutan() {
             const isMajikan = document.getElementById('majikan').checked;
-            if (isMajikan) return; 
-
             const btnSeterusnya = document.getElementById('btnSeterusnyaTab2');
+
+            // Jika pengadu adalah majikan, butang mesti sentiasa muncul 
+            // kerana seksyen telah dipilih secara automatik.
+            if (isMajikan) {
+                btnSeterusnya.style.display = 'flex';
+                return;
+            }
+
             const radioTerpilih = document.querySelector('input[name="seksyen"]:checked');
-            
-            if (radioTerpilih) { btnSeterusnya.style.display = 'flex'; } else { btnSeterusnya.style.display = 'none'; }
+            if (radioTerpilih) { 
+                btnSeterusnya.style.display = 'flex'; 
+            } else { 
+                btnSeterusnya.style.display = 'none'; 
+            }
         }
 
 function kawalJenisAduanTuntutan() {
