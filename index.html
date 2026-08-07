@@ -1932,9 +1932,11 @@ function tindakanSebutan() {
             }
         }
 
-        function toggleMaklumatSyarikat() {
-            const kandungan = document.getElementById('kandunganMaklumatSyarikat');
-            const labelTogol = document.getElementById('labelTogolSyarikat');
+// FUNGSI TOGOL KENYATAAN PENGADU (PAPARAN MAKLUMAT KES)
+        function toggleKenyataanPengaduView() {
+            const kandungan = document.getElementById('kandunganKenyataanPengaduView');
+            const labelTogol = document.getElementById('labelTogolKenyataanView');
+            
             if (kandungan.style.display === 'none') {
                 kandungan.style.display = 'block';
                 labelTogol.innerHTML = '▲ Sembunyi';
