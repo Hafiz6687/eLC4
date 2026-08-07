@@ -809,7 +809,7 @@ Portal rasmi : jtksm.mohr.gov.my
                         <div class="form-group" id="ruanganBilanganPengadu" style="display: none;">
                             <label>Bilangan Pengadu <span>*</span></label>
                             <div class="input-wrapper">
-                                <input type="number" id="bilanganPengadu" style="width: 50%;" placeholder="Contoh: 5">
+                                <input type="number" id="bilPengadu" placeholder="Contoh: 5" onblur="semakBilanganPengadu(this)" ... >
                                 <p style="font-size: 0.8em; color: var(--text-muted); margin: 5px 0 0; font-style: italic;">*Termasuk ketua pengadu</p>
                             </div>
                         </div>
@@ -1388,7 +1388,7 @@ Portal rasmi : jtksm.mohr.gov.my
             setupDragProfil();
             
             document.getElementById('kad2').addEventListener('focusin', semakTutupSelesaiHari);
-            document.getElementById('kad3').addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
+            document.getElementById('kad3_ketua')?.addEventListener('focusin', tutupMaklumatPerkhidmatanDalaman);
             
             const namaDisimpan = localStorage.getItem('eLC_namaProfil');
             if (namaDisimpan) {
@@ -2256,6 +2256,21 @@ function kemaskiniDropdownPendaftaran() {
                 input.setSelectionRange(start, end); 
             }
         }
+       // --- FUNGSI BARU: Semak Bilangan Pengadu Berkumpulan ---
+        function semakBilanganPengadu(input) {
+            // Kita semak hanya jika kotak tidak kosong
+            if (input.value !== "") {
+                let nilai = parseInt(input.value);
+                
+                // Jika pengguna masukkan 0 atau 1
+                if (nilai <= 1) {
+                    alert("Tindakan Ditolak: Bagi aduan jenis Berkumpulan, bilangan pengadu mestilah 2 orang atau lebih.");
+                    input.value = ""; // Kosongkan semula kotak supaya pengguna masukkan angka yang betul
+                    input.focus();    // Halakan semula cursor ke kotak ini
+                }
+            }
+        }
+     
         // ---------------------------------------------------------
         function hurufBesarSelepasTitik(input) {
             let start = input.selectionStart;
