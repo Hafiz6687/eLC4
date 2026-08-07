@@ -2740,7 +2740,27 @@ function bukaTab(tabId, elemenTab) {
                 kandungan.style.display = 'none'; labelTogol.innerHTML = '▼ Buka'; labelTogol.style.backgroundColor = '#f1f5f9'; labelTogol.style.color = 'var(--text-muted)';
             }
         }
-
+// --- FUNGSI BARU: Togol Maklumat Syarikat ---
+        function toggleMaklumatSyarikat() {
+            const kandungan = document.getElementById('kandunganMaklumatSyarikat');
+            const labelTogol = document.getElementById('labelTogolSyarikat');
+            
+            // Jika ia sedang disembunyikan, kita buka
+            if (kandungan.style.display === 'none') {
+                kandungan.style.display = 'block'; 
+                labelTogol.innerHTML = '▲ Sembunyi'; 
+                labelTogol.style.backgroundColor = '#eff6ff'; 
+                labelTogol.style.color = 'var(--primary-blue)';
+            } 
+            // Jika ia sedang dibuka, kita sembunyikan
+            else {
+                kandungan.style.display = 'none'; 
+                labelTogol.innerHTML = '▼ Buka'; 
+                labelTogol.style.backgroundColor = '#f1f5f9'; 
+                labelTogol.style.color = 'var(--text-muted)';
+            }
+        }
+        // --------------------------------------------
         function toggleElaun() {
             const radioTerpilih = document.querySelector('input[name="adaElaun"]:checked');
             if(!radioTerpilih) return;
