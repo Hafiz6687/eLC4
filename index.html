@@ -2960,31 +2960,65 @@ function bukaTab(tabId, elemenTab) {
             if (btnEdit) { btnEdit.style.display = isReadonly ? 'inline-block' : 'none'; }
         }
 
+// MASUKKAN KOD BARU INI:
 function resetBorangPendaftaran() {
-            isEditMode = false;
-            indexKesSemasa = -1;
-            
-            memoriTuntutan = [];
-            memoriTuntutanKetua = [];
-            renderJadualTuntutan();
-            
-            const bekasBorang = document.getElementById('viewPendaftaranKes');
-            if (bekasBorang) {
-                const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
-                inputs.forEach(input => input.value = '');
-                
-                const selects = bekasBorang.querySelectorAll('select');
-                selects.forEach(select => select.selectedIndex = 0);
-                
-                const checkboxes = bekasBorang.querySelectorAll('input[type="checkbox"]');
-                checkboxes.forEach(cb => cb.checked = false);
+    isEditMode = false; 
+    indexKesSemasa = -1; 
+    memoriTuntutan = []; 
+    memoriTuntutanKetua = []; 
+    renderJadualTuntutan();
+    
+    // --- 1. TAMBAHAN PENTING: Reset Status Edit Kenyataan ---
+    isKenyataanEdited = false;
+    const txtKenyataan = document.getElementById('kenyataanAwal');
+    const btnKenyataan = document.getElementById('btnEditKenyataan');
+    if (txtKenyataan) {
+        txtKenyataan.removeAttribute('readonly'); // Buka sementara untuk clear
+        txtKenyataan.setAttribute('readonly', 'true');
+        txtKenyataan.style.backgroundColor = '#f8fafc';
+        txtKenyataan.style.border = '1px solid var(--border-color)';
+    }
+    if (btnKenyataan) {
+        btnKenyataan.innerHTML = '✏️ Edit Kenyataan';
+    }
+    // --------------------------------------------------------
+    
+    const bekasBorang = document.getElementById('viewPendaftaranKes');
+    if (bekasBorang) {
+        // Kosongkan semua input & textarea
+        const inputs = bekasBorang.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="time"], textarea');
+        inputs.forEach(input => input.value = '');
+        
+        // --- 2. PASTIKAN 'Masalahnya, ' DIKEMBALIKAN DENGAN BETUL ---
+        const kronologi = document.getElementById('kronologiKes');
+        if (kronologi) {
+            kronologi.value = 'Masalahnya, ';
+            // Panggil autoResize supaya kotak tidak 'tersembunyi' atau leper
+            setTimeout(() => { autoResize(kronologi); }, 50);
+        }
+        // ------------------------------------------------------------
+        
+        const selects = bekasBorang.querySelectorAll('select');
+        selects.forEach(select => select.selectedIndex = 0);
+        
+        const checkboxes = bekasBorang.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = false);
 
-                const jantinaRadios = bekasBorang.querySelectorAll('input[name="jantinaPengadu"], input[name="jantinaWakil"]');
-                jantinaRadios.forEach(radio => radio.checked = false);
-                
-                const aduanIndividu = document.getElementById('aduanIndividu');
-                if(aduanIndividu) aduanIndividu.checked = true;
-            }
+        const allRadios = bekasBorang.querySelectorAll('input[type="radio"]');
+        allRadios.forEach(radio => radio.checked = false);
+        
+        const aduanIndividu = document.getElementById('aduanIndividu');
+        if(aduanIndividu) aduanIndividu.checked = true;
+
+        const noKontrak = document.querySelector('input[name="adaKontrak"][value="Tidak"]');
+        if(noKontrak) noKontrak.checked = true;
+
+        const noPenyata = document.querySelector('input[name="adaPenyata"][value="Tidak"]');
+        if(noPenyata) noPenyata.checked = true;
+
+        const noElaun = document.querySelector('input[name="adaElaun"][value="Tidak"]');
+        if(noElaun) noElaun.checked = true;
+    }
 
 // --- KOD TAMBAHAN UNTUK TUTUP SEMULA KOTAK-KOTAK YANG TERBUKA ---
         document.getElementById('kandunganMaklumatPerkhidmatan').style.display = 'none';
