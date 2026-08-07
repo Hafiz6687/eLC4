@@ -3229,11 +3229,17 @@ function kumpulDataBorang() {
         if (!el.id && !el.name) return; 
 
         if (el.type === 'radio') {
-            // MESTI guna name untuk radio button supaya nilai disimpan dengan betul
             if (el.checked) formData[el.name] = el.value;
         } else if (el.type === 'checkbox') {
-            let key = el.id || el.name;
-            formData[key] = el.checked;
+            // --- PENAMBAHBAIKAN: Tangkap nilai (a), (b), (c) sebagai array ---
+            if (el.name && !el.id) {
+                if (!formData[el.name]) formData[el.name] = [];
+                if (el.checked) formData[el.name].push(el.value);
+            } else {
+                let key = el.id || el.name;
+                formData[key] = el.checked;
+            }
+            // -----------------------------------------------------------------
         } else {
             let key = el.id || el.name;
             formData[key] = el.value;
@@ -3376,7 +3382,17 @@ function bukaKesDidaftar(index) {
             if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
         });
 
-        for (const key in formData) {
+for (const key in formData) {
+            // --- TAMBAHAN BARU: Jika ia adalah array (seperti subSeksyen), tick semua kotak yang berkenaan ---
+            if (Array.isArray(formData[key])) {
+                formData[key].forEach(val => {
+                    const cb = document.querySelector(`input[name="${key}"][value="${val}"]`);
+                    if (cb) cb.checked = true;
+                });
+                continue; // Terus ke field seterusnya
+            }
+            // -----------------------------------------------------------------------------------------------
+
             const elById = document.getElementById(key);
             if (elById) {
                 if (elById.type === 'checkbox') {
@@ -3384,6 +3400,7 @@ function bukaKesDidaftar(index) {
                 } else if (elById.type === 'radio') {
                     // Diuruskan guna 'name' di bawah
                 } else if (elById.tagName === 'SELECT') {
+                    // ... (Kekalkan semua logik sedia ada untuk dropdown dan kronologi di sini) ...
                     // LOGIK PINTAR: Wujudkan option jika ia tak wujud (Untuk Negeri/Bandar)
                     let optionExists = Array.from(elById.options).some(opt => opt.value === formData[key]);
                     if (!optionExists && formData[key] !== "") {
