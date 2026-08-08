@@ -518,17 +518,9 @@
     </div> <!-- END OF MODAL PREVIEW -->
 
     <!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="sidebar-header" style="padding: 24px 20px; text-align: center;">
-        <!-- FUNGSI MUAT NAIK LOGO -->
-        <div id="bekasLogo" style="width: 100%; max-width: 200px; min-height: 60px; margin: 0 auto; background-color: transparent; border: 2px dashed var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; transition: all 0.2s;" title="Klik untuk muat naik logo" onclick="document.getElementById('uploadLogo').click()">
-            <div id="teksMuatNaikLogo" style="font-size: 0.85em; color: var(--primary-blue); font-weight: 600; padding: 10px;">
-                🖼️ Muat Naik Logo
-            </div>
-            <img id="gambarLogo" src="" style="display: none; width: 100%; height: auto; max-height: 80px; object-fit: contain;">
-            <input type="file" id="uploadLogo" accept="image/*" style="display: none;" onchange="muatNaikLogo(this)">
-        </div>
-    </div>
+    <aside class="sidebar">
+        <div class="sidebar-header"><h2>eLC</h2><p>e-Labour Court</p></div>
+        
         <div style="display: flex; gap: 12px; margin: 0 16px 16px; padding: 10px; align-items: center; background-color: #cbd5e1; border: 1px solid var(--border-color); border-radius: 12px;">
             
             <div id="bekasProfil" style="flex-shrink: 0; width: 48px; height: 48px; background-color: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" title="Klik untuk muat naik. Seret untuk laras, Scroll/Cubit untuk zoom, Dwi-klik untuk tukar.">
@@ -1357,16 +1349,6 @@ Portal rasmi : jtksm.mohr.gov.my
         let isEditMode = false; // Penanda untuk check jika kita sedang edit draf lama
 
         document.addEventListener('DOMContentLoaded', function() {
-            // --- LOAD LOGO YANG DISIMPAN ---
-            const logoDisimpan = localStorage.getItem('eLC_gambarLogo');
-            if (logoDisimpan) {
-                document.getElementById('teksMuatNaikLogo').style.display = 'none';
-                document.getElementById('bekasLogo').style.border = 'none';
-                const imgLogo = document.getElementById('gambarLogo');
-                imgLogo.style.display = 'block';
-                imgLogo.src = logoDisimpan;
-            }
-            // --------------------------------
             kemaskiniDropdownPendaftaran();
             semakWakilLengkap();
 
@@ -2206,29 +2188,7 @@ function kemaskiniDropdownPendaftaran() {
                    reader.readAsDataURL(input.files[0]);
             }
         }
-// --- FUNGSI MUAT NAIK LOGO BARU ---
-        function muatNaikLogo(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    const base64Data = e.target.result;
-                    document.getElementById('teksMuatNaikLogo').style.display = 'none';
-                    document.getElementById('bekasLogo').style.border = 'none';
-                    const img = document.getElementById('gambarLogo');
-                    img.style.display = 'block';
-                    img.src = base64Data;
 
-                    try {
-                        localStorage.setItem('eLC_gambarLogo', base64Data);
-                    } catch (err) { 
-                        console.warn("Gambar logo terlalu besar.");
-                        alert("⚠️ AMARAN: Saiz logo terlalu besar. Sistem hanya boleh memaparkannya sementara. Sila gunakan gambar bersaiz lebih kecil (bawah 1MB) untuk simpanan kekal.");
-                    }
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        // ----------------------------------
         function bukaMaklumatPerkhidmatanDalaman() {
             const kandungan = document.getElementById('kandunganMaklumatPerkhidmatan');
             const labelTogol = document.getElementById('labelTogolPerkhidmatan');
